@@ -3,12 +3,13 @@
  * 3D stage leads, with maker tools and inspection controls framing purposeful play.
  */
 import { useEffect } from "react";
-import { Archive, Eraser, GalleryHorizontalEnd, Sparkles } from "lucide-react";
+import { Archive, Download, Eraser, GalleryHorizontalEnd, Redo2, Sparkles, Undo2 } from "lucide-react";
 import { toast } from "sonner";
 import GalleryDrawer from "@/components/studio/GalleryDrawer";
 import PropertiesPanel from "@/components/studio/PropertiesPanel";
 import StudioCanvas from "@/components/studio/StudioCanvas";
 import ToolPanel from "@/components/studio/ToolPanel";
+import { captureStudioImage, exportStudioImage } from "@/lib/studioImage";
 import { useStudioStore } from "@/store/useStudioStore";
 
 const sparkMark = "/manus-storage/creative-art-studio-spark_5082d4a6.png";
@@ -24,11 +25,20 @@ export default function Home() {
   const surpriseMe = useStudioStore((state) => state.surpriseMe);
   const saveArtwork = useStudioStore((state) => state.saveArtwork);
   const deleteSelectedObject = useStudioStore((state) => state.deleteSelectedObject);
+  const undo = useStudioStore((state) => state.undo);
+  const redo = useStudioStore((state) => state.redo);
+  const canUndo = useStudioStore((state) => state.past.length > 0);
+  const canRedo = useStudioStore((state) => state.future.length > 0);
 
   useEffect(() => {
     const handleDelete = (event: KeyboardEvent) => {
       const target = event.target as HTMLElement | null;
       if (target?.tagName === "INPUT" || target?.tagName === "TEXTAREA") return;
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "z") {
+        event.preventDefault();
+        if (event.shiftKey) redo(); else undo();
+        return;
+      }
       if ((event.key === "Backspace" || event.key === "Delete") && selectedObjectId) {
         event.preventDefault();
         deleteSelectedObject();
@@ -37,15 +47,20 @@ export default function Home() {
     };
     window.addEventListener("keydown", handleDelete);
     return () => window.removeEventListener("keydown", handleDelete);
-  }, [deleteSelectedObject, selectedObjectId]);
+  }, [deleteSelectedObject, redo, selectedObjectId, undo]);
 
   const handleSave = () => {
-    const artwork = saveArtwork();
+    const artwork = saveArtwork(captureStudioImage(objects, 520, 340) ?? undefined);
     if (!artwork) {
       toast.error("Add a shape before saving your artwork.");
       return;
     }
     toast.success(`Saved “${artwork.title}” to this device.`);
+  };
+
+  const handleExport = () => {
+    if (exportStudioImage(artworkTitle, objects)) toast.success("Your artwork is ready as a PNG.");
+    else toast.error("The stage is still waking up. Try export again in a moment.");
   };
 
   const handleSurprise = () => {
@@ -76,19 +91,23 @@ export default function Home() {
         </div>
 
         <div className="artwork-title-field">
-          <label htmlFor="artwork-title">Name your world</label>
+          <label htmlFor="artwork-title">Give your world a name</label>
           <input id="artwork-title" value={artworkTitle} onChange={(event) => setArtworkTitle(event.target.value)} maxLength={48} />
         </div>
 
         <nav className="header-actions" aria-label="Studio actions">
+          <div className="history-controls" aria-label="Undo and redo controls">
+            <button className="history-button" onClick={undo} disabled={!canUndo} aria-label="Undo last creative action" title="Undo (Ctrl/⌘ Z)"><Undo2 aria-hidden="true" /></button>
+            <button className="history-button" onClick={redo} disabled={!canRedo} aria-label="Redo last creative action" title="Redo (Ctrl/⌘ Shift Z)"><Redo2 aria-hidden="true" /></button>
+          </div>
           <button className="gallery-button" onClick={() => setGalleryOpen(true)}>
             <GalleryHorizontalEnd aria-hidden="true" />
-            <span>Worlds</span>
+            <span>My worlds</span>
             {savedArtworks.length > 0 && <b>{savedArtworks.length}</b>}
           </button>
           <button className="save-button" onClick={handleSave}>
             <Archive aria-hidden="true" />
-            <span>Keep it</span>
+            <span>Save world</span>
           </button>
         </nav>
       </header>
@@ -117,6 +136,10 @@ export default function Home() {
               <Sparkles aria-hidden="true" />
               <span>Surprise Me</span>
               <small>new idea</small>
+            </button>
+            <button className="export-button" type="button" onClick={handleExport} disabled={!objects.length}>
+              <Download aria-hidden="true" />
+              <span>Take a PNG</span>
             </button>
           </div>
         </section>

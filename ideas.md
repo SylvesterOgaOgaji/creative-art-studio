@@ -76,3 +76,5 @@ The wordmark pairs the high-contrast Fraunces title with a compact, tilted **Spa
 2. The maker shelf, inspector tray, canvas rim, pigment dots, and empty-state invitation use **layered paper and soft studio-object cues**: warm off-whites, slight irregularity, cut-paper edges, and tactile offset shadows take precedence over generic dashboard cards.
 3. **Persimmon** links the Spark mark, selected-object signal, active pigment state, and creation prompts into a single recognizable energy system.
 4. Utility copy adopts a short **maker voice**: action-oriented, encouraging, and clear without administrative phrasing.
+5. **Persimmon Spark leads every maker moment.** Saving and exporting are warm creative actions; dark navy remains a quiet structural colour.
+6. Every major surface includes a **tactile cue**—a layered paper edge, offset workshop shadow, organic outline, pigment chip, or studio-object detail.

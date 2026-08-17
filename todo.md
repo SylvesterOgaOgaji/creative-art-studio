@@ -1,0 +1,6 @@
+- [x] Review current state, canvas, and gallery contracts for extension points.
+- [x] Add bounded undo/redo scene history with clear UI controls and keyboard shortcuts.
+- [x] Add direct three-axis translate, rotate, and scale gizmos for selected meshes.
+- [x] Capture the canvas to PNG for finished artwork export.
+- [x] Capture a lightweight preview image when saving named artwork locally.
+- [x] Render gallery artwork thumbnails and validate save, restore, delete, export, history, and responsive controls.

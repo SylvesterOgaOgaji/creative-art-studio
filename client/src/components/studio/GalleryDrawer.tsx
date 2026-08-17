@@ -37,6 +37,15 @@ export default function GalleryDrawer() {
           <div className="artwork-list">
             {savedArtworks.map((artwork) => (
               <article className="artwork-card" key={artwork.id}>
+                <div className="artwork-thumbnail" aria-label={`Preview of ${artwork.title}`}>
+                  {artwork.thumbnailDataUrl ? (
+                    <img src={artwork.thumbnailDataUrl} alt={`Generated preview of ${artwork.title}`} />
+                  ) : (
+                    <div className="artwork-thumbnail-fallback" aria-hidden="true">
+                      {artwork.objects.slice(0, 5).map((object, index) => <span key={object.id} style={{ backgroundColor: object.color, transform: `translate(${index * 19 - 34}px, ${(index % 2) * 19 - 9}px) rotate(${index * 23}deg)` }} />)}
+                    </div>
+                  )}
+                </div>
                 <div className="artwork-colour-strip" aria-hidden="true">
                   {artwork.objects.slice(0, 6).map((object) => <span key={object.id} style={{ backgroundColor: object.color }} />)}
                 </div>
