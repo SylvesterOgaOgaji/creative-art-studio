@@ -4,3 +4,10 @@
 - [x] Capture the canvas to PNG for finished artwork export.
 - [x] Capture a lightweight preview image when saving named artwork locally.
 - [x] Render gallery artwork thumbnails and validate save, restore, delete, export, history, and responsive controls.
+- [x] Inspect existing canvas, scene state, gallery, and page layout extension points.
+- [x] Add selected-object duplication and browser-local daylight/neon scene lighting presets.
+- [x] Add multi-select selection state and shared translate/rotate/scale gizmo transformations.
+- [x] Add local gallery search, rename, and deletion confirmation workflows.
+- [x] Restore deliberate vertical scrolling across desktop and touch layouts.
+- [x] Add short, child-friendly studio guidance and contextual navigation tooltips.
+- [x] Validate local persistence, group manipulation, scrolling, gallery editing, and responsive interaction flows.

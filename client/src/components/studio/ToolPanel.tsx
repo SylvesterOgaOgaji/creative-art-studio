@@ -2,104 +2,20 @@
  * Playful Atelier design reminder: use a friendly maker-shelf rhythm—visual controls
  * first, clear labels second, and expressive pigment without a noisy rainbow wall.
  */
-import { Aperture, Box, CircleDot, Cylinder, Triangle } from "lucide-react";
+import { Aperture, Box, CircleDot, Cylinder, Sun, Triangle, Zap } from "lucide-react";
 import { materialDetails, studioColors, type StudioObjectType } from "@/types/studio";
 import { useStudioStore } from "@/store/useStudioStore";
 
-const objectOptions: Array<{
-  type: StudioObjectType;
-  label: string;
-  Icon: typeof Box;
-}> = [
-  { type: "cube", label: "Cube", Icon: Box },
-  { type: "sphere", label: "Sphere", Icon: CircleDot },
-  { type: "cone", label: "Cone", Icon: Triangle },
-  { type: "cylinder", label: "Cylinder", Icon: Cylinder },
-  { type: "torus", label: "Torus", Icon: Aperture },
-];
+const objectOptions: Array<{ type: StudioObjectType; label: string; Icon: typeof Box }> = [{ type: "cube", label: "Cube", Icon: Box }, { type: "sphere", label: "Sphere", Icon: CircleDot }, { type: "cone", label: "Cone", Icon: Triangle }, { type: "cylinder", label: "Cylinder", Icon: Cylinder }, { type: "torus", label: "Torus", Icon: Aperture }];
 
 export default function ToolPanel() {
   const addObject = useStudioStore((state) => state.addObject);
-  const selectedObjectId = useStudioStore((state) => state.selectedObjectId);
-  const selectedObject = useStudioStore((state) =>
-    state.objects.find((object) => object.id === state.selectedObjectId),
-  );
+  const selectedObjectIds = useStudioStore((state) => state.selectedObjectIds);
+  const selectedObject = useStudioStore((state) => state.objects.find((object) => object.id === state.selectedObjectId));
   const setSelectedColor = useStudioStore((state) => state.setSelectedColor);
   const setSelectedMaterial = useStudioStore((state) => state.setSelectedMaterial);
-
-  return (
-    <aside className="tool-panel panel-surface" aria-label="Creation panel">
-      <div className="panel-heading">
-        <span className="eyebrow">Maker shelf</span>
-        <h2>Pick a shape</h2>
-        <p>Tap a form to bring it onto your stage.</p>
-      </div>
-
-      <div className="shape-grid" aria-label="Add a 3D object">
-        {objectOptions.map(({ type, label, Icon }) => (
-          <button key={type} className="shape-button" onClick={() => addObject(type)} aria-label={`Add a ${label}`}>
-            <Icon aria-hidden="true" />
-            <span>{label}</span>
-          </button>
-        ))}
-      </div>
-
-      <div className="tool-divider" />
-
-      <div className="panel-heading compact-heading">
-        <span className="eyebrow">Pigment</span>
-        <h2>Give it a colour</h2>
-      </div>
-      <div className="color-grid" aria-label="Colour selection">
-        {studioColors.map((color) => (
-          <button
-            key={color.name}
-            className={`color-swatch ${selectedObject?.color === color.value ? "is-active" : ""}`}
-            style={{ backgroundColor: color.value }}
-            onClick={() => setSelectedColor(color.value)}
-            disabled={!selectedObjectId}
-            aria-label={`Set selected object colour to ${color.name}`}
-            aria-pressed={selectedObject?.color === color.value}
-          >
-            {selectedObject?.color === color.value && <span aria-hidden="true">✓</span>}
-          </button>
-        ))}
-      </div>
-
-      <label className="custom-color-label">
-        <span>Mix your own</span>
-        <input
-          type="color"
-          value={selectedObject?.color ?? "#FF6B4A"}
-          onChange={(event) => setSelectedColor(event.target.value)}
-          disabled={!selectedObjectId}
-          aria-label="Choose a custom colour for selected object"
-        />
-      </label>
-
-      <div className="tool-divider" />
-
-      <div className="panel-heading compact-heading">
-        <span className="eyebrow">Surface feel</span>
-        <h2>Choose a material</h2>
-      </div>
-      <div className="material-list" aria-label="Material selection">
-        {Object.entries(materialDetails).map(([value, detail]) => (
-          <button
-            key={value}
-            className={`material-button ${selectedObject?.material === value ? "is-active" : ""}`}
-            onClick={() => setSelectedMaterial(value as keyof typeof materialDetails)}
-            disabled={!selectedObjectId}
-            aria-pressed={selectedObject?.material === value}
-          >
-            <span className="material-dot" style={{ background: detail.swatch }} aria-hidden="true" />
-            <span>
-              <strong>{detail.label}</strong>
-              <small>{detail.description}</small>
-            </span>
-          </button>
-        ))}
-      </div>
-    </aside>
-  );
+  const lighting = useStudioStore((state) => state.lighting ?? "daylight");
+  const setLighting = useStudioStore((state) => state.setLighting);
+  const hasSelection = selectedObjectIds.length > 0;
+  return <aside className="tool-panel panel-surface" aria-label="Creation panel"><div className="panel-heading"><span className="eyebrow">Maker shelf</span><h2>Pick a shape</h2><p>Tap a form to bring it onto your stage.</p></div><div className="shape-grid" aria-label="Add a 3D object">{objectOptions.map(({ type, label, Icon }) => <button key={type} className="shape-button has-tooltip" data-tooltip={`Add a ${label}`} onClick={() => addObject(type)} aria-label={`Add a ${label}`}><Icon aria-hidden="true" /><span>{label}</span></button>)}</div><div className="tool-divider" /><div className="panel-heading compact-heading"><span className="eyebrow">Pigment</span><h2>Give it a colour</h2></div><div className="color-grid" aria-label="Colour selection">{studioColors.map((color) => <button key={color.name} className={`color-swatch ${selectedObject?.color === color.value ? "is-active" : ""}`} style={{ backgroundColor: color.value }} onClick={() => setSelectedColor(color.value)} disabled={!hasSelection} aria-label={`Set selected shape colour to ${color.name}`} aria-pressed={selectedObject?.color === color.value}>{selectedObject?.color === color.value && <span aria-hidden="true">✓</span>}</button>)}</div><label className="custom-color-label"><span>Mix your own</span><input type="color" value={selectedObject?.color ?? "#FF6B4A"} onChange={(event) => setSelectedColor(event.target.value)} disabled={!hasSelection} aria-label="Choose a custom colour for selected shapes" /></label><div className="tool-divider" /><div className="panel-heading compact-heading"><span className="eyebrow">Surface feel</span><h2>Choose a material</h2></div><div className="material-list" aria-label="Material selection">{Object.entries(materialDetails).map(([value, detail]) => <button key={value} className={`material-button ${selectedObject?.material === value ? "is-active" : ""}`} onClick={() => setSelectedMaterial(value as keyof typeof materialDetails)} disabled={!hasSelection} aria-pressed={selectedObject?.material === value}><span className="material-dot" style={{ background: detail.swatch }} aria-hidden="true" /><span><strong>{detail.label}</strong><small>{detail.description}</small></span></button>)}</div><div className="tool-divider" /><div className="panel-heading compact-heading"><span className="eyebrow">Stage glow</span><h2>Light your world</h2></div><div className="lighting-row" aria-label="Scene lighting"><button className={`lighting-button ${lighting === "daylight" ? "is-active" : ""}`} onClick={() => setLighting("daylight")} aria-pressed={lighting === "daylight"} title="Warm, clear daylight"><Sun aria-hidden="true" />Daylight</button><button className={`lighting-button ${lighting === "neon" ? "is-active" : ""}`} onClick={() => setLighting("neon")} aria-pressed={lighting === "neon"} title="Colourful after-dark glow"><Zap aria-hidden="true" />Neon</button></div></aside>;
 }

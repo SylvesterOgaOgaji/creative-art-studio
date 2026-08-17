@@ -2,7 +2,8 @@
  * Playful Atelier design reminder: saved work should feel personal and real, using
  * the user's actual object palettes rather than fabricated reviews or social signals.
  */
-import { Check, FolderOpen, Trash2, X } from "lucide-react";
+import { Check, FolderOpen, Pencil, Search, Trash2, X } from "lucide-react";
+import { useMemo, useState } from "react";
 import { useStudioStore } from "@/store/useStudioStore";
 
 const emptyGalleryArtwork = "/manus-storage/atelier-gallery-card_f01187c1.jpg";
@@ -13,55 +14,16 @@ export default function GalleryDrawer() {
   const setGalleryOpen = useStudioStore((state) => state.setGalleryOpen);
   const loadArtwork = useStudioStore((state) => state.loadArtwork);
   const deleteArtwork = useStudioStore((state) => state.deleteArtwork);
-
+  const renameArtwork = useStudioStore((state) => state.renameArtwork);
+  const [search, setSearch] = useState("");
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [draftTitle, setDraftTitle] = useState("");
+  const [deleteCandidate, setDeleteCandidate] = useState<string | null>(null);
+  const matchingArtworks = useMemo(() => savedArtworks.filter((artwork) => artwork.title.toLocaleLowerCase().includes(search.trim().toLocaleLowerCase())), [savedArtworks, search]);
+  const startRename = (id: string, title: string) => { setEditingId(id); setDraftTitle(title); };
+  const saveRename = () => { if (editingId && draftTitle.trim()) renameArtwork(editingId, draftTitle); setEditingId(null); };
+  const confirmDelete = () => { if (deleteCandidate) deleteArtwork(deleteCandidate); setDeleteCandidate(null); };
   if (!galleryOpen) return null;
 
-  return (
-    <div className="gallery-overlay" role="presentation" onMouseDown={() => setGalleryOpen(false)}>
-      <aside className="gallery-drawer" role="dialog" aria-modal="true" aria-labelledby="gallery-title" onMouseDown={(event) => event.stopPropagation()}>
-        <header className="gallery-header">
-          <div>
-            <span className="eyebrow">Local gallery</span>
-            <h2 id="gallery-title">Your little worlds</h2>
-          </div>
-          <button className="icon-button" onClick={() => setGalleryOpen(false)} aria-label="Close gallery"><X /></button>
-        </header>
-
-        {savedArtworks.length === 0 ? (
-          <div className="gallery-empty">
-            <img src={emptyGalleryArtwork} alt="A playful example sculpture made of colourful shapes" />
-            <h3>Your gallery is ready</h3>
-            <p>Build something, then press Save to keep its shapes and colours on this device.</p>
-          </div>
-        ) : (
-          <div className="artwork-list">
-            {savedArtworks.map((artwork) => (
-              <article className="artwork-card" key={artwork.id}>
-                <div className="artwork-thumbnail" aria-label={`Preview of ${artwork.title}`}>
-                  {artwork.thumbnailDataUrl ? (
-                    <img src={artwork.thumbnailDataUrl} alt={`Generated preview of ${artwork.title}`} />
-                  ) : (
-                    <div className="artwork-thumbnail-fallback" aria-hidden="true">
-                      {artwork.objects.slice(0, 5).map((object, index) => <span key={object.id} style={{ backgroundColor: object.color, transform: `translate(${index * 19 - 34}px, ${(index % 2) * 19 - 9}px) rotate(${index * 23}deg)` }} />)}
-                    </div>
-                  )}
-                </div>
-                <div className="artwork-colour-strip" aria-hidden="true">
-                  {artwork.objects.slice(0, 6).map((object) => <span key={object.id} style={{ backgroundColor: object.color }} />)}
-                </div>
-                <div className="artwork-card-main">
-                  <div>
-                    <h3>{artwork.title}</h3>
-                    <p>{artwork.objects.length} shape{artwork.objects.length === 1 ? "" : "s"} · {new Date(artwork.createdAt).toLocaleDateString()}</p>
-                  </div>
-                  <button className="gallery-delete" onClick={() => deleteArtwork(artwork.id)} aria-label={`Delete ${artwork.title}`}><Trash2 /></button>
-                </div>
-                <button className="open-artwork-button" onClick={() => loadArtwork(artwork.id)}><FolderOpen aria-hidden="true" /> Open and keep making <Check aria-hidden="true" /></button>
-              </article>
-            ))}
-          </div>
-        )}
-      </aside>
-    </div>
-  );
+  return <div className="gallery-overlay" role="presentation" onMouseDown={() => setGalleryOpen(false)}><aside className="gallery-drawer" role="dialog" aria-modal="true" aria-labelledby="gallery-title" onMouseDown={(event) => event.stopPropagation()}><header className="gallery-header"><div><span className="eyebrow">Local gallery</span><h2 id="gallery-title">Your little worlds</h2></div><button className="icon-button" onClick={() => setGalleryOpen(false)} aria-label="Close gallery"><X /></button></header>{savedArtworks.length === 0 ? <div className="gallery-empty"><img src={emptyGalleryArtwork} alt="A playful example sculpture made of colourful shapes" /><h3>Your gallery is ready</h3><p>Build something, then press Save to keep its shapes and colours on this device.</p></div> : <><label className="gallery-search"><Search aria-hidden="true" /><span className="sr-only">Search saved artwork by name</span><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Find a world by name" /></label>{matchingArtworks.length === 0 ? <div className="gallery-no-results"><Search aria-hidden="true" /><h3>No world with that name</h3><p>Try another word, or clear your search.</p><button onClick={() => setSearch("")}>Show all worlds</button></div> : <div className="artwork-list">{matchingArtworks.map((artwork) => <article className="artwork-card" key={artwork.id}><div className="artwork-thumbnail" aria-label={`Preview of ${artwork.title}`}>{artwork.thumbnailDataUrl ? <img src={artwork.thumbnailDataUrl} alt={`Generated preview of ${artwork.title}`} /> : <div className="artwork-thumbnail-fallback" aria-hidden="true">{artwork.objects.slice(0, 5).map((object, index) => <span key={object.id} style={{ backgroundColor: object.color, transform: `translate(${index * 19 - 34}px, ${(index % 2) * 19 - 9}px) rotate(${index * 23}deg)` }} />)}</div>}</div><div className="artwork-colour-strip" aria-hidden="true">{artwork.objects.slice(0, 6).map((object) => <span key={object.id} style={{ backgroundColor: object.color }} />)}</div><div className="artwork-card-main"><div>{editingId === artwork.id ? <div className="gallery-rename-row"><input aria-label="Artwork name" autoFocus value={draftTitle} maxLength={48} onChange={(event) => setDraftTitle(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter") saveRename(); if (event.key === "Escape") setEditingId(null); }} /><button className="gallery-rename-save" onClick={saveRename} aria-label="Save new artwork name"><Check /></button></div> : <><h3>{artwork.title}</h3><p>{artwork.objects.length} shape{artwork.objects.length === 1 ? "" : "s"} · {new Date(artwork.createdAt).toLocaleDateString()}</p></>}</div><div className="artwork-card-actions">{editingId !== artwork.id && <button className="gallery-edit" onClick={() => startRename(artwork.id, artwork.title)} aria-label={`Rename ${artwork.title}`} title="Rename this world"><Pencil /></button>}<button className="gallery-delete" onClick={() => setDeleteCandidate(artwork.id)} aria-label={`Delete ${artwork.title}`} title="Delete this world"><Trash2 /></button></div></div><button className="open-artwork-button" onClick={() => loadArtwork(artwork.id)}><FolderOpen aria-hidden="true" />Open and keep making <Check aria-hidden="true" /></button></article>)}</div>}</>}{deleteCandidate && <div className="gallery-confirm" role="alertdialog" aria-label="Confirm deletion"><p>Put this saved world in the bin?</p><div><button className="gallery-confirm-cancel" onClick={() => setDeleteCandidate(null)}>Keep it</button><button className="gallery-confirm-delete" onClick={confirmDelete}>Delete world</button></div></div>}</aside></div>;
 }

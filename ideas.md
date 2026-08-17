@@ -78,3 +78,5 @@ The wordmark pairs the high-contrast Fraunces title with a compact, tilted **Spa
 4. Utility copy adopts a short **maker voice**: action-oriented, encouraging, and clear without administrative phrasing.
 5. **Persimmon Spark leads every maker moment.** Saving and exporting are warm creative actions; dark navy remains a quiet structural colour.
 6. Every major surface includes a **tactile cue**—a layered paper edge, offset workshop shadow, organic outline, pigment chip, or studio-object detail.
+7. The art stage is the visual hero: it has the strongest paper-cut frame and more vertical presence than either supporting tray.
+8. Empty stages use an encouraging maker prompt with a small physical studio cue; the Spark mark and Fraunces wordmark form one compact, persimmon-anchored studio lockup.

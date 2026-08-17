@@ -6,6 +6,7 @@ export const objectTypes = ["cube", "sphere", "cone", "cylinder", "torus"] as co
 
 export type StudioObjectType = (typeof objectTypes)[number];
 export type StudioMaterial = "matte" | "glossy" | "metallic" | "neon";
+export type StudioLighting = "daylight" | "neon";
 export type TransformMode = "translate" | "rotate" | "scale";
 export type Vector3Tuple = [number, number, number];
 
@@ -25,6 +26,7 @@ export interface SavedArtwork {
   title: string;
   createdAt: string;
   objects: StudioObject[];
+  lighting?: StudioLighting;
   thumbnailDataUrl?: string;
 }
 
