@@ -5,9 +5,9 @@
 import { Canvas, type ThreeEvent } from "@react-three/fiber";
 import { ContactShadows, Edges, Html, OrbitControls, TransformControls } from "@react-three/drei";
 import type { ReactNode } from "react";
-import { useMemo, useRef, useState } from "react";
-import { Euler, Quaternion, Vector3, type Mesh } from "three";
-import type { StudioMaterial, StudioObject, Vector3Tuple } from "@/types/studio";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { CanvasTexture, Euler, Quaternion, SRGBColorSpace, Vector3, type Mesh } from "three";
+import type { StudioMaterial, StudioObject, StudioSticker, StudioTexture, Vector3Tuple } from "@/types/studio";
 import { useStudioStore } from "@/store/useStudioStore";
 
 const workspaceArtwork = "/manus-storage/playful-atelier-workspace_6be4be8c.jpg";
@@ -21,18 +21,49 @@ function geometryFor(type: StudioObject["type"]): ReactNode {
   return <boxGeometry args={[1.25, 1.25, 1.25]} />;
 }
 
-function materialFor(material: StudioMaterial, color: string) {
+function makeSurfaceTexture(texture: StudioTexture, color: string) {
+  if (texture === "plain") return null;
+  const canvas = document.createElement("canvas");
+  canvas.width = canvas.height = 128;
+  const context = canvas.getContext("2d");
+  if (!context) return null;
+  context.fillStyle = color;
+  context.fillRect(0, 0, 128, 128);
+  context.fillStyle = "rgba(255,255,246,.68)";
+  if (texture === "dots") {
+    for (let x = 18; x < 128; x += 38) for (let y = 18; y < 128; y += 38) { context.beginPath(); context.arc(x, y, 8, 0, Math.PI * 2); context.fill(); }
+  } else {
+    context.lineWidth = 14;
+    for (let x = -90; x < 170; x += 35) { context.beginPath(); context.moveTo(x, 0); context.lineTo(x + 120, 128); context.stroke(); }
+  }
+  const map = new CanvasTexture(canvas);
+  map.colorSpace = SRGBColorSpace;
+  return map;
+}
+
+function useSurfaceTexture(texture: StudioTexture, color: string) {
+  const map = useMemo(() => makeSurfaceTexture(texture, color), [texture, color]);
+  useEffect(() => () => map?.dispose(), [map]);
+  return map;
+}
+
+function materialFor(material: StudioMaterial, color: string, map: CanvasTexture | null) {
   const finishes: Record<StudioMaterial, { roughness: number; metalness: number; emissive: string; emissiveIntensity: number }> = {
     matte: { roughness: .82, metalness: .02, emissive: "#000000", emissiveIntensity: 0 }, glossy: { roughness: .16, metalness: .08, emissive: "#000000", emissiveIntensity: 0 }, metallic: { roughness: .28, metalness: .88, emissive: "#000000", emissiveIntensity: 0 }, neon: { roughness: .22, metalness: .08, emissive: color, emissiveIntensity: .72 },
   };
-  return <meshStandardMaterial color={color} {...finishes[material]} />;
+  return <meshStandardMaterial color={map ? "#ffffff" : color} map={map ?? undefined} {...finishes[material]} />;
 }
+
+const stickerMarks: Record<StudioSticker, string> = { none: "", star: "✦", heart: "♥", smile: "●" };
 
 function SceneMesh({ object, selected, showTag, position, meshRef }: { object: StudioObject; selected: boolean; showTag?: boolean; position?: Vector3Tuple; meshRef?: (mesh: Mesh | null) => void }) {
   const selectObject = useStudioStore((state) => state.selectObject);
   const multiSelectMode = useStudioStore((state) => state.multiSelectMode);
   const handleSelect = (event: ThreeEvent<MouseEvent>) => { event.stopPropagation(); selectObject(object.id, event.shiftKey || multiSelectMode); };
-  return <mesh ref={meshRef} castShadow receiveShadow position={position ?? object.position} rotation={object.rotation} scale={object.scale} onClick={handleSelect} onPointerDown={(event) => event.stopPropagation()}>{geometryFor(object.type)}{materialFor(object.material, object.color)}{selected && <Edges color="#FF6B4A" threshold={15} />}{showTag && <Html position={[0, 1.35, 0]} center distanceFactor={12} style={{ pointerEvents: "none" }}><span className="selected-tag">Chosen</span></Html>}</mesh>;
+  const texture = object.texture ?? "plain";
+  const sticker = object.sticker ?? "none";
+  const map = useSurfaceTexture(texture, object.color);
+  return <mesh ref={meshRef} castShadow receiveShadow position={position ?? object.position} rotation={object.rotation} scale={object.scale} onClick={handleSelect} onPointerDown={(event) => event.stopPropagation()}>{geometryFor(object.type)}{materialFor(object.material, object.color, map)}{sticker !== "none" && <Html transform position={[0, .08, .88]} distanceFactor={11} style={{ pointerEvents: "none" }}><span className={`shape-sticker sticker-${sticker}`}>{stickerMarks[sticker]}</span></Html>}{selected && <Edges color="#FF6B4A" threshold={15} />}{showTag && <Html position={[0, 1.35, 0]} center distanceFactor={12} style={{ pointerEvents: "none" }}><span className="selected-tag">Chosen</span></Html>}</mesh>;
 }
 
 function SingleTransformObject({ object, onDraggingChange }: { object: StudioObject; onDraggingChange: (dragging: boolean) => void }) {

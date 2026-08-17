@@ -16,3 +16,8 @@
 - [x] Add a reduced-motion-safe visual celebration when a new artwork is saved locally.
 - [x] Persist favourites in the local gallery and add a favourites-only filter.
 - [x] Validate the tutorial, save celebration, favourite persistence/filter, touch layout, TypeScript, and production build.
+- [x] Inspect local interaction, material, shape, and toolbar extension points for sounds, decorations, and prompts.
+- [x] Add an explicit opt-in sound setting with short audio feedback for creating, colouring, and saving worlds.
+- [x] Add browser-local stickers and polka-dot/stripe texture treatments for selected 3D shapes.
+- [x] Add a playful challenge-card prompt experience with accessible refresh and dismiss actions.
+- [x] Validate opt-in sound behaviour, decoration persistence, challenge interactions, touch layout, TypeScript, and production build.

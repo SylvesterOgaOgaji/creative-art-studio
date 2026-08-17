@@ -9,6 +9,8 @@ export type StudioMaterial = "matte" | "glossy" | "metallic" | "neon";
 export type StudioLighting = "daylight" | "neon";
 export type TransformMode = "translate" | "rotate" | "scale";
 export type TutorialStep = "welcome" | "add" | "move" | "colour" | "done";
+export type StudioTexture = "plain" | "dots" | "stripes";
+export type StudioSticker = "none" | "star" | "heart" | "smile";
 export type Vector3Tuple = [number, number, number];
 
 export interface StudioObject {
@@ -20,6 +22,8 @@ export interface StudioObject {
   scale: Vector3Tuple;
   color: string;
   material: StudioMaterial;
+  texture: StudioTexture;
+  sticker: StudioSticker;
 }
 
 export interface SavedArtwork {
@@ -51,4 +55,17 @@ export const materialDetails: Record<
   glossy: { label: "Glossy", description: "Smooth & bright", swatch: "#BFE2F8" },
   metallic: { label: "Metallic", description: "Shiny & strong", swatch: "#9FA8B8" },
   neon: { label: "Neon", description: "Glows gently", swatch: "#FFEA70" },
+};
+
+export const textureDetails: Record<StudioTexture, { label: string; description: string }> = {
+  plain: { label: "Plain", description: "Smooth colour" },
+  dots: { label: "Dots", description: "Bouncy spots" },
+  stripes: { label: "Stripes", description: "Bold bands" },
+};
+
+export const stickerDetails: Record<StudioSticker, { label: string; mark: string }> = {
+  none: { label: "None", mark: "−" },
+  star: { label: "Star", mark: "✦" },
+  heart: { label: "Heart", mark: "♥" },
+  smile: { label: "Smile", mark: "●" },
 };

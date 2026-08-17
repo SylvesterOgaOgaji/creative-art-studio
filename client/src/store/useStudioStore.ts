@@ -4,7 +4,7 @@
  */
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { SavedArtwork, StudioLighting, StudioMaterial, StudioObject, StudioObjectType, TransformMode, TutorialStep, Vector3Tuple } from "@/types/studio";
+import type { SavedArtwork, StudioLighting, StudioMaterial, StudioObject, StudioObjectType, StudioSticker, StudioTexture, TransformMode, TutorialStep, Vector3Tuple } from "@/types/studio";
 
 const HISTORY_LIMIT = 40;
 const makeId = () => globalThis.crypto?.randomUUID?.() ?? `studio-${Date.now()}-${Math.random().toString(36).slice(2)}`;
@@ -25,9 +25,12 @@ interface StudioState {
   savedArtworks: SavedArtwork[];
   galleryOpen: boolean;
   tutorialStep: TutorialStep;
+  soundEnabled: boolean;
+  challengeIndex: number;
   setArtworkTitle: (title: string) => void;
   setGalleryOpen: (isOpen: boolean) => void;
   setLighting: (lighting: StudioLighting) => void;
+  setSoundEnabled: (isEnabled: boolean) => void;
   selectObject: (id: string | null, additive?: boolean) => void;
   setMultiSelectMode: (isEnabled: boolean) => void;
   setTransformMode: (mode: TransformMode) => void;
@@ -39,6 +42,8 @@ interface StudioState {
   finishDirectTransform: () => void;
   setSelectedColor: (color: string) => void;
   setSelectedMaterial: (material: StudioMaterial) => void;
+  setSelectedTexture: (texture: StudioTexture) => void;
+  setSelectedSticker: (sticker: StudioSticker) => void;
   duplicateSelectedObjects: () => void;
   deleteSelectedObject: () => void;
   deleteSelectedObjects: () => void;
@@ -54,6 +59,7 @@ interface StudioState {
   startTutorial: () => void;
   skipTutorial: () => void;
   replayTutorial: () => void;
+  nextChallenge: () => void;
 }
 
 type SceneSnapshot = Pick<StudioState, "artworkTitle" | "objects" | "lighting" | "selectedObjectId" | "selectedObjectIds">;
@@ -63,7 +69,7 @@ const cloneSnapshot = (state: SceneSnapshot): SceneSnapshot => ({ artworkTitle: 
 const createObject = (type: StudioObjectType, count: number): StudioObject => {
   const column = (count % 3) - 1;
   const row = Math.floor(count / 3);
-  return { id: makeId(), name: `${titleCase(type)} ${count + 1}`, type, position: [column * 1.35, 0.85, -row * 1.1], rotation: [0, count * 0.35, 0], scale: [1, 1, 1], color: "#FF6B4A", material: "matte" };
+  return { id: makeId(), name: `${titleCase(type)} ${count + 1}`, type, position: [column * 1.35, 0.85, -row * 1.1], rotation: [0, count * 0.35, 0], scale: [1, 1, 1], color: "#FF6B4A", material: "matte", texture: "plain", sticker: "none" };
 };
 
 export const useStudioStore = create<StudioState>()(
@@ -82,10 +88,11 @@ export const useStudioStore = create<StudioState>()(
 
       return {
         artworkTitle: "My tiny world", objects: [], lighting: "daylight", selectedObjectId: null, selectedObjectIds: [], multiSelectMode: false,
-        transformMode: "translate", transformInProgress: false, past: [], future: [], savedArtworks: [], galleryOpen: false, tutorialStep: "welcome",
+        transformMode: "translate", transformInProgress: false, past: [], future: [], savedArtworks: [], galleryOpen: false, tutorialStep: "welcome", soundEnabled: false, challengeIndex: 0,
         setArtworkTitle: (artworkTitle) => set({ artworkTitle }),
         setGalleryOpen: (galleryOpen) => set({ galleryOpen }),
         setLighting: (lighting) => commit({ lighting }),
+        setSoundEnabled: (soundEnabled) => set({ soundEnabled }),
         selectObject: (id, additive = false) => set((state) => {
           if (!id) return { selectedObjectId: null, selectedObjectIds: [] };
           const current = selectedIdsFor(state);
@@ -105,6 +112,8 @@ export const useStudioStore = create<StudioState>()(
         finishDirectTransform: () => set((state) => ({ transformInProgress: false, ...(state.tutorialStep === "move" ? { tutorialStep: "colour" } : {}) })),
         setSelectedColor: (color) => { editSelected({ color }); if (get().tutorialStep === "colour" && selectedIdsFor(get()).length) set({ tutorialStep: "done" }); },
         setSelectedMaterial: (material) => editSelected({ material }),
+        setSelectedTexture: (texture) => editSelected({ texture }),
+        setSelectedSticker: (sticker) => editSelected({ sticker }),
         duplicateSelectedObjects: () => {
           const current = get(); const ids = new Set(selectedIdsFor(current));
           const copies = current.objects.filter((object) => ids.has(object.id)).map((object, index) => ({ ...cloneObject(object), id: makeId(), name: `${object.name} copy`, position: [object.position[0] + .48 + index * .1, object.position[1] + .34, object.position[2] - .34] as Vector3Tuple }));
@@ -119,7 +128,7 @@ export const useStudioStore = create<StudioState>()(
           const types: StudioObjectType[] = ["torus", "sphere", "cone", "cube", "cylinder", "sphere", "torus"];
           const anchors: Vector3Tuple[] = [[-1.9, .9, .3], [-.75, 1.5, -.4], [.55, .75, .1], [1.85, 1.15, -.35], [.05, 2.25, -.9], [-1.25, .6, -1.25], [1.35, .55, -1.4]];
           const materials: StudioMaterial[] = ["matte", "glossy", "metallic", "neon", "matte", "glossy", "metallic"];
-          const arrangement = types.map((type, index) => { const wobble = () => (Math.random() - .5) * .32; const size = .72 + Math.random() * .72; return { id: makeId(), name: `${titleCase(type)} spark ${index + 1}`, type, position: [anchors[index][0] + wobble(), anchors[index][1] + wobble(), anchors[index][2] + wobble()] as Vector3Tuple, rotation: [Math.random() * 1.1, Math.random() * Math.PI, Math.random() * .8] as Vector3Tuple, scale: [size, size * (.85 + Math.random() * .35), size] as Vector3Tuple, color: palette[index % palette.length], material: materials[index] }; });
+          const arrangement: StudioObject[] = types.map((type, index) => { const wobble = () => (Math.random() - .5) * .32; const size = .72 + Math.random() * .72; return { id: makeId(), name: `${titleCase(type)} spark ${index + 1}`, type, position: [anchors[index][0] + wobble(), anchors[index][1] + wobble(), anchors[index][2] + wobble()] as Vector3Tuple, rotation: [Math.random() * 1.1, Math.random() * Math.PI, Math.random() * .8] as Vector3Tuple, scale: [size, size * (.85 + Math.random() * .35), size] as Vector3Tuple, color: palette[index % palette.length], material: materials[index], texture: index % 3 === 0 ? "dots" : index % 3 === 1 ? "stripes" : "plain", sticker: index % 3 === 0 ? "star" : "none" }; });
           commit({ objects: arrangement, selectedObjectId: arrangement[0].id, selectedObjectIds: [arrangement[0].id], artworkTitle: "A surprised little universe" });
         },
         undo: () => { const current = get(); const previous = current.past.at(-1); if (previous) set({ ...cloneSnapshot(previous), past: current.past.slice(0, -1), future: [cloneSnapshot(current), ...current.future].slice(0, HISTORY_LIMIT), transformInProgress: false }); },
@@ -132,8 +141,9 @@ export const useStudioStore = create<StudioState>()(
         startTutorial: () => set({ tutorialStep: "add" }),
         skipTutorial: () => set({ tutorialStep: "done" }),
         replayTutorial: () => set({ tutorialStep: "add" }),
+        nextChallenge: () => set((state) => ({ challengeIndex: state.challengeIndex + 1 })),
       };
     },
-    { name: "creative-art-studio-v2", partialize: (state) => ({ artworkTitle: state.artworkTitle, objects: state.objects, lighting: state.lighting, savedArtworks: state.savedArtworks, tutorialStep: state.tutorialStep }) },
+    { name: "creative-art-studio-v2", partialize: (state) => ({ artworkTitle: state.artworkTitle, objects: state.objects, lighting: state.lighting, savedArtworks: state.savedArtworks, tutorialStep: state.tutorialStep, soundEnabled: state.soundEnabled, challengeIndex: state.challengeIndex }) },
   ),
 );
