@@ -11,3 +11,8 @@
 - [x] Restore deliberate vertical scrolling across desktop and touch layouts.
 - [x] Add short, child-friendly studio guidance and contextual navigation tooltips.
 - [x] Validate local persistence, group manipulation, scrolling, gallery editing, and responsive interaction flows.
+- [x] Inspect the current local store, canvas, save action, and gallery interfaces for tutorial and favourites integration points.
+- [x] Create a first-run animated tutorial that teaches add, move, and colour with skip/replay controls.
+- [x] Add a reduced-motion-safe visual celebration when a new artwork is saved locally.
+- [x] Persist favourites in the local gallery and add a favourites-only filter.
+- [x] Validate the tutorial, save celebration, favourite persistence/filter, touch layout, TypeScript, and production build.

@@ -59,7 +59,7 @@ function GroupTransformObject({ objects, selectedObjectId, onDraggingChange }: {
   return <TransformControls mode={transformMode} size={.92} onMouseDown={() => { beginDirectTransform(); onDraggingChange(true); }} onMouseUp={commitGroupTransform}><group position={center} rotation={[0, 0, 0]} scale={[1, 1, 1]}>{objects.map((object) => <SceneMesh key={object.id} object={object} selected showTag={object.id === selectedObjectId} position={[object.position[0] - center[0], object.position[1] - center[1], object.position[2] - center[2]]} meshRef={(mesh) => { if (mesh) meshRefs.current.set(object.id, mesh); else meshRefs.current.delete(object.id); }} />)}</group></TransformControls>;
 }
 
-function EmptySceneHint() { return <Html center position={[0, 1.2, 0]} style={{ pointerEvents: "none" }}><div className="scene-empty-hint"><span className="scene-empty-star">✦</span><strong>Start with one bright shape</strong><span>Pick a form, then make it completely yours.</span></div></Html>; }
+function EmptySceneHint() { return <Html center position={[0, 1.2, 0]} style={{ pointerEvents: "none" }}><div className="scene-empty-hint"><span className="scene-empty-star">✦</span><strong>Start with one bright shape</strong><span>Pick a form, then make it completely yours.</span><span className="scene-empty-tools" aria-hidden="true">◒&nbsp;&nbsp;◯&nbsp;&nbsp;△</span></div></Html>; }
 
 function StudioScene() {
   const [isDragging, setIsDragging] = useState(false);

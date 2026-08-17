@@ -1,0 +1,19 @@
+/* Playful Atelier overlay correction: a handmade studio note guides without eclipsing the maker table. */
+.studio-header { position: relative; z-index: 90; }
+.tutorial-welcome { z-index: 999 !important; isolation: isolate; align-items: flex-start !important; padding-top: 86px !important; background: radial-gradient(ellipse 48% 42% at 50% 23%, rgba(255, 247, 228, .24), transparent 73%) !important; backdrop-filter: none !important; }
+.tutorial-welcome-card { position: relative; z-index: 1; isolation: isolate; max-width: 350px !important; padding: 30px 34px 28px !important; border: 2px solid rgba(240, 92, 66, .19) !important; border-radius: 24px 18px 27px 20px !important; background: linear-gradient(135deg, #fffdf5 0%, #fff0d8 100%) !important; box-shadow: 9px 11px 0 rgba(127, 94, 55, .15), inset 0 -4px 0 rgba(247, 207, 148, .35) !important; }
+.tutorial-welcome-card > * { position: relative; z-index: 2; }
+.tutorial-welcome-card::before { content: ""; position: absolute; inset: 7px; border: 1px dashed rgba(255, 107, 74, .25); border-radius: 18px 12px 20px 14px; pointer-events: none; }
+.tutorial-note-corner { position: absolute; right: -2px; bottom: -2px; width: 48px; height: 48px; z-index: 3 !important; clip-path: polygon(100% 0, 0 100%, 100% 100%); background: linear-gradient(135deg, #ffe6a4 0 45%, #ff6b4a 46%); filter: drop-shadow(-2px -2px 0 rgba(204, 156, 82, .2)); }
+.tutorial-welcome-card .eyebrow { color: #c65340 !important; letter-spacing: .13em; }
+.tutorial-welcome-card h2 { max-width: 280px; margin-inline: auto; font-size: clamp(1.7rem, 2.5vw, 2.25rem) !important; }
+.tutorial-welcome-card p { color: #685545 !important; font-size: .95rem !important; line-height: 1.48 !important; }
+.tutorial-welcome-card .tutorial-spark { width: 48px; height: 48px; margin-top: -55px; border: 5px solid #fff9ed; box-shadow: 3px 4px 0 rgba(188, 77, 53, .18); }
+.tutorial-coach { z-index: 995 !important; }
+.tutorial-replay { position: fixed; z-index: 96; top: 18px; right: 275px; }
+.studio-canvas { position: relative; box-shadow: 0 12px 0 rgba(234, 211, 174, .38), inset 0 0 0 5px rgba(255, 252, 241, .8), inset 0 0 0 8px rgba(240, 92, 66, .1); }
+.studio-canvas::after { content: ""; position: absolute; inset: 14px 19px 22px; pointer-events: none; border: 1px dashed rgba(191, 139, 64, .28); border-radius: 46% 46% 22px 22px / 18% 18% 12px 12px; mix-blend-mode: multiply; }
+.scene-empty-hint { border: 2px solid rgba(255, 107, 74, .28) !important; border-radius: 22px 15px 25px 17px !important; background: linear-gradient(155deg, rgba(255, 253, 245, .96), rgba(255, 238, 202, .93)) !important; box-shadow: 7px 8px 0 rgba(139, 101, 56, .14), inset 0 -4px 0 rgba(255, 208, 132, .28) !important; }
+.scene-empty-tools { display: block; margin-top: 9px; color: #ff6b4a; font-size: 17px; letter-spacing: .18em; text-shadow: 1px 2px 0 rgba(224, 164, 71, .2); }
+@media (max-width: 900px) { .tutorial-replay { top: 84px; right: 14px; } }
+@media (max-width: 620px) { .tutorial-welcome { padding: 74px 20px 20px !important; align-items: flex-start !important; }.tutorial-welcome-card { max-width: 330px !important; padding: 28px 25px 26px !important; }.tutorial-welcome-card .tutorial-spark { margin-top: -53px; } }

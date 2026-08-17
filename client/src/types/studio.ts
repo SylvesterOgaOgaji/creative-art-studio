@@ -8,6 +8,7 @@ export type StudioObjectType = (typeof objectTypes)[number];
 export type StudioMaterial = "matte" | "glossy" | "metallic" | "neon";
 export type StudioLighting = "daylight" | "neon";
 export type TransformMode = "translate" | "rotate" | "scale";
+export type TutorialStep = "welcome" | "add" | "move" | "colour" | "done";
 export type Vector3Tuple = [number, number, number];
 
 export interface StudioObject {
@@ -28,6 +29,7 @@ export interface SavedArtwork {
   objects: StudioObject[];
   lighting?: StudioLighting;
   thumbnailDataUrl?: string;
+  isFavorite?: boolean;
 }
 
 export const studioColors = [

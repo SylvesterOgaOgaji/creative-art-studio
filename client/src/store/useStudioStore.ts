@@ -4,7 +4,7 @@
  */
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { SavedArtwork, StudioLighting, StudioMaterial, StudioObject, StudioObjectType, TransformMode, Vector3Tuple } from "@/types/studio";
+import type { SavedArtwork, StudioLighting, StudioMaterial, StudioObject, StudioObjectType, TransformMode, TutorialStep, Vector3Tuple } from "@/types/studio";
 
 const HISTORY_LIMIT = 40;
 const makeId = () => globalThis.crypto?.randomUUID?.() ?? `studio-${Date.now()}-${Math.random().toString(36).slice(2)}`;
@@ -24,6 +24,7 @@ interface StudioState {
   future: SceneSnapshot[];
   savedArtworks: SavedArtwork[];
   galleryOpen: boolean;
+  tutorialStep: TutorialStep;
   setArtworkTitle: (title: string) => void;
   setGalleryOpen: (isOpen: boolean) => void;
   setLighting: (lighting: StudioLighting) => void;
@@ -49,6 +50,10 @@ interface StudioState {
   loadArtwork: (id: string) => void;
   deleteArtwork: (id: string) => void;
   renameArtwork: (id: string, title: string) => void;
+  toggleArtworkFavorite: (id: string) => void;
+  startTutorial: () => void;
+  skipTutorial: () => void;
+  replayTutorial: () => void;
 }
 
 type SceneSnapshot = Pick<StudioState, "artworkTitle" | "objects" | "lighting" | "selectedObjectId" | "selectedObjectIds">;
@@ -77,7 +82,7 @@ export const useStudioStore = create<StudioState>()(
 
       return {
         artworkTitle: "My tiny world", objects: [], lighting: "daylight", selectedObjectId: null, selectedObjectIds: [], multiSelectMode: false,
-        transformMode: "translate", transformInProgress: false, past: [], future: [], savedArtworks: [], galleryOpen: false,
+        transformMode: "translate", transformInProgress: false, past: [], future: [], savedArtworks: [], galleryOpen: false, tutorialStep: "welcome",
         setArtworkTitle: (artworkTitle) => set({ artworkTitle }),
         setGalleryOpen: (galleryOpen) => set({ galleryOpen }),
         setLighting: (lighting) => commit({ lighting }),
@@ -92,13 +97,13 @@ export const useStudioStore = create<StudioState>()(
         }),
         setMultiSelectMode: (multiSelectMode) => set((state) => ({ multiSelectMode, ...(multiSelectMode ? {} : { selectedObjectIds: state.selectedObjectId ? [state.selectedObjectId] : [] }) })),
         setTransformMode: (transformMode) => set({ transformMode }),
-        addObject: (type) => { const object = createObject(type, get().objects.length); commit({ objects: [...get().objects, object], selectedObjectId: object.id, selectedObjectIds: [object.id] }); },
-        updateObject: (id, updates) => { const current = get(); if (current.objects.some((object) => object.id === id)) commit({ objects: current.objects.map((object) => object.id === id ? { ...object, ...updates } : object) }); },
+        addObject: (type) => { const object = createObject(type, get().objects.length); commit({ objects: [...get().objects, object], selectedObjectId: object.id, selectedObjectIds: [object.id] }); if (get().tutorialStep === "add") set({ tutorialStep: "move" }); },
+        updateObject: (id, updates) => { const current = get(); if (current.objects.some((object) => object.id === id)) { commit({ objects: current.objects.map((object) => object.id === id ? { ...object, ...updates } : object) }); if (current.tutorialStep === "move") set({ tutorialStep: "colour" }); } },
         updateObjectDuringTransform: (id, updates) => set((state) => ({ objects: state.objects.map((object) => object.id === id ? { ...object, ...updates } : object) })),
         updateObjectsDuringTransform: (updates) => set((state) => { const byId = new Map(updates.map((entry) => [entry.id, entry.updates])); return { objects: state.objects.map((object) => byId.has(object.id) ? { ...object, ...byId.get(object.id) } : object) }; }),
         beginDirectTransform: () => { const current = get(); if (current.transformInProgress || !selectedIdsFor(current).length) return; set({ transformInProgress: true, past: [...current.past, cloneSnapshot(current)].slice(-HISTORY_LIMIT), future: [] }); },
-        finishDirectTransform: () => set({ transformInProgress: false }),
-        setSelectedColor: (color) => editSelected({ color }),
+        finishDirectTransform: () => set((state) => ({ transformInProgress: false, ...(state.tutorialStep === "move" ? { tutorialStep: "colour" } : {}) })),
+        setSelectedColor: (color) => { editSelected({ color }); if (get().tutorialStep === "colour" && selectedIdsFor(get()).length) set({ tutorialStep: "done" }); },
         setSelectedMaterial: (material) => editSelected({ material }),
         duplicateSelectedObjects: () => {
           const current = get(); const ids = new Set(selectedIdsFor(current));
@@ -119,12 +124,16 @@ export const useStudioStore = create<StudioState>()(
         },
         undo: () => { const current = get(); const previous = current.past.at(-1); if (previous) set({ ...cloneSnapshot(previous), past: current.past.slice(0, -1), future: [cloneSnapshot(current), ...current.future].slice(0, HISTORY_LIMIT), transformInProgress: false }); },
         redo: () => { const current = get(); const next = current.future[0]; if (next) set({ ...cloneSnapshot(next), past: [...current.past, cloneSnapshot(current)].slice(-HISTORY_LIMIT), future: current.future.slice(1), transformInProgress: false }); },
-        saveArtwork: (thumbnailDataUrl) => { const { objects, artworkTitle, lighting } = get(); if (!objects.length) return null; const artwork: SavedArtwork = { id: makeId(), title: artworkTitle.trim() || "Untitled artwork", createdAt: new Date().toISOString(), objects: objects.map(cloneObject), lighting, thumbnailDataUrl }; set((state) => ({ savedArtworks: [artwork, ...state.savedArtworks].slice(0, 24) })); return artwork; },
+        saveArtwork: (thumbnailDataUrl) => { const { objects, artworkTitle, lighting } = get(); if (!objects.length) return null; const artwork: SavedArtwork = { id: makeId(), title: artworkTitle.trim() || "Untitled artwork", createdAt: new Date().toISOString(), objects: objects.map(cloneObject), lighting, thumbnailDataUrl, isFavorite: false }; set((state) => ({ savedArtworks: [artwork, ...state.savedArtworks].slice(0, 24) })); return artwork; },
         loadArtwork: (id) => { const artwork = get().savedArtworks.find((entry) => entry.id === id); if (!artwork) return; const objects = artwork.objects.map(cloneObject); set({ objects, artworkTitle: artwork.title, lighting: artwork.lighting ?? "daylight", selectedObjectId: objects[0]?.id ?? null, selectedObjectIds: objects[0] ? [objects[0].id] : [], galleryOpen: false, transformInProgress: false }); },
         deleteArtwork: (id) => set((state) => ({ savedArtworks: state.savedArtworks.filter((entry) => entry.id !== id) })),
         renameArtwork: (id, title) => { const nextTitle = title.trim(); if (nextTitle) set((state) => ({ savedArtworks: state.savedArtworks.map((artwork) => artwork.id === id ? { ...artwork, title: nextTitle.slice(0, 48) } : artwork) })); },
+        toggleArtworkFavorite: (id) => set((state) => ({ savedArtworks: state.savedArtworks.map((artwork) => artwork.id === id ? { ...artwork, isFavorite: !artwork.isFavorite } : artwork) })),
+        startTutorial: () => set({ tutorialStep: "add" }),
+        skipTutorial: () => set({ tutorialStep: "done" }),
+        replayTutorial: () => set({ tutorialStep: "add" }),
       };
     },
-    { name: "creative-art-studio-v2", partialize: (state) => ({ artworkTitle: state.artworkTitle, objects: state.objects, lighting: state.lighting, savedArtworks: state.savedArtworks }) },
+    { name: "creative-art-studio-v2", partialize: (state) => ({ artworkTitle: state.artworkTitle, objects: state.objects, lighting: state.lighting, savedArtworks: state.savedArtworks, tutorialStep: state.tutorialStep }) },
   ),
 );

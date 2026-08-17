@@ -80,3 +80,5 @@ The wordmark pairs the high-contrast Fraunces title with a compact, tilted **Spa
 6. Every major surface includes a **tactile cue**—a layered paper edge, offset workshop shadow, organic outline, pigment chip, or studio-object detail.
 7. The art stage is the visual hero: it has the strongest paper-cut frame and more vertical presence than either supporting tray.
 8. Empty stages use an encouraging maker prompt with a small physical studio cue; the Spark mark and Fraunces wordmark form one compact, persimmon-anchored studio lockup.
+9. First-run guidance appears as a **pinned paper studio note**, with a dashed edge and folded corner; it guides attention without blurring or visually eclipsing the canvas.
+10. The empty 3D stage carries a small **maker-table cue**—a hand-cut frame and simple form marks—so the invitation feels ready for play rather than vacant.
