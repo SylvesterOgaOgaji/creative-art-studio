@@ -35,4 +35,4 @@
 - [x] Add gallery controls for creating folders, assigning folders, editing tags, and filtering.
 - [x] Refine PNG export naming and make image download available from saved gallery worlds.
 - [x] Validate key desktop and touch workflows, TypeScript, and production build.
-- [ ] Save and publish the completed update.
+- [x] Save and publish the completed update.

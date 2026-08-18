@@ -6,9 +6,7 @@ Creative Art Studio is a React and Three.js learning project created during a co
 
 ## Makers
 
-**Creative lead:** Mr. Sylvester Ogah Ogaji.
-
-**Built in collaboration with student makers:** Simeon Ogaji, Samuel Ogaji, Daniel Ogaji, Michael Ogaji, Bisina, Glenn, and other student makers participating in the training programme.
+**Created by Sylvester Oga Ogaji with student developers Simeon Ogaji, Samuel Ogaji, Daniel Ogaji, Michael Ogaji, and other learners in the training studio.**
 
 ## What children can do
 
