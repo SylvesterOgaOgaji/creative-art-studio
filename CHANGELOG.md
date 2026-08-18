@@ -14,6 +14,12 @@ All notable project changes are documented here.
 - Made the optional map integration offline-first when `VITE_FRONTEND_FORGE_API_KEY` is absent, added explicit Zod-backed metrics query validation, and added an opt-in local JSONL error-tracking sink controlled by `ERROR_TRACKING_FILE`.
 - Marked the generated browser-debug collector as generated metadata and aligned the environment and architecture documentation with the fresh-clone contract.
 
+## 1.0.2 - 2026-08-18
+
+- Added an offline-capable dashboard shell with a cache-first service worker, installable web manifest, and an accessible online/offline status banner; browser-local artwork remains on the device.
+- Added production-preview browser coverage for offline dashboard reloads and focused Home, gallery, and history slice coverage for primary studio workflows.
+- Fixed history snapshot aliasing so selected-object arrays are isolated across undo and redo operations.
+
 ## 1.0.1 - 2026-08-18
 
 - Added explicit environment documentation and independently discoverable clean-install, format, lint, typecheck, coverage, browser-flow, security-audit, and build checks in CI.
