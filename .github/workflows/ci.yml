@@ -131,8 +131,8 @@ jobs:
 
       - name: Verify health and metrics endpoints
         run: |
-          curl --fail --retry 10 --retry-delay 2 http://127.0.0.1:3000/healthz
-          curl --fail --retry 10 --retry-delay 2 http://127.0.0.1:3000/metrics
+          curl --fail --retry-all-errors --retry 15 --retry-delay 1 --max-time 10 http://127.0.0.1:3000/healthz
+          curl --fail --retry-all-errors --retry 15 --retry-delay 1 --max-time 10 http://127.0.0.1:3000/metrics
 
       - name: Print container logs on failure
         if: failure()
