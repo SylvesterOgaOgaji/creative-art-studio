@@ -114,3 +114,10 @@
 - [x] Add structured server logging, request/error middleware, and focused server logging tests.
 - [x] Separate gallery/history responsibilities from the studio store and split remaining oversized gallery controls.
 - [x] Record a real v1.0.1 release entry, validate clean startup and all quality gates, then publish the focused update.
+
+## CI repair and dependency maintenance
+
+- [ ] Inspect the failing GitHub Actions run and isolate the lockfile compatibility issue.
+- [ ] Publish a clean CI lockfile repair to the main branch and verify the workflow succeeds.
+- [ ] Review the four open Dependabot pull requests for compatibility with the repaired main branch.
+- [ ] Merge compatible updates and confirm the final repository health.
