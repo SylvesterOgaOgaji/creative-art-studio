@@ -1,2 +1,276 @@
 /* Playful Atelier family handout: a one-page at-home studio invitation that uses paper-note cues on screen and stays ink-light in print. */
-.family-activity-section { width: min(1140px, calc(100% - 40px)); margin: 0 auto 76px; border-top: 1px dashed rgba(121, 90, 59, .25); padding: 56px 20px 0; }.family-sheet-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }.family-sheet-heading > div { max-width: 690px; }.family-sheet-heading h2 { margin: 6px 0 9px; font-family: Fraunces, Georgia, serif; font-size: clamp(29px, 4vw, 46px); line-height: 1.02; letter-spacing: -.056em; }.family-sheet-heading p { margin: 0; color: #715e4c; font-size: 13px; line-height: 1.6; }.family-print-button { display: inline-flex; min-height: 46px; flex: 0 0 auto; align-items: center; justify-content: center; gap: 7px; border: 0; border-radius: 14px 10px 16px 11px; color: #fffaf1; background: #ff6b4a; padding: 0 14px; box-shadow: 4px 5px 0 rgba(185, 71, 43, .2); font-size: 12px; font-weight: 900; }.family-print-button svg { width: 16px; }.family-sheet-paper { position: relative; overflow: hidden; margin-top: 25px; border: 1px solid rgba(121, 90, 59, .18); border-radius: 24px 15px 27px 18px; background: #fffdf7; padding: 27px; box-shadow: 9px 11px 0 rgba(139, 106, 73, .1); }.family-sheet-paper::before { position: absolute; top: 0; right: 8%; width: 102px; height: 13px; background: rgba(246, 201, 69, .62); content: ""; transform: rotate(1.5deg); }.family-sheet-paper header { display: flex; align-items: center; gap: 11px; border-bottom: 1px dashed rgba(121, 90, 59, .25); padding-bottom: 17px; }.family-sheet-mark { display: grid; width: 41px; height: 41px; flex: 0 0 auto; place-items: center; border-radius: 13px 9px 14px 10px; color: #fffaf1; background: #ff6b4a; }.family-sheet-mark svg { width: 21px; }.family-sheet-paper header > div:nth-child(2) { display: grid; gap: 2px; }.family-sheet-paper header span { color: #a26044; font-size: 10px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }.family-sheet-paper header h3 { margin: 0; font-family: Fraunces, Georgia, serif; font-size: 25px; letter-spacing: -.045em; }.family-sheet-paper header > p { margin-left: auto; border-radius: 8px 6px 9px 7px; color: #4e6d62; background: #edf9f4; padding: 6px 8px; font-size: 10px; font-weight: 900; }.family-sheet-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 15px; padding: 21px 0; }.family-sheet-steps section { display: flex; gap: 9px; }.family-sheet-steps section > span { display: grid; width: 28px; height: 28px; flex: 0 0 auto; place-items: center; border-radius: 9px 6px 10px 7px; color: #fffaf1; background: #4666e9; font-family: Fraunces, Georgia, serif; font-size: 12px; }.family-sheet-steps section:nth-child(2) > span { background: #4a9c86; }.family-sheet-steps section:nth-child(3) > span { background: #c85a91; }.family-sheet-steps h4 { margin: 2px 0 4px; font-family: Fraunces, Georgia, serif; font-size: 18px; letter-spacing: -.035em; }.family-sheet-steps p { margin: 0; color: #705d4b; font-size: 11px; line-height: 1.5; }.family-sheet-talk { display: flex; align-items: flex-start; gap: 10px; border-radius: 15px 10px 17px 12px; background: #fff3c8; padding: 14px; }.family-sheet-talk > svg { flex: 0 0 auto; width: 21px; color: #bd7d29; }.family-sheet-talk b { color: #855f30; font-size: 11px; text-transform: uppercase; }.family-sheet-talk p { margin: 3px 0 0; color: #6d583b; font-size: 12px; line-height: 1.5; }.family-sheet-paper footer { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 17px; color: #786452; font-size: 10px; font-weight: 750; line-height: 1.45; }.family-sheet-paper footer span { display: inline-flex; align-items: center; gap: 4px; }.family-sheet-paper footer svg { width: 13px; color: #4a9c86; }.family-sheet-note { display: flex; align-items: flex-start; gap: 8px; max-width: 800px; margin: 15px auto 0; color: #685748; font-size: 11px; line-height: 1.5; }.family-sheet-note svg { flex: 0 0 auto; width: 18px; color: #c85a91; }.family-sheet-note p { margin: 0; }@media (max-width: 700px) { .family-activity-section { width: min(100% - 28px, 1140px); padding-inline: 0; }.family-sheet-heading { align-items: flex-start; flex-direction: column; }.family-print-button { width: 100%; }.family-sheet-paper { padding: 19px; }.family-sheet-paper header { align-items: flex-start; }.family-sheet-paper header > p { margin: 0 0 0 auto; }.family-sheet-steps { grid-template-columns: 1fr; gap: 13px; }.family-sheet-paper footer { flex-direction: column; gap: 6px; } }@media print { .family-activity-section { display: none !important; } body[data-print-target="family"] .family-activity-section { display: block !important; width: auto !important; margin: 0 !important; border: 0 !important; padding: 0 !important; } body[data-print-target="family"] .teacher-print-section { display: none !important; } body[data-print-target="family"] .family-sheet-heading { display: none !important; } body[data-print-target="family"] .family-sheet-paper { border: 1px solid #76604c; border-radius: 0; box-shadow: none; padding: 16mm; } body[data-print-target="family"] .family-sheet-paper::before { display: none; } body[data-print-target="family"] .family-sheet-note { max-width: none; margin-top: 8mm; } }
+.family-activity-section {
+  width: min(1140px, calc(100% - 40px));
+  margin: 0 auto 76px;
+  border-top: 1px dashed rgba(121, 90, 59, 0.25);
+  padding: 56px 20px 0;
+}
+.family-sheet-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+}
+.family-sheet-heading > div {
+  max-width: 690px;
+}
+.family-sheet-heading h2 {
+  margin: 6px 0 9px;
+  font-family: Fraunces, Georgia, serif;
+  font-size: clamp(29px, 4vw, 46px);
+  line-height: 1.02;
+  letter-spacing: -0.056em;
+}
+.family-sheet-heading p {
+  margin: 0;
+  color: #715e4c;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.family-print-button {
+  display: inline-flex;
+  min-height: 46px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 0;
+  border-radius: 14px 10px 16px 11px;
+  color: #fffaf1;
+  background: #ff6b4a;
+  padding: 0 14px;
+  box-shadow: 4px 5px 0 rgba(185, 71, 43, 0.2);
+  font-size: 12px;
+  font-weight: 900;
+}
+.family-print-button svg {
+  width: 16px;
+}
+.family-sheet-paper {
+  position: relative;
+  overflow: hidden;
+  margin-top: 25px;
+  border: 1px solid rgba(121, 90, 59, 0.18);
+  border-radius: 24px 15px 27px 18px;
+  background: #fffdf7;
+  padding: 27px;
+  box-shadow: 9px 11px 0 rgba(139, 106, 73, 0.1);
+}
+.family-sheet-paper::before {
+  position: absolute;
+  top: 0;
+  right: 8%;
+  width: 102px;
+  height: 13px;
+  background: rgba(246, 201, 69, 0.62);
+  content: "";
+  transform: rotate(1.5deg);
+}
+.family-sheet-paper header {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  border-bottom: 1px dashed rgba(121, 90, 59, 0.25);
+  padding-bottom: 17px;
+}
+.family-sheet-mark {
+  display: grid;
+  width: 41px;
+  height: 41px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 13px 9px 14px 10px;
+  color: #fffaf1;
+  background: #ff6b4a;
+}
+.family-sheet-mark svg {
+  width: 21px;
+}
+.family-sheet-paper header > div:nth-child(2) {
+  display: grid;
+  gap: 2px;
+}
+.family-sheet-paper header span {
+  color: #a26044;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.family-sheet-paper header h3 {
+  margin: 0;
+  font-family: Fraunces, Georgia, serif;
+  font-size: 25px;
+  letter-spacing: -0.045em;
+}
+.family-sheet-paper header > p {
+  margin-left: auto;
+  border-radius: 8px 6px 9px 7px;
+  color: #4e6d62;
+  background: #edf9f4;
+  padding: 6px 8px;
+  font-size: 10px;
+  font-weight: 900;
+}
+.family-sheet-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 15px;
+  padding: 21px 0;
+}
+.family-sheet-steps section {
+  display: flex;
+  gap: 9px;
+}
+.family-sheet-steps section > span {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 9px 6px 10px 7px;
+  color: #fffaf1;
+  background: #4666e9;
+  font-family: Fraunces, Georgia, serif;
+  font-size: 12px;
+}
+.family-sheet-steps section:nth-child(2) > span {
+  background: #4a9c86;
+}
+.family-sheet-steps section:nth-child(3) > span {
+  background: #c85a91;
+}
+.family-sheet-steps h4 {
+  margin: 2px 0 4px;
+  font-family: Fraunces, Georgia, serif;
+  font-size: 18px;
+  letter-spacing: -0.035em;
+}
+.family-sheet-steps p {
+  margin: 0;
+  color: #705d4b;
+  font-size: 11px;
+  line-height: 1.5;
+}
+.family-sheet-talk {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  border-radius: 15px 10px 17px 12px;
+  background: #fff3c8;
+  padding: 14px;
+}
+.family-sheet-talk > svg {
+  flex: 0 0 auto;
+  width: 21px;
+  color: #bd7d29;
+}
+.family-sheet-talk b {
+  color: #855f30;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+.family-sheet-talk p {
+  margin: 3px 0 0;
+  color: #6d583b;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.family-sheet-paper footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 17px;
+  color: #786452;
+  font-size: 10px;
+  font-weight: 750;
+  line-height: 1.45;
+}
+.family-sheet-paper footer span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.family-sheet-paper footer svg {
+  width: 13px;
+  color: #4a9c86;
+}
+.family-sheet-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  max-width: 800px;
+  margin: 15px auto 0;
+  color: #685748;
+  font-size: 11px;
+  line-height: 1.5;
+}
+.family-sheet-note svg {
+  flex: 0 0 auto;
+  width: 18px;
+  color: #c85a91;
+}
+.family-sheet-note p {
+  margin: 0;
+}
+@media (max-width: 700px) {
+  .family-activity-section {
+    width: min(100% - 28px, 1140px);
+    padding-inline: 0;
+  }
+  .family-sheet-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .family-print-button {
+    width: 100%;
+  }
+  .family-sheet-paper {
+    padding: 19px;
+  }
+  .family-sheet-paper header {
+    align-items: flex-start;
+  }
+  .family-sheet-paper header > p {
+    margin: 0 0 0 auto;
+  }
+  .family-sheet-steps {
+    grid-template-columns: 1fr;
+    gap: 13px;
+  }
+  .family-sheet-paper footer {
+    flex-direction: column;
+    gap: 6px;
+  }
+}
+@media print {
+  .family-activity-section {
+    display: none !important;
+  }
+  body[data-print-target="family"] .family-activity-section {
+    display: block !important;
+    width: auto !important;
+    margin: 0 !important;
+    border: 0 !important;
+    padding: 0 !important;
+  }
+  body[data-print-target="family"] .teacher-print-section {
+    display: none !important;
+  }
+  body[data-print-target="family"] .family-sheet-heading {
+    display: none !important;
+  }
+  body[data-print-target="family"] .family-sheet-paper {
+    border: 1px solid #76604c;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 16mm;
+  }
+  body[data-print-target="family"] .family-sheet-paper::before {
+    display: none;
+  }
+  body[data-print-target="family"] .family-sheet-note {
+    max-width: none;
+    margin-top: 8mm;
+  }
+}

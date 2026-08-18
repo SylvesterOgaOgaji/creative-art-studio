@@ -1,25 +1,253 @@
 /* Playful Atelier workbench correction: the canvas remains the hero, but it is bounded for short desktop windows and surrounded by independently scrollable tool trays. */
 @media (min-width: 1024px) {
-  .atelier-layout { align-items: start; grid-template-columns: clamp(188px, 14vw, 220px) minmax(500px, 1fr) clamp(198px, 15vw, 236px); }
-  .workspace-panel { min-height: 0; }
-  .studio-canvas { height: clamp(410px, 53dvh, 535px); min-height: clamp(410px, 53dvh, 535px) !important; }
-  .tool-panel, .properties-panel { position: relative; isolation: isolate; align-self: start; max-height: calc(100dvh - 110px); overflow-y: auto; overscroll-behavior: contain; color: #493c31 !important; background: rgba(255, 252, 243, .98) !important; scrollbar-width: thin; scrollbar-color: rgba(255,107,74,.48) transparent; }
-  .properties-panel { background: rgba(246, 252, 248, .98) !important; }
-  .tool-panel > *, .properties-panel > * { position: relative; z-index: 1; opacity: 1 !important; }
-  .tool-panel::before, .properties-panel::before { z-index: -1 !important; opacity: .28 !important; }
-  .tool-panel::-webkit-scrollbar, .properties-panel::-webkit-scrollbar { width: 8px; }
-  .tool-panel::-webkit-scrollbar-thumb, .properties-panel::-webkit-scrollbar-thumb { border: 2px solid transparent; border-radius: 999px; background: rgba(255,107,74,.48); background-clip: padding-box; }
+  .atelier-layout {
+    align-items: start;
+    grid-template-columns: clamp(188px, 14vw, 220px) minmax(500px, 1fr) clamp(
+        198px,
+        15vw,
+        236px
+      );
+  }
+  .workspace-panel {
+    min-height: 0;
+  }
+  .studio-canvas {
+    height: clamp(410px, 53dvh, 535px);
+    min-height: clamp(410px, 53dvh, 535px) !important;
+  }
+  .tool-panel,
+  .properties-panel {
+    position: relative;
+    isolation: isolate;
+    align-self: start;
+    max-height: calc(100dvh - 110px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    color: #493c31 !important;
+    background: rgba(255, 252, 243, 0.98) !important;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 107, 74, 0.48) transparent;
+  }
+  .properties-panel {
+    background: rgba(246, 252, 248, 0.98) !important;
+  }
+  .tool-panel > *,
+  .properties-panel > * {
+    position: relative;
+    z-index: 1;
+    opacity: 1 !important;
+  }
+  .tool-panel::before,
+  .properties-panel::before {
+    z-index: -1 !important;
+    opacity: 0.28 !important;
+  }
+  .tool-panel::-webkit-scrollbar,
+  .properties-panel::-webkit-scrollbar {
+    width: 8px;
+  }
+  .tool-panel::-webkit-scrollbar-thumb,
+  .properties-panel::-webkit-scrollbar-thumb {
+    border: 2px solid transparent;
+    border-radius: 999px;
+    background: rgba(255, 107, 74, 0.48);
+    background-clip: padding-box;
+  }
 }
 @media (min-width: 1024px) and (max-height: 820px) {
-  .atelier-layout { padding-top: 12px; padding-bottom: 16px; }
-  .workspace-header { padding-top: 0; }
-  .studio-canvas { height: clamp(360px, 52dvh, 420px); min-height: clamp(360px, 52dvh, 420px) !important; }
-  .workspace-actionbar { min-height: 47px; padding: 4px 0; }
+  .atelier-layout {
+    padding-top: 12px;
+    padding-bottom: 16px;
+  }
+  .workspace-header {
+    padding-top: 0;
+  }
+  .studio-canvas {
+    height: clamp(360px, 52dvh, 420px);
+    min-height: clamp(360px, 52dvh, 420px) !important;
+  }
+  .workspace-actionbar {
+    min-height: 47px;
+    padding: 4px 0;
+  }
 }
-.canvas-empty-guide { position: absolute; z-index: 4; top: 50%; left: 50%; display: grid; width: min(250px, calc(100% - 46px)); justify-items: center; gap: 5px; border: 1px solid rgba(255,107,74,.35); border-radius: 22px 14px 24px 16px; background: rgba(255,251,240,.91); padding: 17px 18px 15px; box-shadow: 7px 9px 0 rgba(185,71,43,.13); color: #59483b; text-align: center; transform: translate(-50%, -50%) rotate(-1deg); backdrop-filter: blur(8px); }.canvas-empty-guide > span { color: #ff6b4a; font-size: 24px; line-height: 1; }.canvas-empty-guide strong { font-family: Fraunces, Georgia, serif; font-size: 18px; letter-spacing: -.04em; }.canvas-empty-guide p { margin: 0; color: #806a58; font-size: 11px; font-weight: 750; }.canvas-empty-guide > div { display: flex; gap: 6px; margin-top: 4px; }.canvas-empty-guide i { display: block; width: 15px; height: 15px; border-radius: 7px 4px 8px 5px; background: #f6c945; transform: rotate(12deg); }.canvas-empty-guide i:nth-child(2) { background: #4eb69d; transform: translateY(4px) rotate(-7deg); }.canvas-empty-guide i:nth-child(3) { background: #4666e9; transform: rotate(3deg); }@media (max-width: 700px) { .canvas-empty-guide { width: min(225px, calc(100% - 34px)); padding: 14px; }.canvas-empty-guide strong { font-size: 16px; } }
+.canvas-empty-guide {
+  position: absolute;
+  z-index: 4;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  width: min(250px, calc(100% - 46px));
+  justify-items: center;
+  gap: 5px;
+  border: 1px solid rgba(255, 107, 74, 0.35);
+  border-radius: 22px 14px 24px 16px;
+  background: rgba(255, 251, 240, 0.91);
+  padding: 17px 18px 15px;
+  box-shadow: 7px 9px 0 rgba(185, 71, 43, 0.13);
+  color: #59483b;
+  text-align: center;
+  transform: translate(-50%, -50%) rotate(-1deg);
+  backdrop-filter: blur(8px);
+}
+.canvas-empty-guide > span {
+  color: #ff6b4a;
+  font-size: 24px;
+  line-height: 1;
+}
+.canvas-empty-guide strong {
+  font-family: Fraunces, Georgia, serif;
+  font-size: 18px;
+  letter-spacing: -0.04em;
+}
+.canvas-empty-guide p {
+  margin: 0;
+  color: #806a58;
+  font-size: 11px;
+  font-weight: 750;
+}
+.canvas-empty-guide > div {
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
+}
+.canvas-empty-guide i {
+  display: block;
+  width: 15px;
+  height: 15px;
+  border-radius: 7px 4px 8px 5px;
+  background: #f6c945;
+  transform: rotate(12deg);
+}
+.canvas-empty-guide i:nth-child(2) {
+  background: #4eb69d;
+  transform: translateY(4px) rotate(-7deg);
+}
+.canvas-empty-guide i:nth-child(3) {
+  background: #4666e9;
+  transform: rotate(3deg);
+}
+@media (max-width: 700px) {
+  .canvas-empty-guide {
+    width: min(225px, calc(100% - 34px));
+    padding: 14px;
+  }
+  .canvas-empty-guide strong {
+    font-size: 16px;
+  }
+}
 /* The welcome note must never behave like a modal: keep the maker table at full contrast and place the note over the quiet edge of the shelf. */
-.tutorial-welcome { position: fixed !important; inset: auto !important; top: 78px !important; left: max(16px, calc(50% - 790px)) !important; right: auto !important; bottom: auto !important; display: block !important; width: min(212px, calc(100vw - 32px)) !important; height: auto !important; min-height: 0 !important; padding: 0 !important; opacity: 1 !important; background: transparent !important; backdrop-filter: none !important; filter: none !important; pointer-events: none !important; }.tutorial-welcome-card { pointer-events: auto !important; }.studio-app:has(.tutorial-welcome) .atelier-layout, .studio-app:has(.tutorial-welcome) .studio-header { opacity: 1 !important; filter: none !important; }@media (max-width: 1023px) { .tutorial-welcome { top: 74px !important; left: 14px !important; } }
-.tutorial-welcome-trigger { display: inline-flex; min-height: 38px; align-items: center; gap: 6px; border: 1px dashed rgba(255,107,74,.42); border-radius: 11px 8px 13px 9px; color: #9d4938; background: #fff7e9; padding: 5px 8px; text-align: left; }.tutorial-welcome-trigger > svg:first-child { width: 16px; color: #ff6b4a; }.tutorial-welcome-trigger > svg:last-child { width: 14px; }.tutorial-welcome-trigger span { display: grid; gap: 0; }.tutorial-welcome-trigger b { font-size: 10px; line-height: 1.1; }.tutorial-welcome-trigger small { color: #9b7860; font-size: 8px; font-weight: 800; line-height: 1.1; }.tutorial-welcome-trigger:hover { border-color: #ff6b4a; background: #fff0e7; }.tutorial-welcome-trigger:active { transform: scale(.97); }@media (max-width: 760px) { .tutorial-welcome-trigger span small { display: none; } .tutorial-welcome-trigger { min-height: 35px; padding: 5px 7px; } }
-@media (min-width: 1024px) { .tool-panel, .properties-panel { isolation: isolate; opacity: 1 !important; filter: none !important; backdrop-filter: none !important; background: #fffdf7 !important; }.properties-panel { background: #f6fcf8 !important; }.tool-panel::before, .tool-panel::after, .properties-panel::before { display: none !important; }.tool-panel *, .properties-panel * { opacity: 1 !important; filter: none !important; } }
+.tutorial-welcome {
+  position: fixed !important;
+  inset: auto !important;
+  top: 78px !important;
+  left: max(16px, calc(50% - 790px)) !important;
+  right: auto !important;
+  bottom: auto !important;
+  display: block !important;
+  width: min(212px, calc(100vw - 32px)) !important;
+  height: auto !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  opacity: 1 !important;
+  background: transparent !important;
+  backdrop-filter: none !important;
+  filter: none !important;
+  pointer-events: none !important;
+}
+.tutorial-welcome-card {
+  pointer-events: auto !important;
+}
+.studio-app:has(.tutorial-welcome) .atelier-layout,
+.studio-app:has(.tutorial-welcome) .studio-header {
+  opacity: 1 !important;
+  filter: none !important;
+}
+@media (max-width: 1023px) {
+  .tutorial-welcome {
+    top: 74px !important;
+    left: 14px !important;
+  }
+}
+.tutorial-welcome-trigger {
+  display: inline-flex;
+  min-height: 38px;
+  align-items: center;
+  gap: 6px;
+  border: 1px dashed rgba(255, 107, 74, 0.42);
+  border-radius: 11px 8px 13px 9px;
+  color: #9d4938;
+  background: #fff7e9;
+  padding: 5px 8px;
+  text-align: left;
+}
+.tutorial-welcome-trigger > svg:first-child {
+  width: 16px;
+  color: #ff6b4a;
+}
+.tutorial-welcome-trigger > svg:last-child {
+  width: 14px;
+}
+.tutorial-welcome-trigger span {
+  display: grid;
+  gap: 0;
+}
+.tutorial-welcome-trigger b {
+  font-size: 10px;
+  line-height: 1.1;
+}
+.tutorial-welcome-trigger small {
+  color: #9b7860;
+  font-size: 8px;
+  font-weight: 800;
+  line-height: 1.1;
+}
+.tutorial-welcome-trigger:hover {
+  border-color: #ff6b4a;
+  background: #fff0e7;
+}
+.tutorial-welcome-trigger:active {
+  transform: scale(0.97);
+}
+@media (max-width: 760px) {
+  .tutorial-welcome-trigger span small {
+    display: none;
+  }
+  .tutorial-welcome-trigger {
+    min-height: 35px;
+    padding: 5px 7px;
+  }
+}
+@media (min-width: 1024px) {
+  .tool-panel,
+  .properties-panel {
+    isolation: isolate;
+    opacity: 1 !important;
+    filter: none !important;
+    backdrop-filter: none !important;
+    background: #fffdf7 !important;
+  }
+  .properties-panel {
+    background: #f6fcf8 !important;
+  }
+  .tool-panel::before,
+  .tool-panel::after,
+  .properties-panel::before {
+    display: none !important;
+  }
+  .tool-panel *,
+  .properties-panel * {
+    opacity: 1 !important;
+    filter: none !important;
+  }
+}
 /* The central stage owns its own frame; its oversized paper decoration must not cross into either side tray. */
-@media (min-width: 1024px) { .workspace-panel { z-index: auto !important; }.workspace-panel::before, .workspace-panel::after { display: none !important; } }
+@media (min-width: 1024px) {
+  .workspace-panel {
+    z-index: auto !important;
+  }
+  .workspace-panel::before,
+  .workspace-panel::after {
+    display: none !important;
+  }
+}

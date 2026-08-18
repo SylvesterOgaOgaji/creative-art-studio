@@ -8,10 +8,10 @@ The 3D canvas has loaded successfully beneath the generated high-key atelier bac
 
 ## Technical validation completed
 
-| Check | Result |
-| --- | --- |
-| TypeScript (`pnpm check`) | Passed |
-| Production build (`pnpm build`) | Passed |
+| Check                                            | Result  |
+| ------------------------------------------------ | ------- |
+| TypeScript (`pnpm check`)                        | Passed  |
+| Production build (`pnpm build`)                  | Passed  |
 | Development server after dependency installation | Running |
 
 The production build reports a standard Vite bundle-size advisory for the Three.js/R3F client bundle, but no build failure.

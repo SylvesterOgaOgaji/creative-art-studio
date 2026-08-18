@@ -1,39 +1,424 @@
 /* Playful Atelier overlay correction: a handmade studio note guides without eclipsing the maker table. */
-.studio-header { position: relative; z-index: 90; }
-.tutorial-welcome { z-index: 999 !important; isolation: isolate; align-items: flex-start !important; padding-top: 86px !important; background: radial-gradient(ellipse 48% 42% at 50% 23%, rgba(255, 247, 228, .24), transparent 73%) !important; backdrop-filter: none !important; }
-.tutorial-welcome-card { position: relative; z-index: 1; isolation: isolate; max-width: 350px !important; padding: 30px 34px 28px !important; border: 2px solid rgba(240, 92, 66, .19) !important; border-radius: 24px 18px 27px 20px !important; background: linear-gradient(135deg, #fffdf5 0%, #fff0d8 100%) !important; box-shadow: 9px 11px 0 rgba(127, 94, 55, .15), inset 0 -4px 0 rgba(247, 207, 148, .35) !important; }
-.tutorial-welcome-card > * { position: relative; z-index: 2; }
-.tutorial-welcome-card::before { content: ""; position: absolute; inset: 7px; border: 1px dashed rgba(255, 107, 74, .25); border-radius: 18px 12px 20px 14px; pointer-events: none; }
-.tutorial-note-corner { position: absolute; right: -2px; bottom: -2px; width: 48px; height: 48px; z-index: 3 !important; clip-path: polygon(100% 0, 0 100%, 100% 100%); background: linear-gradient(135deg, #ffe6a4 0 45%, #ff6b4a 46%); filter: drop-shadow(-2px -2px 0 rgba(204, 156, 82, .2)); }
-.tutorial-welcome-card .eyebrow { color: #c65340 !important; letter-spacing: .13em; }
-.tutorial-welcome-card h2 { max-width: 280px; margin-inline: auto; font-size: clamp(1.7rem, 2.5vw, 2.25rem) !important; }
-.tutorial-welcome-card p { color: #685545 !important; font-size: .95rem !important; line-height: 1.48 !important; }
-.tutorial-welcome-card .tutorial-spark { width: 48px; height: 48px; margin-top: -55px; border: 5px solid #fff9ed; box-shadow: 3px 4px 0 rgba(188, 77, 53, .18); }
-.tutorial-coach { z-index: 995 !important; }
-.tutorial-replay { position: fixed; z-index: 96; top: 18px; right: 275px; }
-.studio-canvas { position: relative; box-shadow: 0 12px 0 rgba(234, 211, 174, .38), inset 0 0 0 5px rgba(255, 252, 241, .8), inset 0 0 0 8px rgba(240, 92, 66, .1); }
-.studio-canvas::after { content: ""; position: absolute; inset: 14px 19px 22px; pointer-events: none; border: 1px dashed rgba(191, 139, 64, .28); border-radius: 46% 46% 22px 22px / 18% 18% 12px 12px; mix-blend-mode: multiply; }
-.scene-empty-hint { border: 2px solid rgba(255, 107, 74, .28) !important; border-radius: 22px 15px 25px 17px !important; background: linear-gradient(155deg, rgba(255, 253, 245, .96), rgba(255, 238, 202, .93)) !important; box-shadow: 7px 8px 0 rgba(139, 101, 56, .14), inset 0 -4px 0 rgba(255, 208, 132, .28) !important; }
-.scene-empty-tools { display: block; margin-top: 9px; color: #ff6b4a; font-size: 17px; letter-spacing: .18em; text-shadow: 1px 2px 0 rgba(224, 164, 71, .2); }
-@media (max-width: 900px) { .tutorial-replay { top: 84px; right: 14px; } }
-@media (max-width: 620px) { .tutorial-welcome { padding: 74px 20px 20px !important; align-items: flex-start !important; }.tutorial-welcome-card { max-width: 330px !important; padding: 28px 25px 26px !important; }.tutorial-welcome-card .tutorial-spark { margin-top: -53px; } }
+.studio-header {
+  position: relative;
+  z-index: 90;
+}
+.tutorial-welcome {
+  z-index: 999 !important;
+  isolation: isolate;
+  align-items: flex-start !important;
+  padding-top: 86px !important;
+  background: radial-gradient(
+    ellipse 48% 42% at 50% 23%,
+    rgba(255, 247, 228, 0.24),
+    transparent 73%
+  ) !important;
+  backdrop-filter: none !important;
+}
+.tutorial-welcome-card {
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+  max-width: 350px !important;
+  padding: 30px 34px 28px !important;
+  border: 2px solid rgba(240, 92, 66, 0.19) !important;
+  border-radius: 24px 18px 27px 20px !important;
+  background: linear-gradient(135deg, #fffdf5 0%, #fff0d8 100%) !important;
+  box-shadow:
+    9px 11px 0 rgba(127, 94, 55, 0.15),
+    inset 0 -4px 0 rgba(247, 207, 148, 0.35) !important;
+}
+.tutorial-welcome-card > * {
+  position: relative;
+  z-index: 2;
+}
+.tutorial-welcome-card::before {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  border: 1px dashed rgba(255, 107, 74, 0.25);
+  border-radius: 18px 12px 20px 14px;
+  pointer-events: none;
+}
+.tutorial-note-corner {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  width: 48px;
+  height: 48px;
+  z-index: 3 !important;
+  clip-path: polygon(100% 0, 0 100%, 100% 100%);
+  background: linear-gradient(135deg, #ffe6a4 0 45%, #ff6b4a 46%);
+  filter: drop-shadow(-2px -2px 0 rgba(204, 156, 82, 0.2));
+}
+.tutorial-welcome-card .eyebrow {
+  color: #c65340 !important;
+  letter-spacing: 0.13em;
+}
+.tutorial-welcome-card h2 {
+  max-width: 280px;
+  margin-inline: auto;
+  font-size: clamp(1.7rem, 2.5vw, 2.25rem) !important;
+}
+.tutorial-welcome-card p {
+  color: #685545 !important;
+  font-size: 0.95rem !important;
+  line-height: 1.48 !important;
+}
+.tutorial-welcome-card .tutorial-spark {
+  width: 48px;
+  height: 48px;
+  margin-top: -55px;
+  border: 5px solid #fff9ed;
+  box-shadow: 3px 4px 0 rgba(188, 77, 53, 0.18);
+}
+.tutorial-coach {
+  z-index: 995 !important;
+}
+.tutorial-replay {
+  position: fixed;
+  z-index: 96;
+  top: 18px;
+  right: 275px;
+}
+.studio-canvas {
+  position: relative;
+  box-shadow:
+    0 12px 0 rgba(234, 211, 174, 0.38),
+    inset 0 0 0 5px rgba(255, 252, 241, 0.8),
+    inset 0 0 0 8px rgba(240, 92, 66, 0.1);
+}
+.studio-canvas::after {
+  content: "";
+  position: absolute;
+  inset: 14px 19px 22px;
+  pointer-events: none;
+  border: 1px dashed rgba(191, 139, 64, 0.28);
+  border-radius: 46% 46% 22px 22px / 18% 18% 12px 12px;
+  mix-blend-mode: multiply;
+}
+.scene-empty-hint {
+  border: 2px solid rgba(255, 107, 74, 0.28) !important;
+  border-radius: 22px 15px 25px 17px !important;
+  background: linear-gradient(
+    155deg,
+    rgba(255, 253, 245, 0.96),
+    rgba(255, 238, 202, 0.93)
+  ) !important;
+  box-shadow:
+    7px 8px 0 rgba(139, 101, 56, 0.14),
+    inset 0 -4px 0 rgba(255, 208, 132, 0.28) !important;
+}
+.scene-empty-tools {
+  display: block;
+  margin-top: 9px;
+  color: #ff6b4a;
+  font-size: 17px;
+  letter-spacing: 0.18em;
+  text-shadow: 1px 2px 0 rgba(224, 164, 71, 0.2);
+}
+@media (max-width: 900px) {
+  .tutorial-replay {
+    top: 84px;
+    right: 14px;
+  }
+}
+@media (max-width: 620px) {
+  .tutorial-welcome {
+    padding: 74px 20px 20px !important;
+    align-items: flex-start !important;
+  }
+  .tutorial-welcome-card {
+    max-width: 330px !important;
+    padding: 28px 25px 26px !important;
+  }
+  .tutorial-welcome-card .tutorial-spark {
+    margin-top: -53px;
+  }
+}
 
 /* Canvas-first refinement: the tutorial is a pinned studio note, not a gate in front of the play table. */
-.tutorial-welcome { justify-content: flex-start !important; padding: 118px 0 0 calc(50% - 250px) !important; pointer-events: none; background: radial-gradient(ellipse 30% 28% at 42% 21%, rgba(255, 236, 198, .16), transparent 78%) !important; }
-.tutorial-welcome-card { max-width: 286px !important; padding: 23px 25px 21px !important; transform: rotate(-1.1deg); pointer-events: auto; box-shadow: 7px 9px 0 rgba(127, 94, 55, .13), inset 0 -4px 0 rgba(247, 207, 148, .3) !important; }
-.tutorial-welcome-card h2 { max-width: 230px; font-size: clamp(1.45rem, 2vw, 1.82rem) !important; }.tutorial-welcome-card p { font-size: .84rem !important; }.tutorial-welcome-card .tutorial-spark { width: 40px; height: 40px; margin-top: -45px; }.tutorial-welcome-card .tutorial-start { min-height: 42px; margin-top: 13px; }.tutorial-welcome-card .tutorial-skip { margin-top: 6px; }
-.studio-canvas::before { content: "A maker table is ready"; position: absolute; z-index: 3; top: 18px; left: 20px; border: 1px solid rgba(246, 201, 69, .5); border-radius: 10px 7px 12px 8px; color: #8a603e; background: rgba(255, 249, 233, .84); padding: 6px 9px; font-family: "DM Sans", sans-serif; font-size: 10px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; box-shadow: 3px 4px 0 rgba(226, 188, 121, .18); }
-.properties-panel::after { content: "shapes + spark"; position: absolute; top: -10px; right: 19px; z-index: 3; border: 1px solid rgba(78, 182, 157, .32); border-radius: 9px 7px 11px 8px; color: #4b806f; background: #edfaf4; padding: 4px 8px; font-family: "DM Sans", sans-serif; font-size: 9px; font-weight: 900; letter-spacing: .09em; text-transform: uppercase; transform: rotate(1.3deg); box-shadow: 3px 4px 0 rgba(78, 182, 157, .12); }
-.brand-lockup { position: relative; padding-bottom: 5px; }.brand-lockup::after { content: ""; position: absolute; right: 0; bottom: 0; left: 52px; height: 3px; border-radius: 5px; background: linear-gradient(90deg, #ff6b4a 0 42%, #f6c945 42% 64%, #4eb69d 64% 82%, #4666e9 82%); opacity: .72; }.header-sound-toggle, .gallery-button { border-color: rgba(246, 201, 69, .42) !important; background: #fff8e6 !important; box-shadow: 2px 3px 0 rgba(226, 188, 121, .12); }.header-sound-toggle.is-active { border-color: rgba(255, 107, 74, .42) !important; background: #fff0e8 !important; }
-@media (max-width: 900px) { .tutorial-welcome { justify-content: center !important; padding: 100px 18px 20px !important; }.tutorial-welcome-card { transform: none; }.studio-canvas::before { top: 13px; left: 14px; } }
-@media (max-width: 620px) { .tutorial-welcome-card { max-width: 278px !important; }.studio-canvas::before { display: none; } }
+.tutorial-welcome {
+  justify-content: flex-start !important;
+  padding: 118px 0 0 calc(50% - 250px) !important;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 30% 28% at 42% 21%,
+    rgba(255, 236, 198, 0.16),
+    transparent 78%
+  ) !important;
+}
+.tutorial-welcome-card {
+  max-width: 286px !important;
+  padding: 23px 25px 21px !important;
+  transform: rotate(-1.1deg);
+  pointer-events: auto;
+  box-shadow:
+    7px 9px 0 rgba(127, 94, 55, 0.13),
+    inset 0 -4px 0 rgba(247, 207, 148, 0.3) !important;
+}
+.tutorial-welcome-card h2 {
+  max-width: 230px;
+  font-size: clamp(1.45rem, 2vw, 1.82rem) !important;
+}
+.tutorial-welcome-card p {
+  font-size: 0.84rem !important;
+}
+.tutorial-welcome-card .tutorial-spark {
+  width: 40px;
+  height: 40px;
+  margin-top: -45px;
+}
+.tutorial-welcome-card .tutorial-start {
+  min-height: 42px;
+  margin-top: 13px;
+}
+.tutorial-welcome-card .tutorial-skip {
+  margin-top: 6px;
+}
+.studio-canvas::before {
+  content: "A maker table is ready";
+  position: absolute;
+  z-index: 3;
+  top: 18px;
+  left: 20px;
+  border: 1px solid rgba(246, 201, 69, 0.5);
+  border-radius: 10px 7px 12px 8px;
+  color: #8a603e;
+  background: rgba(255, 249, 233, 0.84);
+  padding: 6px 9px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  box-shadow: 3px 4px 0 rgba(226, 188, 121, 0.18);
+}
+.properties-panel::after {
+  content: "shapes + spark";
+  position: absolute;
+  top: -10px;
+  right: 19px;
+  z-index: 3;
+  border: 1px solid rgba(78, 182, 157, 0.32);
+  border-radius: 9px 7px 11px 8px;
+  color: #4b806f;
+  background: #edfaf4;
+  padding: 4px 8px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  transform: rotate(1.3deg);
+  box-shadow: 3px 4px 0 rgba(78, 182, 157, 0.12);
+}
+.brand-lockup {
+  position: relative;
+  padding-bottom: 5px;
+}
+.brand-lockup::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 52px;
+  height: 3px;
+  border-radius: 5px;
+  background: linear-gradient(
+    90deg,
+    #ff6b4a 0 42%,
+    #f6c945 42% 64%,
+    #4eb69d 64% 82%,
+    #4666e9 82%
+  );
+  opacity: 0.72;
+}
+.header-sound-toggle,
+.gallery-button {
+  border-color: rgba(246, 201, 69, 0.42) !important;
+  background: #fff8e6 !important;
+  box-shadow: 2px 3px 0 rgba(226, 188, 121, 0.12);
+}
+.header-sound-toggle.is-active {
+  border-color: rgba(255, 107, 74, 0.42) !important;
+  background: #fff0e8 !important;
+}
+@media (max-width: 900px) {
+  .tutorial-welcome {
+    justify-content: center !important;
+    padding: 100px 18px 20px !important;
+  }
+  .tutorial-welcome-card {
+    transform: none;
+  }
+  .studio-canvas::before {
+    top: 13px;
+    left: 14px;
+  }
+}
+@media (max-width: 620px) {
+  .tutorial-welcome-card {
+    max-width: 278px !important;
+  }
+  .studio-canvas::before {
+    display: none;
+  }
+}
 
 /* Canvas-first composition: a broadened maker table, quieter shelves, and a pinned note leave the play surface immediately legible. */
-@media (min-width: 1024px) { .atelier-layout { grid-template-columns: clamp(196px, 16vw, 230px) minmax(0, 1fr) clamp(210px, 17vw, 246px) !important; gap: clamp(16px, 1.7vw, 24px) !important; }.studio-canvas { min-height: 548px !important; }.tool-panel::before, .properties-panel::before { inset: 11px -2px -3px 2px !important; opacity: .58; box-shadow: 4px 6px 0 rgba(226,194,142,.1) !important; }.properties-panel::before { opacity: .52; } }
-.tutorial-welcome { position: fixed !important; z-index: 67 !important; top: 86px !important; right: auto !important; bottom: auto !important; left: max(14px, calc(50% - 374px)) !important; display: block !important; width: min(226px, calc(100vw - 28px)) !important; padding: 0 !important; background: none !important; pointer-events: none !important; }
-.tutorial-welcome-card { width: 100%; max-width: none !important; padding: 18px 18px 16px !important; border-width: 1px !important; border-radius: 18px 13px 20px 15px !important; text-align: left !important; transform: rotate(-1.6deg) !important; pointer-events: auto !important; box-shadow: 5px 7px 0 rgba(127, 94, 55, .12), inset 0 -3px 0 rgba(247, 207, 148, .24) !important; }
-.tutorial-welcome-card::before { inset: 5px !important; border-radius: 13px 9px 15px 11px !important; }.tutorial-welcome-card .tutorial-spark { position: absolute; top: -17px; right: 18px; width: 34px; height: 34px; margin: 0 !important; border-width: 3px; }.tutorial-welcome-card h2 { max-width: 180px !important; margin: 2px 0 6px !important; font-size: 1.35rem !important; line-height: 1.03; }.tutorial-welcome-card p { max-width: 188px; font-size: .77rem !important; line-height: 1.36 !important; }.tutorial-welcome-actions { gap: 4px; margin-top: 10px !important; }.tutorial-welcome-card .tutorial-start { min-height: 36px; margin-top: 0 !important; border-radius: 11px 8px 13px 9px; font-size: 11px; }.tutorial-welcome-card .tutorial-skip { font-size: 10px; text-align: left; }.tutorial-note-corner { width: 34px; height: 34px; }
-.studio-canvas::after { inset: 10px 14px 15px !important; border: 0 !important; border-radius: 28px 21px 31px 23px !important; background: radial-gradient(ellipse 78% 100% at 50% 108%, transparent 57%, rgba(255, 221, 169, .44) 57.6% 59.6%, transparent 60.3%), radial-gradient(ellipse 67% 87% at 50% 108%, transparent 57%, rgba(255, 107, 74, .17) 57.7% 58.7%, transparent 59.3%), radial-gradient(ellipse 55% 78% at 50% 108%, transparent 57%, rgba(78, 182, 157, .15) 57.7% 58.7%, transparent 59.3%) !important; mix-blend-mode: normal !important; opacity: .92; }
-.studio-canvas { box-shadow: 12px 15px 0 rgba(230,199,148,.22), inset 0 0 0 6px rgba(255,252,241,.86), inset 0 0 0 9px rgba(246,201,69,.16) !important; }.studio-canvas::before { top: 15px !important; left: 16px !important; box-shadow: 2px 3px 0 rgba(226,188,121,.13) !important; }
-@media (max-width: 1023px) { .tutorial-welcome { top: 78px !important; left: 16px !important; }.studio-canvas { min-height: 480px; } }
-@media (max-width: 620px) { .tutorial-welcome { top: 70px !important; left: 12px !important; width: min(212px, calc(100vw - 24px)) !important; }.tutorial-welcome-card { transform: rotate(-.8deg) !important; }.studio-canvas { min-height: 420px; }.studio-canvas::after { inset: 8px 9px 12px !important; }.tutorial-welcome-card p { font-size: .74rem !important; } }
+@media (min-width: 1024px) {
+  .atelier-layout {
+    grid-template-columns: clamp(196px, 16vw, 230px) minmax(0, 1fr) clamp(
+        210px,
+        17vw,
+        246px
+      ) !important;
+    gap: clamp(16px, 1.7vw, 24px) !important;
+  }
+  .studio-canvas {
+    min-height: 548px !important;
+  }
+  .tool-panel::before,
+  .properties-panel::before {
+    inset: 11px -2px -3px 2px !important;
+    opacity: 0.58;
+    box-shadow: 4px 6px 0 rgba(226, 194, 142, 0.1) !important;
+  }
+  .properties-panel::before {
+    opacity: 0.52;
+  }
+}
+.tutorial-welcome {
+  position: fixed !important;
+  z-index: 67 !important;
+  top: 86px !important;
+  right: auto !important;
+  bottom: auto !important;
+  left: max(14px, calc(50% - 374px)) !important;
+  display: block !important;
+  width: min(226px, calc(100vw - 28px)) !important;
+  padding: 0 !important;
+  background: none !important;
+  pointer-events: none !important;
+}
+.tutorial-welcome-card {
+  width: 100%;
+  max-width: none !important;
+  padding: 18px 18px 16px !important;
+  border-width: 1px !important;
+  border-radius: 18px 13px 20px 15px !important;
+  text-align: left !important;
+  transform: rotate(-1.6deg) !important;
+  pointer-events: auto !important;
+  box-shadow:
+    5px 7px 0 rgba(127, 94, 55, 0.12),
+    inset 0 -3px 0 rgba(247, 207, 148, 0.24) !important;
+}
+.tutorial-welcome-card::before {
+  inset: 5px !important;
+  border-radius: 13px 9px 15px 11px !important;
+}
+.tutorial-welcome-card .tutorial-spark {
+  position: absolute;
+  top: -17px;
+  right: 18px;
+  width: 34px;
+  height: 34px;
+  margin: 0 !important;
+  border-width: 3px;
+}
+.tutorial-welcome-card h2 {
+  max-width: 180px !important;
+  margin: 2px 0 6px !important;
+  font-size: 1.35rem !important;
+  line-height: 1.03;
+}
+.tutorial-welcome-card p {
+  max-width: 188px;
+  font-size: 0.77rem !important;
+  line-height: 1.36 !important;
+}
+.tutorial-welcome-actions {
+  gap: 4px;
+  margin-top: 10px !important;
+}
+.tutorial-welcome-card .tutorial-start {
+  min-height: 36px;
+  margin-top: 0 !important;
+  border-radius: 11px 8px 13px 9px;
+  font-size: 11px;
+}
+.tutorial-welcome-card .tutorial-skip {
+  font-size: 10px;
+  text-align: left;
+}
+.tutorial-note-corner {
+  width: 34px;
+  height: 34px;
+}
+.studio-canvas::after {
+  inset: 10px 14px 15px !important;
+  border: 0 !important;
+  border-radius: 28px 21px 31px 23px !important;
+  background:
+    radial-gradient(
+      ellipse 78% 100% at 50% 108%,
+      transparent 57%,
+      rgba(255, 221, 169, 0.44) 57.6% 59.6%,
+      transparent 60.3%
+    ),
+    radial-gradient(
+      ellipse 67% 87% at 50% 108%,
+      transparent 57%,
+      rgba(255, 107, 74, 0.17) 57.7% 58.7%,
+      transparent 59.3%
+    ),
+    radial-gradient(
+      ellipse 55% 78% at 50% 108%,
+      transparent 57%,
+      rgba(78, 182, 157, 0.15) 57.7% 58.7%,
+      transparent 59.3%
+    ) !important;
+  mix-blend-mode: normal !important;
+  opacity: 0.92;
+}
+.studio-canvas {
+  box-shadow:
+    12px 15px 0 rgba(230, 199, 148, 0.22),
+    inset 0 0 0 6px rgba(255, 252, 241, 0.86),
+    inset 0 0 0 9px rgba(246, 201, 69, 0.16) !important;
+}
+.studio-canvas::before {
+  top: 15px !important;
+  left: 16px !important;
+  box-shadow: 2px 3px 0 rgba(226, 188, 121, 0.13) !important;
+}
+@media (max-width: 1023px) {
+  .tutorial-welcome {
+    top: 78px !important;
+    left: 16px !important;
+  }
+  .studio-canvas {
+    min-height: 480px;
+  }
+}
+@media (max-width: 620px) {
+  .tutorial-welcome {
+    top: 70px !important;
+    left: 12px !important;
+    width: min(212px, calc(100vw - 24px)) !important;
+  }
+  .tutorial-welcome-card {
+    transform: rotate(-0.8deg) !important;
+  }
+  .studio-canvas {
+    min-height: 420px;
+  }
+  .studio-canvas::after {
+    inset: 8px 9px 12px !important;
+  }
+  .tutorial-welcome-card p {
+    font-size: 0.74rem !important;
+  }
+}

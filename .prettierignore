@@ -3,3 +3,4 @@ node_modules
 .git
 *.min.js
 *.min.css
+client/public/__manus__/

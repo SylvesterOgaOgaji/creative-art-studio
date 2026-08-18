@@ -1,6 +1,410 @@
 /* Playful Atelier final play layer: visible controls remain tactile, with calm handmade cards rather than system widgets. */
-.volume-control { display: grid; grid-template-columns: auto 1fr auto; gap: 9px; align-items: center; margin-top: 9px; padding: 10px 12px; border: 1px solid rgba(246, 201, 69, .46); border-radius: 14px 10px 15px 11px; color: #67533f; background: #fff9e9; font-family: "DM Sans", sans-serif; font-size: 12px; font-weight: 800; box-shadow: 3px 4px 0 rgba(226, 188, 121, .1); }.volume-control input { accent-color: #ff6b4a; min-width: 0; }.volume-control:has(input:disabled) { opacity: .55; }.volume-control output { min-width: 32px; color: #c65340; font-variant-numeric: tabular-nums; text-align: right; }.environment-heading { margin-top: 16px; }.environment-row { display: grid; gap: 7px; }.environment-button { display: flex; align-items: center; gap: 9px; width: 100%; padding: 9px 10px; border: 1px solid rgba(108, 86, 61, .14); border-radius: 13px 10px 15px 11px; color: #504437; background: #fffdf7; text-align: left; transition: transform 160ms var(--ease-out), box-shadow 160ms var(--ease-out), border-color 160ms var(--ease-out); }.environment-button > svg { width: 18px; color: #ff6b4a; }.environment-button span { display: grid; gap: 1px; }.environment-button b { font-size: 12px; }.environment-button small { color: #86715c; font-size: 10px; }.environment-button:hover { transform: translateY(-1px); box-shadow: 3px 4px 0 rgba(226, 188, 121, .16); }.environment-button.is-active { border-color: rgba(255, 107, 74, .52); background: #fff0df; box-shadow: 3px 4px 0 rgba(255, 107, 74, .13); }.environment-space > svg { color: #5261d2; }.environment-underwater > svg { color: #2195af; }.texture-checkerboard > span { background: conic-gradient(#fff7d8 25%, #4666e9 0 50%, #fff7d8 0 75%, #4666e9 0) 0 / 8px 8px; }.texture-glitter > span { background: radial-gradient(circle at 25% 35%, #fff 0 10%, transparent 12%), radial-gradient(circle at 72% 22%, #f6c945 0 9%, transparent 11%), radial-gradient(circle at 56% 75%, #fff 0 8%, transparent 10%), #c85a91; }.studio-canvas.environment-space { box-shadow: 0 12px 0 rgba(46, 42, 106, .28), inset 0 0 0 5px rgba(255, 252, 241, .72), inset 0 0 0 8px rgba(150, 142, 255, .18); }.studio-canvas.environment-underwater { box-shadow: 0 12px 0 rgba(55, 157, 170, .26), inset 0 0 0 5px rgba(247, 255, 250, .72), inset 0 0 0 8px rgba(79, 202, 224, .2); }.environment-space .canvas-corner-note { color: #e6e7ff; background: rgba(19, 22, 71, .56); }.environment-underwater .canvas-corner-note { color: #1e6474; background: rgba(239, 255, 253, .65); }.challenge-complete { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; border: 1px solid rgba(255, 107, 74, .36); border-radius: 12px 9px 13px 10px; color: #b94e3b; background: #fff3e7; padding: 7px 10px; font-family: "DM Sans", sans-serif; font-size: 11px; font-weight: 900; box-shadow: 2px 3px 0 rgba(255, 107, 74, .12); transition: transform 160ms var(--ease-out); }.challenge-complete:hover:not(:disabled) { transform: translateY(-1px); }.challenge-complete svg { width: 14px; }.challenge-complete.is-complete { color: #347967; border-color: rgba(78, 182, 157, .4); background: #effbf5; }.challenge-card.is-earned { animation: badge-wiggle 720ms var(--ease-out); }.badge-shelf { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 10px; padding: 10px 13px; border: 1px dashed rgba(246, 201, 69, .68); border-radius: 17px 13px 19px 14px; background: linear-gradient(120deg, #fff9e8, #f3fbf5); }.badge-shelf > div:first-child { display: flex; align-items: center; gap: 7px; }.badge-shelf > div:first-child > svg { width: 19px; color: #f3aa34; }.badge-shelf b, .badge-shelf small { display: block; }.badge-shelf b { color: #5b4737; font-size: 11px; }.badge-shelf small { color: #88735e; font-size: 9px; }.badge-row { display: flex; gap: 4px; }.challenge-badge { display: grid; place-items: center; width: 27px; height: 32px; border: 1px solid rgba(135, 112, 88, .18); border-radius: 10px 8px 11px 9px; color: #b6a89c; background: #fffdf7; font-size: 14px; }.challenge-badge small { font-size: 8px; line-height: .6; }.challenge-badge.is-earned { color: #f18d32; border-color: rgba(246, 201, 69, .64); background: #fff4c9; box-shadow: 2px 3px 0 rgba(246, 201, 69, .2); }.challenge-badge.is-earned span { animation: badge-twinkle 1.4s ease-in-out infinite; }@keyframes badge-wiggle { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-1.5deg) translateY(-2px); } 65% { transform: rotate(1.5deg); } }@keyframes badge-twinkle { 50% { transform: scale(1.16) rotate(14deg); } }@media (max-width: 700px) { .badge-shelf { align-items: flex-start; flex-direction: column; }.badge-row { align-self: stretch; justify-content: space-between; }.challenge-badge { width: 32px; }.volume-control { margin-bottom: 8px; } }@media (prefers-reduced-motion: reduce) { .challenge-card.is-earned, .challenge-badge.is-earned span { animation: none; } }
-.maker-credit { display: flex; align-items: center; gap: 11px; max-width: 1180px; margin: 18px auto 42px; padding: 13px 18px; border: 1px dashed rgba(246, 201, 69, .72); border-radius: 20px 15px 22px 17px; color: #705d4b; background: linear-gradient(105deg, rgba(255,249,229,.95), rgba(242,250,245,.95)); box-shadow: 5px 6px 0 rgba(218, 185, 121, .12); font-family: "DM Sans", sans-serif; font-size: 12px; line-height: 1.5; }.maker-credit svg { flex: 0 0 auto; width: 25px; height: 25px; color: #f17e43; }.maker-credit p { margin: 0; }.maker-credit strong { color: #493b31; }.maker-credit b { color: #a24e3e; }.maker-credit::after { content: "made together"; margin-left: auto; color: #9a7e59; font-size: 10px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; }@media (max-width: 700px) { .maker-credit { align-items: flex-start; margin: 12px 14px 30px; }.maker-credit::after { display: none; } }
+.volume-control {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 9px;
+  align-items: center;
+  margin-top: 9px;
+  padding: 10px 12px;
+  border: 1px solid rgba(246, 201, 69, 0.46);
+  border-radius: 14px 10px 15px 11px;
+  color: #67533f;
+  background: #fff9e9;
+  font-family: "DM Sans", sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  box-shadow: 3px 4px 0 rgba(226, 188, 121, 0.1);
+}
+.volume-control input {
+  accent-color: #ff6b4a;
+  min-width: 0;
+}
+.volume-control:has(input:disabled) {
+  opacity: 0.55;
+}
+.volume-control output {
+  min-width: 32px;
+  color: #c65340;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+.environment-heading {
+  margin-top: 16px;
+}
+.environment-row {
+  display: grid;
+  gap: 7px;
+}
+.environment-button {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  padding: 9px 10px;
+  border: 1px solid rgba(108, 86, 61, 0.14);
+  border-radius: 13px 10px 15px 11px;
+  color: #504437;
+  background: #fffdf7;
+  text-align: left;
+  transition:
+    transform 160ms var(--ease-out),
+    box-shadow 160ms var(--ease-out),
+    border-color 160ms var(--ease-out);
+}
+.environment-button > svg {
+  width: 18px;
+  color: #ff6b4a;
+}
+.environment-button span {
+  display: grid;
+  gap: 1px;
+}
+.environment-button b {
+  font-size: 12px;
+}
+.environment-button small {
+  color: #86715c;
+  font-size: 10px;
+}
+.environment-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 3px 4px 0 rgba(226, 188, 121, 0.16);
+}
+.environment-button.is-active {
+  border-color: rgba(255, 107, 74, 0.52);
+  background: #fff0df;
+  box-shadow: 3px 4px 0 rgba(255, 107, 74, 0.13);
+}
+.environment-space > svg {
+  color: #5261d2;
+}
+.environment-underwater > svg {
+  color: #2195af;
+}
+.texture-checkerboard > span {
+  background: conic-gradient(
+      #fff7d8 25%,
+      #4666e9 0 50%,
+      #fff7d8 0 75%,
+      #4666e9 0
+    )
+    0 / 8px 8px;
+}
+.texture-glitter > span {
+  background:
+    radial-gradient(circle at 25% 35%, #fff 0 10%, transparent 12%),
+    radial-gradient(circle at 72% 22%, #f6c945 0 9%, transparent 11%),
+    radial-gradient(circle at 56% 75%, #fff 0 8%, transparent 10%), #c85a91;
+}
+.studio-canvas.environment-space {
+  box-shadow:
+    0 12px 0 rgba(46, 42, 106, 0.28),
+    inset 0 0 0 5px rgba(255, 252, 241, 0.72),
+    inset 0 0 0 8px rgba(150, 142, 255, 0.18);
+}
+.studio-canvas.environment-underwater {
+  box-shadow:
+    0 12px 0 rgba(55, 157, 170, 0.26),
+    inset 0 0 0 5px rgba(247, 255, 250, 0.72),
+    inset 0 0 0 8px rgba(79, 202, 224, 0.2);
+}
+.environment-space .canvas-corner-note {
+  color: #e6e7ff;
+  background: rgba(19, 22, 71, 0.56);
+}
+.environment-underwater .canvas-corner-note {
+  color: #1e6474;
+  background: rgba(239, 255, 253, 0.65);
+}
+.challenge-complete {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  border: 1px solid rgba(255, 107, 74, 0.36);
+  border-radius: 12px 9px 13px 10px;
+  color: #b94e3b;
+  background: #fff3e7;
+  padding: 7px 10px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 11px;
+  font-weight: 900;
+  box-shadow: 2px 3px 0 rgba(255, 107, 74, 0.12);
+  transition: transform 160ms var(--ease-out);
+}
+.challenge-complete:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+.challenge-complete svg {
+  width: 14px;
+}
+.challenge-complete.is-complete {
+  color: #347967;
+  border-color: rgba(78, 182, 157, 0.4);
+  background: #effbf5;
+}
+.challenge-card.is-earned {
+  animation: badge-wiggle 720ms var(--ease-out);
+}
+.badge-shelf {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 10px;
+  padding: 10px 13px;
+  border: 1px dashed rgba(246, 201, 69, 0.68);
+  border-radius: 17px 13px 19px 14px;
+  background: linear-gradient(120deg, #fff9e8, #f3fbf5);
+}
+.badge-shelf > div:first-child {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.badge-shelf > div:first-child > svg {
+  width: 19px;
+  color: #f3aa34;
+}
+.badge-shelf b,
+.badge-shelf small {
+  display: block;
+}
+.badge-shelf b {
+  color: #5b4737;
+  font-size: 11px;
+}
+.badge-shelf small {
+  color: #88735e;
+  font-size: 9px;
+}
+.badge-row {
+  display: flex;
+  gap: 4px;
+}
+.challenge-badge {
+  display: grid;
+  place-items: center;
+  width: 27px;
+  height: 32px;
+  border: 1px solid rgba(135, 112, 88, 0.18);
+  border-radius: 10px 8px 11px 9px;
+  color: #b6a89c;
+  background: #fffdf7;
+  font-size: 14px;
+}
+.challenge-badge small {
+  font-size: 8px;
+  line-height: 0.6;
+}
+.challenge-badge.is-earned {
+  color: #f18d32;
+  border-color: rgba(246, 201, 69, 0.64);
+  background: #fff4c9;
+  box-shadow: 2px 3px 0 rgba(246, 201, 69, 0.2);
+}
+.challenge-badge.is-earned span {
+  animation: badge-twinkle 1.4s ease-in-out infinite;
+}
+@keyframes badge-wiggle {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  25% {
+    transform: rotate(-1.5deg) translateY(-2px);
+  }
+  65% {
+    transform: rotate(1.5deg);
+  }
+}
+@keyframes badge-twinkle {
+  50% {
+    transform: scale(1.16) rotate(14deg);
+  }
+}
+@media (max-width: 700px) {
+  .badge-shelf {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .badge-row {
+    align-self: stretch;
+    justify-content: space-between;
+  }
+  .challenge-badge {
+    width: 32px;
+  }
+  .volume-control {
+    margin-bottom: 8px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .challenge-card.is-earned,
+  .challenge-badge.is-earned span {
+    animation: none;
+  }
+}
+.maker-credit {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  max-width: 1180px;
+  margin: 18px auto 42px;
+  padding: 13px 18px;
+  border: 1px dashed rgba(246, 201, 69, 0.72);
+  border-radius: 20px 15px 22px 17px;
+  color: #705d4b;
+  background: linear-gradient(
+    105deg,
+    rgba(255, 249, 229, 0.95),
+    rgba(242, 250, 245, 0.95)
+  );
+  box-shadow: 5px 6px 0 rgba(218, 185, 121, 0.12);
+  font-family: "DM Sans", sans-serif;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.maker-credit svg {
+  flex: 0 0 auto;
+  width: 25px;
+  height: 25px;
+  color: #f17e43;
+}
+.maker-credit p {
+  margin: 0;
+}
+.maker-credit strong {
+  color: #493b31;
+}
+.maker-credit b {
+  color: #a24e3e;
+}
+.maker-credit::after {
+  content: "made together";
+  margin-left: auto;
+  color: #9a7e59;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+@media (max-width: 700px) {
+  .maker-credit {
+    align-items: flex-start;
+    margin: 12px 14px 30px;
+  }
+  .maker-credit::after {
+    display: none;
+  }
+}
 
 /* Playful Atelier age modes: one shared engine, three calm levels of creative depth. */
-.age-mode-section { margin: -1px 0 15px; padding: 11px; border: 1px dashed rgba(246, 201, 69, .66); border-radius: 17px 13px 19px 14px; background: linear-gradient(135deg, #fff9e8, #f2faf5); }.age-mode-row { display: grid; gap: 6px; margin-top: 8px; }.age-mode-button { display: flex; width: 100%; align-items: center; gap: 8px; border: 1px solid rgba(123, 99, 75, .16); border-radius: 12px 9px 14px 10px; color: #665545; background: rgba(255,253,247,.84); padding: 7px 8px; text-align: left; transition: transform 160ms var(--ease-out), border-color 160ms var(--ease-out), background 160ms var(--ease-out), box-shadow 160ms var(--ease-out); }.age-mode-button > svg { width: 17px; color: #8d7962; }.age-mode-button span { display: grid; gap: 1px; }.age-mode-button b { font-size: 11px; }.age-mode-button small { color: #8b7661; font-size: 9px; }.age-mode-button:hover { transform: translateY(-1px); }.age-mode-button.is-active { border-color: rgba(255,107,74,.5); color: #914635; background: #fff0e5; box-shadow: 3px 4px 0 rgba(255,107,74,.13); }.age-mode-button.is-active > svg { color: #ff6b4a; }.age-mode-description { margin: 8px 1px 0; color: #806c59; font-family: "DM Sans", sans-serif; font-size: 10px; font-weight: 650; line-height: 1.35; }.studio-app.age-mode-explorer .shape-button { min-height: 68px; }.studio-app.age-mode-explorer .color-swatch { width: 36px; height: 36px; }.studio-app.age-mode-explorer .workspace-actionbar { grid-template-columns: repeat(3, minmax(0, 1fr)); }.studio-app.age-mode-explorer .workspace-actionbar > p { grid-column: 1 / -1; }.studio-app.age-mode-explorer .workspace-actionbar > button { padding-inline: 8px; }.studio-app.age-mode-explorer .workspace-actionbar .export-button span { white-space: nowrap; }@media (max-width: 700px) { .age-mode-section { margin-top: 2px; }.age-mode-row { grid-template-columns: repeat(3, minmax(0, 1fr)); }.age-mode-button { min-height: 66px; align-items: flex-start; flex-direction: column; gap: 4px; }.age-mode-button small { line-height: 1.1; }.studio-app.age-mode-explorer .workspace-actionbar { grid-template-columns: repeat(2, minmax(0, 1fr)); }.studio-app.age-mode-explorer .workspace-actionbar > p, .studio-app.age-mode-explorer .workspace-actionbar .surprise-button { grid-column: 1 / -1; } }
+.age-mode-section {
+  margin: -1px 0 15px;
+  padding: 11px;
+  border: 1px dashed rgba(246, 201, 69, 0.66);
+  border-radius: 17px 13px 19px 14px;
+  background: linear-gradient(135deg, #fff9e8, #f2faf5);
+}
+.age-mode-row {
+  display: grid;
+  gap: 6px;
+  margin-top: 8px;
+}
+.age-mode-button {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(123, 99, 75, 0.16);
+  border-radius: 12px 9px 14px 10px;
+  color: #665545;
+  background: rgba(255, 253, 247, 0.84);
+  padding: 7px 8px;
+  text-align: left;
+  transition:
+    transform 160ms var(--ease-out),
+    border-color 160ms var(--ease-out),
+    background 160ms var(--ease-out),
+    box-shadow 160ms var(--ease-out);
+}
+.age-mode-button > svg {
+  width: 17px;
+  color: #8d7962;
+}
+.age-mode-button span {
+  display: grid;
+  gap: 1px;
+}
+.age-mode-button b {
+  font-size: 11px;
+}
+.age-mode-button small {
+  color: #8b7661;
+  font-size: 9px;
+}
+.age-mode-button:hover {
+  transform: translateY(-1px);
+}
+.age-mode-button.is-active {
+  border-color: rgba(255, 107, 74, 0.5);
+  color: #914635;
+  background: #fff0e5;
+  box-shadow: 3px 4px 0 rgba(255, 107, 74, 0.13);
+}
+.age-mode-button.is-active > svg {
+  color: #ff6b4a;
+}
+.age-mode-description {
+  margin: 8px 1px 0;
+  color: #806c59;
+  font-family: "DM Sans", sans-serif;
+  font-size: 10px;
+  font-weight: 650;
+  line-height: 1.35;
+}
+.studio-app.age-mode-explorer .shape-button {
+  min-height: 68px;
+}
+.studio-app.age-mode-explorer .color-swatch {
+  width: 36px;
+  height: 36px;
+}
+.studio-app.age-mode-explorer .workspace-actionbar {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.studio-app.age-mode-explorer .workspace-actionbar > p {
+  grid-column: 1 / -1;
+}
+.studio-app.age-mode-explorer .workspace-actionbar > button {
+  padding-inline: 8px;
+}
+.studio-app.age-mode-explorer .workspace-actionbar .export-button span {
+  white-space: nowrap;
+}
+@media (max-width: 700px) {
+  .age-mode-section {
+    margin-top: 2px;
+  }
+  .age-mode-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .age-mode-button {
+    min-height: 66px;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .age-mode-button small {
+    line-height: 1.1;
+  }
+  .studio-app.age-mode-explorer .workspace-actionbar {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .studio-app.age-mode-explorer .workspace-actionbar > p,
+  .studio-app.age-mode-explorer .workspace-actionbar .surprise-button {
+    grid-column: 1 / -1;
+  }
+}

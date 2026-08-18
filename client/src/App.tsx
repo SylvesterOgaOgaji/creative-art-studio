@@ -11,7 +11,12 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 
 function StudioWithReflection() {
-  return <><Home /><SessionReflectionPrompt /></>;
+  return (
+    <>
+      <Home />
+      <SessionReflectionPrompt />
+    </>
+  );
 }
 
 function Router() {

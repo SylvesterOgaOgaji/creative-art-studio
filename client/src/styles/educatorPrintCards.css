@@ -1,2 +1,202 @@
 /* Playful Atelier print pack: concise cards that keep their paper-cut hierarchy on screen and become clean ink-light pages in print. */
-.teacher-print-section { width: min(1140px, calc(100% - 40px)); margin: 0 auto 76px; border-top: 1px dashed rgba(121, 90, 59, .25); padding: 56px 20px 0; }.teacher-print-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 25px; }.teacher-print-heading > div { max-width: 700px; }.teacher-print-heading h2 { margin: 6px 0 9px; font-family: Fraunces, Georgia, serif; font-size: clamp(29px, 4vw, 46px); line-height: 1.02; letter-spacing: -.056em; }.teacher-print-heading p { margin: 0; color: #715e4c; font-size: 13px; line-height: 1.62; }.teacher-print-button { display: inline-flex; min-height: 46px; flex: 0 0 auto; align-items: center; justify-content: center; gap: 7px; border: 0; border-radius: 14px 10px 16px 11px; color: #fffaf1; background: #ff6b4a; padding: 0 14px; box-shadow: 4px 5px 0 rgba(185, 71, 43, .2); font-size: 12px; font-weight: 900; }.teacher-print-button svg { width: 16px; }.teacher-print-card-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 13px; margin-top: 26px; }.teacher-print-card { position: relative; display: flex; min-height: 265px; flex-direction: column; overflow: hidden; border: 1px solid rgba(121, 90, 59, .14); border-radius: 20px 13px 23px 16px; background: #fffaf0; padding: 18px; box-shadow: 6px 8px 0 rgba(139, 106, 73, .1); }.teacher-print-card:nth-child(2) { background: #edf2ff; transform: translateY(11px) rotate(.5deg); }.teacher-print-card:nth-child(3) { background: #fff3c8; transform: rotate(-.8deg); }.teacher-print-card:nth-child(4) { background: #edf8f4; transform: translateY(6px); }.teacher-print-card > span { display: grid; width: 32px; height: 32px; place-items: center; border-radius: 11px 7px 12px 8px; color: #fffaf1; background: #ff6b4a; font-family: Fraunces, Georgia, serif; }.teacher-print-card:nth-child(2) > span { background: #4666e9; }.teacher-print-card:nth-child(3) > span { background: #c18427; }.teacher-print-card:nth-child(4) > span { background: #4a9c86; }.teacher-print-card small { margin-top: 20px; color: #9c7357; font-size: 9px; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; }.teacher-print-card h3 { margin: 8px 0; font-family: Fraunces, Georgia, serif; font-size: 23px; line-height: 1.02; letter-spacing: -.045em; }.teacher-print-card p { margin: 0; color: #715d4b; font-size: 12px; line-height: 1.55; }.teacher-print-card footer { margin-top: auto; border-top: 1px dashed rgba(121, 90, 59, .27); padding-top: 10px; color: #5e4a3a; font-size: 11px; line-height: 1.42; }.teacher-print-card footer b { color: #a14e3b; }@media (max-width: 880px) { .teacher-print-card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }.teacher-print-card:nth-child(2), .teacher-print-card:nth-child(4) { transform: none; } }@media (max-width: 640px) { .teacher-print-section { width: min(100% - 28px, 1140px); padding-inline: 0; }.teacher-print-heading { align-items: flex-start; flex-direction: column; }.teacher-print-button { width: 100%; }.teacher-print-card-grid { grid-template-columns: 1fr; }.teacher-print-card:nth-child(3) { transform: none; } }@media print { @page { size: A4 portrait; margin: 12mm; } body { background: #fff !important; } .public-studio-header, .educator-hero, .age-path-section, .teaching-flow-section, .educator-safety-section, .journal-footer, .teacher-print-heading { display: none !important; } .journal-page.educator-page { min-height: auto; background: #fff !important; } .teacher-print-section { width: auto !important; margin: 0 !important; border: 0 !important; padding: 0 !important; } .teacher-print-card-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 8mm !important; margin: 0 !important; } .teacher-print-card { min-height: 118mm; break-inside: avoid; border: 1px solid #756452; border-radius: 0; background: #fff !important; box-shadow: none !important; transform: none !important; } .teacher-print-card > span { border-radius: 0; } }
+.teacher-print-section {
+  width: min(1140px, calc(100% - 40px));
+  margin: 0 auto 76px;
+  border-top: 1px dashed rgba(121, 90, 59, 0.25);
+  padding: 56px 20px 0;
+}
+.teacher-print-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 25px;
+}
+.teacher-print-heading > div {
+  max-width: 700px;
+}
+.teacher-print-heading h2 {
+  margin: 6px 0 9px;
+  font-family: Fraunces, Georgia, serif;
+  font-size: clamp(29px, 4vw, 46px);
+  line-height: 1.02;
+  letter-spacing: -0.056em;
+}
+.teacher-print-heading p {
+  margin: 0;
+  color: #715e4c;
+  font-size: 13px;
+  line-height: 1.62;
+}
+.teacher-print-button {
+  display: inline-flex;
+  min-height: 46px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 0;
+  border-radius: 14px 10px 16px 11px;
+  color: #fffaf1;
+  background: #ff6b4a;
+  padding: 0 14px;
+  box-shadow: 4px 5px 0 rgba(185, 71, 43, 0.2);
+  font-size: 12px;
+  font-weight: 900;
+}
+.teacher-print-button svg {
+  width: 16px;
+}
+.teacher-print-card-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 13px;
+  margin-top: 26px;
+}
+.teacher-print-card {
+  position: relative;
+  display: flex;
+  min-height: 265px;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid rgba(121, 90, 59, 0.14);
+  border-radius: 20px 13px 23px 16px;
+  background: #fffaf0;
+  padding: 18px;
+  box-shadow: 6px 8px 0 rgba(139, 106, 73, 0.1);
+}
+.teacher-print-card:nth-child(2) {
+  background: #edf2ff;
+  transform: translateY(11px) rotate(0.5deg);
+}
+.teacher-print-card:nth-child(3) {
+  background: #fff3c8;
+  transform: rotate(-0.8deg);
+}
+.teacher-print-card:nth-child(4) {
+  background: #edf8f4;
+  transform: translateY(6px);
+}
+.teacher-print-card > span {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  border-radius: 11px 7px 12px 8px;
+  color: #fffaf1;
+  background: #ff6b4a;
+  font-family: Fraunces, Georgia, serif;
+}
+.teacher-print-card:nth-child(2) > span {
+  background: #4666e9;
+}
+.teacher-print-card:nth-child(3) > span {
+  background: #c18427;
+}
+.teacher-print-card:nth-child(4) > span {
+  background: #4a9c86;
+}
+.teacher-print-card small {
+  margin-top: 20px;
+  color: #9c7357;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.teacher-print-card h3 {
+  margin: 8px 0;
+  font-family: Fraunces, Georgia, serif;
+  font-size: 23px;
+  line-height: 1.02;
+  letter-spacing: -0.045em;
+}
+.teacher-print-card p {
+  margin: 0;
+  color: #715d4b;
+  font-size: 12px;
+  line-height: 1.55;
+}
+.teacher-print-card footer {
+  margin-top: auto;
+  border-top: 1px dashed rgba(121, 90, 59, 0.27);
+  padding-top: 10px;
+  color: #5e4a3a;
+  font-size: 11px;
+  line-height: 1.42;
+}
+.teacher-print-card footer b {
+  color: #a14e3b;
+}
+@media (max-width: 880px) {
+  .teacher-print-card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .teacher-print-card:nth-child(2),
+  .teacher-print-card:nth-child(4) {
+    transform: none;
+  }
+}
+@media (max-width: 640px) {
+  .teacher-print-section {
+    width: min(100% - 28px, 1140px);
+    padding-inline: 0;
+  }
+  .teacher-print-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .teacher-print-button {
+    width: 100%;
+  }
+  .teacher-print-card-grid {
+    grid-template-columns: 1fr;
+  }
+  .teacher-print-card:nth-child(3) {
+    transform: none;
+  }
+}
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 12mm;
+  }
+  body {
+    background: #fff !important;
+  }
+  .public-studio-header,
+  .educator-hero,
+  .age-path-section,
+  .teaching-flow-section,
+  .educator-safety-section,
+  .journal-footer,
+  .teacher-print-heading {
+    display: none !important;
+  }
+  .journal-page.educator-page {
+    min-height: auto;
+    background: #fff !important;
+  }
+  .teacher-print-section {
+    width: auto !important;
+    margin: 0 !important;
+    border: 0 !important;
+    padding: 0 !important;
+  }
+  .teacher-print-card-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8mm !important;
+    margin: 0 !important;
+  }
+  .teacher-print-card {
+    min-height: 118mm;
+    break-inside: avoid;
+    border: 1px solid #756452;
+    border-radius: 0;
+    background: #fff !important;
+    box-shadow: none !important;
+    transform: none !important;
+  }
+  .teacher-print-card > span {
+    border-radius: 0;
+  }
+}

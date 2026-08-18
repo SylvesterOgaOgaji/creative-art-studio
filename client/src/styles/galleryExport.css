@@ -1,2 +1,41 @@
 /* Playful Atelier gallery export: downloading a memory is a bright secondary action beside reopening it. */
-.gallery-card-bottom { display: grid; grid-template-columns: minmax(0, .84fr) minmax(0, 1.16fr); gap: 7px; }.download-artwork-button { display: inline-flex; min-height: 38px; align-items: center; justify-content: center; gap: 5px; border: 1px solid rgba(70, 102, 233, .26); border-radius: 11px 8px 12px 9px; color: #3656bd; background: #eef1ff; padding: 0 8px; font-size: 10px; font-weight: 900; transition: transform 160ms var(--ease-out), box-shadow 160ms var(--ease-out); }.download-artwork-button svg { width: 14px; }.gallery-card-bottom .open-artwork-button { margin-top: 0; }.download-artwork-button:hover { transform: translateY(-1px); box-shadow: 3px 4px 0 rgba(70, 102, 233, .14); }.download-artwork-button:active { transform: scale(.97); }@media (max-width: 420px) { .gallery-card-bottom { grid-template-columns: 1fr; } }
+.gallery-card-bottom {
+  display: grid;
+  grid-template-columns: minmax(0, 0.84fr) minmax(0, 1.16fr);
+  gap: 7px;
+}
+.download-artwork-button {
+  display: inline-flex;
+  min-height: 38px;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border: 1px solid rgba(70, 102, 233, 0.26);
+  border-radius: 11px 8px 12px 9px;
+  color: #3656bd;
+  background: #eef1ff;
+  padding: 0 8px;
+  font-size: 10px;
+  font-weight: 900;
+  transition:
+    transform 160ms var(--ease-out),
+    box-shadow 160ms var(--ease-out);
+}
+.download-artwork-button svg {
+  width: 14px;
+}
+.gallery-card-bottom .open-artwork-button {
+  margin-top: 0;
+}
+.download-artwork-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 3px 4px 0 rgba(70, 102, 233, 0.14);
+}
+.download-artwork-button:active {
+  transform: scale(0.97);
+}
+@media (max-width: 420px) {
+  .gallery-card-bottom {
+    grid-template-columns: 1fr;
+  }
+}
