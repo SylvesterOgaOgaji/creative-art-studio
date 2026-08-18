@@ -4,7 +4,7 @@
  */
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "wouter";
-import "@/styles/studioExtensions.css";
+import "@/styles/sessionReflection.css";
 import "@/styles/tutorialOverlayFix.css";
 import "@/styles/playExtras.css";
 import "@/styles/finalStudioFeatures.css";
@@ -14,6 +14,7 @@ import "@/styles/canvasFirstPass.css";
 import "@/styles/publicStudioPages.css";
 import "@/styles/makersEducatorExtensions.css";
 import "@/styles/visualReviewRefinements.css";
+import "@/styles/workbenchViewportFix.css";
 import { Archive, CircleHelp, Download, Eraser, GalleryHorizontalEnd, HeartHandshake, Layers3, Redo2, Sparkles, Undo2, Volume2, VolumeX } from "lucide-react";
 import ChallengeCard from "@/components/studio/ChallengeCard";
 import { toast } from "sonner";

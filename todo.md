@@ -67,3 +67,10 @@
 - [x] Add a browser-local end-of-session student reflection prompt.
 - [x] Validate print, duration selection, reflection persistence, desktop/touch layouts, TypeScript, and production build.
 - [x] Save and publish the family and session wrap-up release.
+
+## Workbench layout correction
+
+- [x] Inspect the studio grid, canvas wrapper, height rules, and overflow behavior at the reported wide viewport.
+- [x] Correct stage sizing so the canvas is prominent without expanding into an empty or cropped region.
+- [x] Ensure maker shelf and inspector stay readable without being clipped at desktop and touch breakpoints.
+- [ ] Validate the corrected wide desktop and touch workbench layouts, then publish the fix.
