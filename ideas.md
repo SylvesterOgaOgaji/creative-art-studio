@@ -109,3 +109,7 @@ The wordmark pairs the high-contrast Fraunces title with a compact, tilted **Spa
 20. On wide, tall screens, the **3D art stage** is wider, taller, and more physically framed than any surrounding shelf; challenge, badge, guide, and reflection surfaces are intentionally quieter downstream notes.
 21. Empty stages show a **double paper-cut arch** with three simple pigment primitives behind the first-making prompt, making the maker table recognizable before an object is added.
 22. Field-journal section headings use one short, content-adjacent pigment strip and retain **Persimmon Spark** for making, starting, saving, and print actions; decorative colour appears as a material cue, not a competing action signal.
+23. Below-canvas guidance behaves as **quiet field-journal material**: one tactile cue per section, subdued pigment use, and no downstream card may visually outweigh the main art stage.
+24. **Persimmon Spark `#FF6B4A`** is reserved for primary maker actions, selected or active states, saving/exporting, and celebration; secondary notes use parchment, charcoal, sea-glass, cobalt, and softer pigment accents.
+25. The Spark + Fraunces “Make a tiny world” lockup is the compact identity anchor; it reads as one ownable maker mark rather than a decorated application header.
+26. Reflection is a calm **field-journal pause** with parchment surfaces and muted studio pigments; its only persimmon action is the functional save control.

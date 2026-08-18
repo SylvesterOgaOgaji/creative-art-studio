@@ -4,6 +4,13 @@ All notable project changes are documented here.
 
 ## Unreleased
 
+## 1.0.1 - 2026-08-18
+
+- Added explicit environment documentation and independently discoverable clean-install, format, lint, typecheck, coverage, browser-flow, security-audit, and build checks in CI.
+- Expanded focused unit coverage for image export, opt-in sound, sidebar state, server health, structured logging, and browser-local studio actions; the enforced coverage floor is now 50%.
+- Added privacy-aware structured request and error logging to the static server without logging client artwork or personal information.
+- Split browser-local gallery, history, classroom starter, and gallery-control responsibilities into focused modules, reducing the central store and gallery drawer below the 500-line review threshold.
+
 - Added an enforced ESLint gate, core-coverage threshold, focused studio component tests, and persisted-state schema tests.
 - Added safe Zod validation at the browser LocalStorage rehydration boundary, rejecting malformed scene data while preserving compatible saved worlds.
 - Added a compose-based production startup path and expanded fresh-clone, quality-gate, and environment guidance.

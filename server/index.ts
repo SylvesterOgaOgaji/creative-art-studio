@@ -3,6 +3,7 @@ import type { Express, NextFunction, Request, Response } from "express";
 import { createServer } from "http";
 import path from "path";
 import { fileURLToPath } from "url";
+import { logger, type AppLogger } from "./logger";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -13,12 +14,48 @@ function getStaticPath() {
     : path.resolve(__dirname, "..", "dist", "public");
 }
 
+function requestLoggingMiddleware(log: AppLogger) {
+  return (req: Request, res: Response, next: NextFunction) => {
+    const startedAt = performance.now();
+    res.once("finish", () => {
+      log.info(
+        {
+          method: req.method,
+          path: req.path,
+          statusCode: res.statusCode,
+          durationMs: Math.round((performance.now() - startedAt) * 100) / 100,
+        },
+        "request completed"
+      );
+    });
+    next();
+  };
+}
+
+function errorHandlingMiddleware(log: AppLogger) {
+  return (error: Error, req: Request, res: Response, _next: NextFunction) => {
+    log.error(
+      {
+        err: { message: error.message },
+        method: req.method,
+        path: req.path,
+      },
+      "unhandled request error"
+    );
+    if (!res.headersSent) res.status(500).json({ error: "internal_error" });
+  };
+}
+
 /**
- * Creates the minimal static application server.  Keeping this factory separate
- * from process startup makes the health contract easy to exercise in tests.
+ * Creates the minimal static application server. Keeping this factory separate
+ * from process startup makes the health and logging contracts easy to exercise.
  */
-export function createApp(staticPath = getStaticPath()): Express {
+export function createApp(
+  staticPath = getStaticPath(),
+  log: AppLogger = logger
+): Express {
   const app = express();
+  app.use(requestLoggingMiddleware(log));
 
   app.get("/healthz", (_req, res) => {
     res.status(200).json({ status: "ok", service: "creative-art-studio" });
@@ -32,19 +69,22 @@ export function createApp(staticPath = getStaticPath()): Express {
     res.sendFile(path.join(staticPath, "index.html"));
   });
 
-  app.use((error: Error, _req: Request, res: Response, _next: NextFunction) => {
-    console.error(JSON.stringify({ level: "error", message: error.message }));
-    res.status(500).json({ error: "internal_error" });
-  });
+  app.use(errorHandlingMiddleware(log));
 
   return app;
 }
 
-export function startServer(port = Number(process.env.PORT) || 3000) {
-  const server = createServer(createApp());
+export function startServer(
+  port = Number(process.env.PORT) || 3000,
+  log: AppLogger = logger
+) {
+  const server = createServer(createApp(undefined, log));
+  server.once("error", error =>
+    log.error({ err: { message: error.message }, port }, "server failed")
+  );
 
   server.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}/`);
+    log.info({ port }, "server listening");
   });
 
   return server;

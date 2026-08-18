@@ -25,8 +25,8 @@ jobs:
       - name: Check formatting
         run: pnpm format:check
 
-      - name: Run lint
-        run: pnpm lint
+      - name: Run ESLint
+        run: pnpm run lint
 
   typecheck:
     name: TypeScript typecheck
@@ -38,8 +38,8 @@ jobs:
       - name: Set up project
         uses: ./.github/actions/setup-pnpm
 
-      - name: Check TypeScript
-        run: pnpm check
+      - name: Run TypeScript typecheck
+        run: pnpm run check
 
   tests:
     name: Unit tests and coverage
@@ -51,11 +51,11 @@ jobs:
       - name: Set up project
         uses: ./.github/actions/setup-pnpm
 
-      - name: Run automated tests
-        run: pnpm test
+      - name: Run unit tests with Vitest
+        run: pnpm run test
 
-      - name: Enforce core coverage baseline
-        run: pnpm test:coverage
+      - name: Enforce unit-test coverage threshold
+        run: pnpm run test:coverage
 
   browser-test:
     name: Browser creative flow

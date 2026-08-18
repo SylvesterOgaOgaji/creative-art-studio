@@ -5,28 +5,22 @@
 import {
   Check,
   Download,
-  FolderClosed,
   FolderOpen,
-  FolderPlus,
   Pencil,
-  Plus,
   Search,
   Sparkles,
   Star,
-  Tag,
   Trash2,
   X,
 } from "lucide-react";
 import { useMemo, useState, type FormEvent } from "react";
 import { toast } from "sonner";
-import {
-  collectGalleryTags,
-  createFolderLookup,
-  filterGalleryArtworks,
-} from "@/lib/galleryOrganization";
+import { filterGalleryArtworks } from "@/lib/galleryOrganization";
 import { exportSavedArtworkImage } from "@/lib/studioImage";
 import { useStudioStore } from "@/store/useStudioStore";
+import GalleryFolderControls from "./GalleryFolderControls";
 import GallerySearchControls from "./GallerySearchControls";
+import GalleryTagControls from "./GalleryTagControls";
 
 const emptyGalleryArtwork = "/manus-storage/atelier-gallery-card_f01187c1.jpg";
 
@@ -69,20 +63,9 @@ export default function GalleryDrawer() {
   const [favoritesOnly, setFavoritesOnly] = useState(false);
   const [folderFilter, setFolderFilter] = useState("all");
   const [tagFilter, setTagFilter] = useState("all");
-  const [folderDraft, setFolderDraft] = useState("");
-  const [editingFolderId, setEditingFolderId] = useState<string | null>(null);
-  const [tagDrafts, setTagDrafts] = useState<Record<string, string>>({});
   const [spotlightDrafts, setSpotlightDrafts] = useState<
     Record<string, string>
   >({});
-  const folderById = useMemo(
-    () => createFolderLookup(galleryFolders),
-    [galleryFolders]
-  );
-  const allTags = useMemo(
-    () => collectGalleryTags(savedArtworks),
-    [savedArtworks]
-  );
   const matchingArtworks = useMemo(() => {
     return filterGalleryArtworks({
       artworks: savedArtworks,
@@ -112,38 +95,6 @@ export default function GalleryDrawer() {
     if (deleteCandidate) deleteArtwork(deleteCandidate);
     setDeleteCandidate(null);
   };
-  const saveFolder = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (editingFolderId) renameGalleryFolder(editingFolderId, folderDraft);
-    else {
-      const createdId = createGalleryFolder(folderDraft);
-      if (createdId) setFolderFilter(createdId);
-    }
-    setFolderDraft("");
-    setEditingFolderId(null);
-  };
-  const startFolderRename = (id: string) => {
-    const folder = folderById.get(id);
-    if (!folder) return;
-    setEditingFolderId(id);
-    setFolderDraft(folder.name);
-  };
-  const addTag = (
-    event: FormEvent<HTMLFormElement>,
-    artworkId: string,
-    currentTags: string[]
-  ) => {
-    event.preventDefault();
-    const value = tagDrafts[artworkId] ?? "";
-    if (!value.trim()) return;
-    setArtworkTags(artworkId, [...currentTags, value]);
-    setTagDrafts(drafts => ({ ...drafts, [artworkId]: "" }));
-  };
-  const removeTag = (artworkId: string, tags: string[], tag: string) =>
-    setArtworkTags(
-      artworkId,
-      tags.filter(entry => entry !== tag)
-    );
   const featureArtwork = (
     event: FormEvent<HTMLFormElement>,
     artworkId: string
@@ -214,128 +165,17 @@ export default function GalleryDrawer() {
           </div>
         ) : (
           <>
-            <section
-              className="gallery-organizer"
-              aria-labelledby="organizer-title"
-            >
-              <div className="gallery-organizer-heading">
-                <div>
-                  <span className="eyebrow">Project shelf</span>
-                  <h3 id="organizer-title">Folders and tags</h3>
-                </div>
-                <FolderPlus aria-hidden="true" />
-              </div>
-              <form className="folder-create-row" onSubmit={saveFolder}>
-                <label className="sr-only" htmlFor="gallery-folder-name">
-                  {editingFolderId
-                    ? "Rename project folder"
-                    : "New project folder"}
-                </label>
-                <input
-                  id="gallery-folder-name"
-                  value={folderDraft}
-                  maxLength={24}
-                  onChange={event => setFolderDraft(event.target.value)}
-                  placeholder={
-                    editingFolderId
-                      ? "Rename this folder"
-                      : "New project folder"
-                  }
-                />
-                <button type="submit">
-                  {editingFolderId ? (
-                    "Save"
-                  ) : (
-                    <>
-                      <Plus aria-hidden="true" />
-                      Add folder
-                    </>
-                  )}
-                </button>
-                {editingFolderId && (
-                  <button
-                    className="folder-cancel"
-                    type="button"
-                    onClick={() => {
-                      setEditingFolderId(null);
-                      setFolderDraft("");
-                    }}
-                  >
-                    Cancel
-                  </button>
-                )}
-              </form>
-              <div
-                className="folder-filter-row"
-                aria-label="Filter gallery by folder"
-              >
-                <button
-                  className={`gallery-filter-chip ${folderFilter === "all" ? "is-active" : ""}`}
-                  onClick={() => setFolderFilter("all")}
-                  aria-pressed={folderFilter === "all"}
-                >
-                  All worlds
-                </button>
-                <button
-                  className={`gallery-filter-chip ${folderFilter === "loose" ? "is-active" : ""}`}
-                  onClick={() => setFolderFilter("loose")}
-                  aria-pressed={folderFilter === "loose"}
-                >
-                  Loose
-                </button>
-                {galleryFolders.map(folder => (
-                  <span className="folder-filter-group" key={folder.id}>
-                    <button
-                      className={`gallery-filter-chip ${folderFilter === folder.id ? "is-active" : ""}`}
-                      onClick={() => setFolderFilter(folder.id)}
-                      aria-pressed={folderFilter === folder.id}
-                    >
-                      <FolderClosed aria-hidden="true" />
-                      {folder.name}
-                    </button>
-                    <button
-                      className="folder-mini-action"
-                      onClick={() => startFolderRename(folder.id)}
-                      aria-label={`Rename ${folder.name}`}
-                    >
-                      <Pencil aria-hidden="true" />
-                    </button>
-                    <button
-                      className="folder-mini-action delete"
-                      onClick={() => setFolderDeleteCandidate(folder.id)}
-                      aria-label={`Remove ${folder.name}`}
-                    >
-                      <X aria-hidden="true" />
-                    </button>
-                  </span>
-                ))}
-              </div>
-              {allTags.length > 0 && (
-                <div
-                  className="tag-filter-row"
-                  aria-label="Filter gallery by tag"
-                >
-                  <Tag aria-hidden="true" />
-                  <button
-                    className={`gallery-tag-filter ${tagFilter === "all" ? "is-active" : ""}`}
-                    onClick={() => setTagFilter("all")}
-                    aria-pressed={tagFilter === "all"}
-                  >
-                    Every tag
-                  </button>
-                  {allTags.map(tag => (
-                    <button
-                      key={tag}
-                      className={`gallery-tag-filter ${tagFilter === tag ? "is-active" : ""}`}
-                      onClick={() => setTagFilter(tag)}
-                      aria-pressed={tagFilter === tag}
-                    >
-                      #{tag}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </section>
+            <GalleryFolderControls
+              artworks={savedArtworks}
+              galleryFolders={galleryFolders}
+              folderFilter={folderFilter}
+              tagFilter={tagFilter}
+              onFolderFilterChange={setFolderFilter}
+              onTagFilterChange={setTagFilter}
+              onCreateFolder={createGalleryFolder}
+              onRenameFolder={renameGalleryFolder}
+              onDeleteFolderRequest={setFolderDeleteCandidate}
+            />
             <GallerySearchControls
               search={search}
               onSearchChange={setSearch}
@@ -366,7 +206,6 @@ export default function GalleryDrawer() {
             ) : (
               <div className="artwork-list">
                 {matchingArtworks.map(artwork => {
-                  const artworkTags = artwork.tags ?? [];
                   const spotlight = makerSpotlights.find(
                     entry => entry.artworkId === artwork.id
                   );
@@ -482,79 +321,12 @@ export default function GalleryDrawer() {
                           </button>
                         </div>
                       </div>
-                      <div className="artwork-organization">
-                        <label className="artwork-folder-picker">
-                          <FolderClosed aria-hidden="true" />
-                          <span className="sr-only">
-                            Place {artwork.title} in a project folder
-                          </span>
-                          <select
-                            value={artwork.folderId ?? ""}
-                            onChange={event =>
-                              assignArtworkFolder(
-                                artwork.id,
-                                event.target.value || null
-                              )
-                            }
-                          >
-                            <option value="">Loose world</option>
-                            {galleryFolders.map(folder => (
-                              <option key={folder.id} value={folder.id}>
-                                {folder.name}
-                              </option>
-                            ))}
-                          </select>
-                        </label>
-                        <div
-                          className="artwork-tag-list"
-                          aria-label={`${artwork.title} tags`}
-                        >
-                          {artworkTags.map(tag => (
-                            <button
-                              key={tag}
-                              className="artwork-tag"
-                              onClick={() =>
-                                removeTag(artwork.id, artworkTags, tag)
-                              }
-                              aria-label={`Remove tag ${tag} from ${artwork.title}`}
-                            >
-                              #{tag}
-                              <X aria-hidden="true" />
-                            </button>
-                          ))}
-                        </div>
-                        <form
-                          className="tag-add-form"
-                          onSubmit={event =>
-                            addTag(event, artwork.id, artworkTags)
-                          }
-                        >
-                          <label
-                            className="sr-only"
-                            htmlFor={`tag-${artwork.id}`}
-                          >
-                            Add a tag to {artwork.title}
-                          </label>
-                          <input
-                            id={`tag-${artwork.id}`}
-                            value={tagDrafts[artwork.id] ?? ""}
-                            maxLength={18}
-                            onChange={event =>
-                              setTagDrafts(drafts => ({
-                                ...drafts,
-                                [artwork.id]: event.target.value,
-                              }))
-                            }
-                            placeholder="Add tag"
-                          />
-                          <button
-                            type="submit"
-                            aria-label={`Add tag to ${artwork.title}`}
-                          >
-                            <Plus aria-hidden="true" />
-                          </button>
-                        </form>
-                      </div>
+                      <GalleryTagControls
+                        artwork={artwork}
+                        galleryFolders={galleryFolders}
+                        onAssignFolder={assignArtworkFolder}
+                        onSetTags={setArtworkTags}
+                      />
                       <div className="maker-spotlight-control">
                         {spotlight ? (
                           <>

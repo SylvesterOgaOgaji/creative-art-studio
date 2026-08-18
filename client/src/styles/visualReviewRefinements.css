@@ -495,3 +495,172 @@
     right: 13px;
   }
 }
+
+/* Canvas-first refinement: journal material supports making without becoming a second dashboard. */
+.brand-lockup {
+  gap: 8px;
+  border: 1px solid rgba(246, 201, 69, 0.38);
+  background: rgba(255, 253, 247, 0.78);
+  box-shadow: 3px 4px 0 rgba(226, 194, 142, 0.1);
+}
+
+.brand-lockup .brand-spark {
+  filter: saturate(1.08);
+}
+
+.brand-lockup .brand-kicker {
+  color: #9a513f;
+  letter-spacing: 0.12em;
+}
+
+.workspace-panel > .challenge-card {
+  margin-top: 18px;
+  border: 0;
+  border-left: 3px solid rgba(246, 201, 69, 0.72);
+  border-radius: 0 11px 11px 0;
+  background: linear-gradient(90deg, rgba(255, 252, 243, 0.76), transparent);
+  box-shadow: none;
+  padding-block: 11px;
+  transform: none;
+}
+
+.workspace-panel > .challenge-card::after {
+  display: none;
+}
+
+.workspace-panel > .badge-shelf,
+.workspace-panel > .studio-quick-guide,
+.workspace-panel > .maker-table-cue {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.workspace-panel > .badge-shelf {
+  margin-top: 12px;
+  border-top: 1px solid rgba(127, 100, 72, 0.16);
+  padding: 9px 2px 0;
+}
+
+.workspace-panel > .studio-quick-guide {
+  gap: 7px;
+  margin-top: 12px;
+  padding: 0 2px;
+  color: #6f6559;
+  font-size: 11px;
+}
+
+.workspace-panel > .studio-quick-guide svg {
+  width: 16px;
+  color: #4666e9;
+}
+
+.workspace-panel > .studio-quick-guide strong {
+  color: #3f493f;
+}
+
+.workspace-panel > .maker-table-cue {
+  gap: 8px;
+  margin-top: 8px;
+  padding: 7px 2px 0;
+}
+
+.workspace-panel > .maker-table-cue > span {
+  width: 22px;
+  height: 22px;
+  border-radius: 7px 5px 8px 6px;
+  color: #fffaf1;
+  background: #4eb69d;
+  font-size: 12px;
+}
+
+.workspace-panel > .maker-table-cue b {
+  color: #4b564d;
+  font-family: "DM Sans", sans-serif;
+  font-size: 11px;
+}
+
+.workspace-panel > .maker-table-cue p {
+  color: #817566;
+  font-size: 9px;
+}
+
+.workspace-panel > .maker-table-cue .paper-chips {
+  opacity: 0.65;
+  transform: scale(0.82);
+  transform-origin: right center;
+}
+
+.studio-app + .session-reflection {
+  width: min(1080px, calc(100% - 64px));
+  margin: 12px auto 30px;
+}
+
+.studio-app + .session-reflection::before {
+  left: 7%;
+  width: 42px;
+  height: 6px;
+  background: linear-gradient(
+    90deg,
+    #f6c945 0 34%,
+    #4eb69d 34% 67%,
+    #4666e9 67%
+  );
+  box-shadow: none;
+  transform: rotate(-2deg);
+}
+
+.session-reflection {
+  gap: 14px;
+  border: 1px solid rgba(127, 100, 72, 0.16);
+  border-radius: 16px 11px 18px 13px;
+  background: rgba(255, 252, 243, 0.74);
+  box-shadow: none;
+  padding: 15px;
+}
+
+.reflection-stamp {
+  width: 44px;
+  height: 44px;
+  border-radius: 13px 8px 15px 10px;
+  background: #4eb69d;
+}
+
+.reflection-stamp svg {
+  width: 17px;
+}
+
+.reflection-copy h2 {
+  color: #3f493f;
+  font-size: 19px;
+}
+
+.reflection-copy > p,
+.reflection-privacy,
+.reflection-actions {
+  color: #817566;
+}
+
+.reflection-privacy svg {
+  color: #4666e9;
+}
+
+.reflection-note textarea {
+  min-height: 68px;
+  border-color: rgba(127, 100, 72, 0.17);
+  color: #5e554b;
+  background: rgba(255, 254, 250, 0.82);
+  outline-color: #4666e9;
+}
+
+@media (max-width: 700px) {
+  .workspace-panel > .challenge-card {
+    margin-top: 14px;
+  }
+
+  .studio-app + .session-reflection {
+    width: min(100% - 28px, 1080px);
+    margin-top: 16px;
+  }
+}

@@ -25,7 +25,7 @@ pnpm install
 pnpm dev
 ```
 
-The app works without accounts, databases, external APIs, or a local configuration file. For development, the Express host defaults to port `3000`; provide `PORT` only when another local process already uses that port. `NODE_ENV=production` is set by the production container command. Platform-managed credentials are intentionally not required to run this browser-local MVP and are never committed to the repository.
+The app works without accounts, databases, external APIs, or a local configuration file. For development, the Express host defaults to port `3000`; provide `PORT` only when another local process already uses that port. `NODE_ENV=production` is set by the production container command. Platform-managed credentials are intentionally not required to run this browser-local MVP and are never committed to the repository. See [docs/environment.md](docs/environment.md) for the complete optional configuration contract and safe local examples.
 
 To build and start the same production host used for deployment with one command, run:
 

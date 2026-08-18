@@ -106,3 +106,11 @@
 - [x] Apply safe vendor and feature chunk boundaries to reduce the shared initial bundle.
 - [x] Replace the static stage fallback with an accessible, reduced-motion-aware loading animation.
 - [x] Validate the optimized bundle, browser workflows, quality gates, and responsive rendering before publishing.
+
+## 80-percent assessment improvement pass
+
+- [ ] Make the environment contract scanner-visible with a root `.env.example` and explicit README guidance.
+- [x] Broaden unit coverage for image export, opt-in sound, and sidebar state transitions; enforce a 50-percent coverage floor.
+- [x] Add structured server logging, request/error middleware, and focused server logging tests.
+- [x] Separate gallery/history responsibilities from the studio store and split remaining oversized gallery controls.
+- [x] Record a real v1.0.1 release entry, validate clean startup and all quality gates, then publish the focused update.
