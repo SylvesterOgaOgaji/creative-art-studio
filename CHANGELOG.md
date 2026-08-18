@@ -14,6 +14,12 @@ All notable project changes are documented here.
 - Made the optional map integration offline-first when `VITE_FRONTEND_FORGE_API_KEY` is absent, added explicit Zod-backed metrics query validation, and added an opt-in local JSONL error-tracking sink controlled by `ERROR_TRACKING_FILE`.
 - Marked the generated browser-debug collector as generated metadata and aligned the environment and architecture documentation with the fresh-clone contract.
 
+## 1.0.3 - 2026-08-18
+
+- Moved generated Manus browser-debug instrumentation out of `client/public` into `tools/dev-only`, serving it only through the development Vite middleware so production builds no longer ship it.
+- Added `verify:production-assets` and included it in quality and fresh-clone checks to assert that generated debug instrumentation is absent from `dist/public`.
+- Documented the exact clean-machine setup sequence and deduplicated the pnpm lockfile after auditing direct Radix imports; no unused direct Radix runtime dependencies were identified.
+
 ## 1.0.2 - 2026-08-18
 
 - Added an offline-capable dashboard shell with a cache-first service worker, installable web manifest, and an accessible online/offline status banner; browser-local artwork remains on the device.
