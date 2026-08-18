@@ -74,3 +74,10 @@
 - [x] Correct stage sizing so the canvas is prominent without expanding into an empty or cropped region.
 - [x] Ensure maker shelf and inspector stay readable without being clipped at desktop and touch breakpoints.
 - [x] Validate the corrected wide desktop and touch workbench layouts, then publish the fix.
+
+## Initial-load and creative-flow reliability
+
+- [x] Inspect route boundaries and current bundle composition for a safe Three.js lazy-loading seam.
+- [x] Lazy-load the studio route and confirm a clear accessible loading state.
+- [x] Add a browser-level end-to-end test covering shape creation, customization, save, and gallery restore.
+- [x] Validate the optimized bundle, browser flow, TypeScript, and production build, then publish the update.

@@ -2,7 +2,7 @@
  * Playful Atelier design reminder: compose the studio like a physical workbench—the
  * 3D stage leads, with maker tools and inspection controls framing purposeful play.
  */
-import { useCallback, useEffect, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useState } from "react";
 import { Link } from "wouter";
 import "@/styles/sessionReflection.css";
 import "@/styles/tutorialOverlayFix.css";
@@ -15,6 +15,7 @@ import "@/styles/publicStudioPages.css";
 import "@/styles/makersEducatorExtensions.css";
 import "@/styles/visualReviewRefinements.css";
 import "@/styles/workbenchViewportFix.css";
+import "@/styles/studioLoadState.css";
 import {
   Archive,
   CircleHelp,
@@ -35,13 +36,34 @@ import GalleryDrawer from "@/components/studio/GalleryDrawer";
 import FirstRunTutorial from "@/components/studio/FirstRunTutorial";
 import PropertiesPanel from "@/components/studio/PropertiesPanel";
 import SaveCelebration from "@/components/studio/SaveCelebration";
-import StudioCanvas from "@/components/studio/StudioCanvas";
 import ToolPanel from "@/components/studio/ToolPanel";
 import { captureStudioImage, exportStudioImage } from "@/lib/studioImage";
 import { playStudioSound } from "@/lib/studioSound";
 import { useStudioStore } from "@/store/useStudioStore";
 
 const sparkMark = "/manus-storage/creative-art-studio-spark_5082d4a6.png";
+const StudioCanvas = lazy(() => import("@/components/studio/StudioCanvas"));
+
+function StudioCanvasLoadingState() {
+  return (
+    <div
+      className="studio-canvas studio-canvas-loading-state"
+      role="status"
+      aria-live="polite"
+    >
+      <div className="studio-canvas-loading-card">
+        <span aria-hidden="true">✦</span>
+        <strong>Setting up your art stage</strong>
+        <p>You can choose a shape while the 3D tools wake up.</p>
+        <div className="studio-canvas-loading-dots" aria-hidden="true">
+          <i />
+          <i />
+          <i />
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function Home() {
   const artworkTitle = useStudioStore(state => state.artworkTitle);
@@ -257,7 +279,9 @@ export default function Home() {
               {objects.length} shape{objects.length === 1 ? "" : "s"}
             </span>
           </div>
-          <StudioCanvas />
+          <Suspense fallback={<StudioCanvasLoadingState />}>
+            <StudioCanvas />
+          </Suspense>
           <div className="workspace-actionbar">
             <button
               className="clear-button has-tooltip"

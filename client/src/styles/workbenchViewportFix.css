@@ -251,3 +251,112 @@
     display: none !important;
   }
 }
+
+/* Trusted review refinement: a generous maker table and its paper-cut arch lead the first glance; shelves and downstream notes stay quiet, readable tools. */
+@media (min-width: 1024px) and (min-height: 821px) {
+  .atelier-layout {
+    grid-template-columns: clamp(178px, 13.4vw, 212px) minmax(600px, 1fr) clamp(
+        184px,
+        13.8vw,
+        222px
+      );
+    gap: clamp(20px, 2.5vw, 38px);
+  }
+  .studio-canvas {
+    height: clamp(490px, 60dvh, 640px);
+    min-height: clamp(490px, 60dvh, 640px) !important;
+    border-width: 3px;
+    box-shadow:
+      20px 24px 0 rgba(230, 199, 148, 0.22),
+      inset 0 0 0 8px rgba(255, 252, 241, 0.86),
+      inset 0 0 0 12px rgba(246, 201, 69, 0.14) !important;
+  }
+  .tool-panel,
+  .properties-panel {
+    border-color: rgba(127, 100, 72, 0.18) !important;
+    box-shadow: 3px 6px 0 rgba(215, 182, 130, 0.1) !important;
+  }
+  .workspace-panel .challenge-card,
+  .workspace-panel .badge-shelf,
+  .workspace-panel .studio-quick-guide,
+  .workspace-panel .maker-table-cue {
+    box-shadow: none;
+  }
+  .workspace-panel .challenge-card {
+    margin-top: 30px;
+    margin-right: 9%;
+    border-color: rgba(246, 201, 69, 0.32);
+    background: rgba(255, 252, 244, 0.72);
+  }
+  .workspace-panel .badge-shelf,
+  .workspace-panel .studio-quick-guide,
+  .workspace-panel .maker-table-cue {
+    margin-right: 9%;
+    border-color: rgba(127, 100, 72, 0.18);
+    background: rgba(255, 253, 247, 0.66);
+  }
+}
+
+.paper-cut-stage-arch {
+  position: absolute;
+  z-index: 3;
+  inset: 40px 10% 42px;
+  overflow: hidden;
+  pointer-events: none;
+}
+.paper-cut-stage-arch::before,
+.paper-cut-stage-arch::after {
+  position: absolute;
+  content: "";
+  border-radius: 50% 50% 10px 10px / 31% 31% 8px 8px;
+  border: 6px solid rgba(246, 201, 69, 0.46);
+  border-bottom: 0;
+}
+.paper-cut-stage-arch::before {
+  inset: 8% 13% 6%;
+  box-shadow:
+    0 0 0 13px rgba(255, 255, 255, 0.16),
+    0 8px 0 rgba(246, 201, 69, 0.08);
+}
+.paper-cut-stage-arch::after {
+  inset: 17% 22% 6%;
+  border: 5px solid rgba(78, 182, 157, 0.42);
+  transform: rotate(-1.5deg);
+}
+.paper-cut-stage-arch i {
+  position: absolute;
+  bottom: 5.5%;
+  display: block;
+  width: 18px;
+  height: 18px;
+  border-radius: 7px 4px 7px 4px;
+  background: #f6c945;
+  box-shadow: 2px 3px 0 rgba(143, 109, 41, 0.1);
+  transform: rotate(18deg);
+}
+.paper-cut-stage-arch i:nth-child(1) {
+  left: 19%;
+}
+.paper-cut-stage-arch i:nth-child(2) {
+  right: 19%;
+  border-radius: 50%;
+  background: #4eb69d;
+  transform: translateY(7px) rotate(-14deg);
+}
+.paper-cut-stage-arch i:nth-child(3) {
+  left: 50%;
+  width: 17px;
+  height: 17px;
+  background: #4666e9;
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  transform: translateX(-50%) rotate(6deg);
+}
+@media (max-width: 700px) {
+  .paper-cut-stage-arch {
+    inset: 34px 7% 38px;
+  }
+  .paper-cut-stage-arch::before,
+  .paper-cut-stage-arch::after {
+    border-width: 4px;
+  }
+}

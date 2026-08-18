@@ -397,6 +397,73 @@
 .reflection-save {
   background: #ff6b4a;
 }
+/* Playful Atelier journal refinement: a single pigment strip sits beside each content heading, while persimmon remains reserved for making and primary actions. */
+.journal-page .section-heading-journal,
+.journal-page .showcase-heading,
+.journal-page .teacher-print-heading {
+  position: relative;
+}
+.journal-page .section-heading-journal::after,
+.journal-page .showcase-heading::after,
+.journal-page .teacher-print-heading::after {
+  display: block;
+  width: 58px;
+  height: 7px;
+  margin-top: 13px;
+  content: "";
+  border-radius: 2px 5px 2px 4px;
+  background: linear-gradient(
+    90deg,
+    #ff6b4a 0 34%,
+    #f6c945 34% 54%,
+    #4eb69d 54% 74%,
+    #4666e9 74%
+  );
+  box-shadow: 1px 2px 0 rgba(121, 90, 59, 0.1);
+  transform: rotate(-1.2deg);
+}
+.journal-page .journal-primary-action,
+.journal-page .journal-primary-button,
+.journal-page .teacher-print-button {
+  background: #ff6b4a;
+  box-shadow: 3px 4px 0 rgba(185, 71, 43, 0.16);
+}
+@media (min-width: 701px) {
+  .educator-hero::after,
+  .classroom-hero::after,
+  .makers-roster-section::after,
+  .makers-showcase::after {
+    width: 62px;
+    height: 8px;
+    margin-top: 22px;
+    border-radius: 2px 5px 2px 4px;
+    background: linear-gradient(
+      90deg,
+      rgba(246, 201, 69, 0.92) 0 30%,
+      rgba(78, 182, 157, 0.76) 30% 58%,
+      rgba(70, 102, 233, 0.76) 58% 78%,
+      rgba(255, 107, 74, 0.84) 78%
+    );
+    box-shadow: 2px 3px 0 rgba(121, 90, 59, 0.09);
+    transform: rotate(-1.4deg);
+  }
+  .session-duration-section::before,
+  .family-activity-section::before {
+    width: 64px;
+    height: 8px;
+    margin: -9px 0 14px 7px;
+    border-radius: 2px 5px 2px 4px;
+    background: linear-gradient(
+      90deg,
+      #ff6b4a 0 36%,
+      #f6c945 36% 57%,
+      #4eb69d 57% 77%,
+      #4666e9 77%
+    );
+    box-shadow: 2px 3px 0 rgba(121, 90, 59, 0.09);
+    transform: rotate(-1.2deg);
+  }
+}
 .family-sheet-paper header {
   position: relative;
 }

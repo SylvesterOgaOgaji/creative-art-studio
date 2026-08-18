@@ -32,6 +32,7 @@ Run the full local quality gate with:
 ```bash
 pnpm check
 pnpm test
+pnpm test:e2e
 pnpm build
 pnpm format:check
 pnpm audit:production
@@ -50,7 +51,7 @@ The artwork model is structured data rather than a screenshot alone, so a saved 
 
 ## Tests and automation
 
-The project uses Vitest with Testing Library. The suite covers core browser-local creation, transformation history, multi-select duplication and deletion, gallery organization, classroom starters, reusable field errors, and the production health endpoint. GitHub Actions installs from the lockfile and runs formatting, type checking, tests, and the production build on every push and pull request.
+The project uses Vitest with Testing Library for focused unit and integration coverage, plus Playwright for a browser-level creative flow. The browser test opens a fresh studio, creates and colours a shape, saves it locally, verifies the gallery card, and restores the saved world. GitHub Actions installs from the lockfile and runs formatting, type checking, unit tests, the Chromium creative-flow test, and the production build on every push and pull request.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the focused-change workflow and [CHANGELOG.md](CHANGELOG.md) for project release notes.
 

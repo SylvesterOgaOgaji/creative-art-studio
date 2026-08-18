@@ -45,5 +45,11 @@ jobs:
       - name: Run automated tests
         run: pnpm test
 
+      - name: Install Chromium for browser tests
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Run creative-flow browser test
+        run: pnpm test:e2e
+
       - name: Build production bundle
         run: pnpm build

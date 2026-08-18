@@ -106,3 +106,6 @@ The wordmark pairs the high-contrast Fraunces title with a compact, tilted **Spa
 17. The four-lobed pigment **Spark** and Fraunces wordmark are the single visual identity on studio and field-journal routes; “Field journal” remains a secondary descriptor.
 18. **Persimmon Spark `#FF6B4A`** signals making, starting, saving, selection, and celebration. Cobalt is a secondary pigment accent rather than a primary action colour.
 19. Every field-journal section carries a small tactile studio signal: a pinned edge, paper tape, pigment strip, paper-cut shape, or folded surface.
+20. On wide, tall screens, the **3D art stage** is wider, taller, and more physically framed than any surrounding shelf; challenge, badge, guide, and reflection surfaces are intentionally quieter downstream notes.
+21. Empty stages show a **double paper-cut arch** with three simple pigment primitives behind the first-making prompt, making the maker table recognizable before an object is added.
+22. Field-journal section headings use one short, content-adjacent pigment strip and retain **Persimmon Spark** for making, starting, saving, and print actions; decorative colour appears as a material cue, not a competing action signal.

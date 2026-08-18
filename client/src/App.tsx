@@ -1,21 +1,44 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { lazy, Suspense } from "react";
 import NotFound from "@/pages/NotFound";
 import Makers from "@/pages/Makers";
 import Educators from "@/pages/Educators";
 import ClassroomStarter from "@/pages/ClassroomStarter";
-import SessionReflectionPrompt from "@/components/studio/SessionReflectionPrompt";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
-import Home from "./pages/Home";
+
+const StudioRoute = lazy(() => import("./pages/StudioRoute"));
 
 function StudioWithReflection() {
   return (
-    <>
-      <Home />
-      <SessionReflectionPrompt />
-    </>
+    <Suspense
+      fallback={
+        <main
+          className="flex min-h-screen items-center justify-center bg-[#fffaf0] p-6 text-center text-[#342c43]"
+          role="status"
+          aria-live="polite"
+        >
+          <div className="max-w-xs rounded-[1.5rem] border border-[#f2d7a2] bg-white/85 px-8 py-7 shadow-[0_12px_32px_rgba(94,68,31,.12)]">
+            <span
+              className="mb-3 block text-2xl text-[#ff6b4a]"
+              aria-hidden="true"
+            >
+              ✦
+            </span>
+            <strong className="font-serif text-xl">
+              Opening your art studio
+            </strong>
+            <p className="mt-2 text-sm text-[#62566d]">
+              Bringing the creative tools to your maker table.
+            </p>
+          </div>
+        </main>
+      }
+    >
+      <StudioRoute />
+    </Suspense>
   );
 }
 

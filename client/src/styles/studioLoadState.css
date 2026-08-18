@@ -1,0 +1,101 @@
+/* Playful Atelier design reminder: make loading feel like a gentle studio ritual,
+   using parchment, persimmon, and a visible child-friendly next step. */
+
+.studio-canvas-loading-state {
+  display: grid;
+  min-height: clamp(21rem, 47vh, 34rem);
+  place-items: center;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      circle at 18% 22%,
+      rgba(255, 202, 75, 0.34) 0 0.65rem,
+      transparent 0.7rem
+    ),
+    radial-gradient(
+      circle at 80% 75%,
+      rgba(71, 100, 230, 0.18) 0 1rem,
+      transparent 1.08rem
+    ),
+    linear-gradient(
+      145deg,
+      rgba(255, 249, 238, 0.96),
+      rgba(253, 237, 204, 0.84)
+    );
+}
+
+.studio-canvas-loading-card {
+  max-width: 18rem;
+  padding: 1.35rem 1.5rem;
+  border: 1px solid rgba(242, 183, 112, 0.62);
+  border-radius: 1.35rem;
+  background: rgba(255, 253, 246, 0.92);
+  box-shadow:
+    0 0.65rem 0 rgba(241, 193, 122, 0.35),
+    0 1.4rem 2.8rem rgba(94, 68, 31, 0.12);
+  color: #342c43;
+  text-align: center;
+}
+
+.studio-canvas-loading-card > span {
+  display: block;
+  margin-bottom: 0.45rem;
+  color: #ff6b4a;
+  font-size: 1.7rem;
+}
+
+.studio-canvas-loading-card strong {
+  display: block;
+  font-family: Fraunces, Georgia, serif;
+  font-size: 1.2rem;
+}
+
+.studio-canvas-loading-card p {
+  margin: 0.45rem 0 0;
+  color: #62566d;
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.studio-canvas-loading-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.4rem;
+  margin-top: 0.85rem;
+}
+
+.studio-canvas-loading-dots i {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: #ff6b4a;
+}
+
+.studio-canvas-loading-dots i:nth-child(2) {
+  background: #f5c53d;
+}
+
+.studio-canvas-loading-dots i:nth-child(3) {
+  background: #4666e9;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .studio-canvas-loading-dots i {
+    animation: studio-loading-dot 900ms ease-in-out infinite alternate;
+  }
+
+  .studio-canvas-loading-dots i:nth-child(2) {
+    animation-delay: 120ms;
+  }
+
+  .studio-canvas-loading-dots i:nth-child(3) {
+    animation-delay: 240ms;
+  }
+}
+
+@keyframes studio-loading-dot {
+  to {
+    opacity: 0.45;
+    transform: translateY(-0.22rem);
+  }
+}

@@ -541,6 +541,13 @@ export default function StudioCanvas() {
         <StudioScene />
       </Canvas>
       {!objects.length && (
+        <div className="paper-cut-stage-arch" aria-hidden="true">
+          <i />
+          <i />
+          <i />
+        </div>
+      )}
+      {!objects.length && (
         <div className="canvas-empty-guide" aria-hidden="true">
           <span>✦</span>
           <strong>Start with one bright shape</strong>
