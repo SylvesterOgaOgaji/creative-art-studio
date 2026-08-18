@@ -44,3 +44,44 @@ test("a creator can make, customise, save, and reopen a browser-local world", as
     page.getByText("1 shape", { exact: true }).first()
   ).toBeVisible();
 });
+
+test("a creator can undo, redo, and download a PNG of their current stage", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    window.localStorage.clear();
+  });
+
+  await page.goto("/");
+
+  const title = page.getByLabel("Give your world a name");
+  await title.fill("Undo Redo Rainbow");
+
+  const undo = page.getByRole("button", {
+    name: "Undo last creative action",
+  });
+  const redo = page.getByRole("button", {
+    name: "Redo last creative action",
+  });
+  await expect(undo).toBeDisabled();
+  await expect(redo).toBeDisabled();
+
+  await page.getByRole("button", { name: "Add a Cube" }).click();
+  await expect(page.getByText("1 shape", { exact: true })).toBeVisible();
+  await expect(undo).toBeEnabled();
+
+  await undo.click();
+  await expect(page.getByText("0 shapes", { exact: true })).toBeVisible();
+  await expect(redo).toBeEnabled();
+
+  await redo.click();
+  await expect(page.getByText("1 shape", { exact: true })).toBeVisible();
+
+  const download = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Take a PNG" }).click();
+  const png = await download;
+  expect(png.suggestedFilename()).toBe(
+    "undo-redo-rainbow-creative-art-studio.png"
+  );
+  await expect(page.getByText("Your artwork is ready as a PNG.")).toBeVisible();
+});

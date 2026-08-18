@@ -32,10 +32,8 @@ import {
 } from "lucide-react";
 import ChallengeCard from "@/components/studio/ChallengeCard";
 import { toast } from "sonner";
-import GalleryDrawer from "@/components/studio/GalleryDrawer";
 import FirstRunTutorial from "@/components/studio/FirstRunTutorial";
 import PropertiesPanel from "@/components/studio/PropertiesPanel";
-import SaveCelebration from "@/components/studio/SaveCelebration";
 import ToolPanel from "@/components/studio/ToolPanel";
 import { captureStudioImage, exportStudioImage } from "@/lib/studioImage";
 import { playStudioSound } from "@/lib/studioSound";
@@ -43,6 +41,10 @@ import { useStudioStore } from "@/store/useStudioStore";
 
 const sparkMark = "/manus-storage/creative-art-studio-spark_5082d4a6.png";
 const StudioCanvas = lazy(() => import("@/components/studio/StudioCanvas"));
+const GalleryDrawer = lazy(() => import("@/components/studio/GalleryDrawer"));
+const SaveCelebration = lazy(
+  () => import("@/components/studio/SaveCelebration")
+);
 
 function StudioCanvasLoadingState() {
   return (
@@ -51,6 +53,13 @@ function StudioCanvasLoadingState() {
       role="status"
       aria-live="polite"
     >
+      <div className="studio-canvas-skeleton" aria-hidden="true">
+        <span className="studio-skeleton-arch studio-skeleton-arch-one" />
+        <span className="studio-skeleton-arch studio-skeleton-arch-two" />
+        <span className="studio-skeleton-orb studio-skeleton-orb-one" />
+        <span className="studio-skeleton-orb studio-skeleton-orb-two" />
+        <span className="studio-skeleton-ground" />
+      </div>
       <div className="studio-canvas-loading-card">
         <span aria-hidden="true">✦</span>
         <strong>Setting up your art stage</strong>
@@ -71,6 +80,7 @@ export default function Home() {
   const objects = useStudioStore(state => state.objects);
   const selectedObjectId = useStudioStore(state => state.selectedObjectId);
   const savedArtworks = useStudioStore(state => state.savedArtworks);
+  const galleryOpen = useStudioStore(state => state.galleryOpen);
   const setGalleryOpen = useStudioStore(state => state.setGalleryOpen);
   const clearScene = useStudioStore(state => state.clearScene);
   const surpriseMe = useStudioStore(state => state.surpriseMe);
@@ -366,8 +376,16 @@ export default function Home() {
           other learners in the training studio.
         </p>
       </footer>
-      <GalleryDrawer />
-      <SaveCelebration active={isCelebrating} onDone={finishCelebration} />
+      {galleryOpen && (
+        <Suspense fallback={null}>
+          <GalleryDrawer />
+        </Suspense>
+      )}
+      {isCelebrating && (
+        <Suspense fallback={null}>
+          <SaveCelebration active={isCelebrating} onDone={finishCelebration} />
+        </Suspense>
+      )}
     </div>
   );
 }

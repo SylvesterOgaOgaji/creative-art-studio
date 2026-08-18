@@ -240,6 +240,27 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (!id.includes("node_modules")) return;
+          if (
+            id.includes("/three/") ||
+            id.includes("/@react-three/") ||
+            id.includes("/three-stdlib/") ||
+            id.includes("/maath/")
+          ) {
+            return "three-runtime";
+          }
+          if (id.includes("/framer-motion/")) return "motion";
+          if (id.includes("/@radix-ui/")) return "radix-ui";
+          if (id.includes("/lucide-react/")) return "studio-icons";
+          if (id.includes("/react/") || id.includes("/react-dom/")) {
+            return "react-runtime";
+          }
+        },
+      },
+    },
   },
   server: {
     port: 3000,

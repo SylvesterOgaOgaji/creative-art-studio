@@ -98,3 +98,11 @@
 - [x] Add focused tests for the studio shell, gallery drawer, and challenge interactions, then raise the enforced coverage floor.
 - [x] Extract gallery drawer sections into reviewable, tested subcomponents while preserving current browser-local behaviour.
 - [x] Validate clean installation, all quality gates, and desktop/touch workflows before publishing.
+
+## Export, history, and loading experience
+
+- [x] Inspect current download behavior, history controls, Rollup chunks, and lazy-stage markup.
+- [x] Extend the browser flow with reliable undo, redo, and PNG download assertions.
+- [x] Apply safe vendor and feature chunk boundaries to reduce the shared initial bundle.
+- [x] Replace the static stage fallback with an accessible, reduced-motion-aware loading animation.
+- [x] Validate the optimized bundle, browser workflows, quality gates, and responsive rendering before publishing.
