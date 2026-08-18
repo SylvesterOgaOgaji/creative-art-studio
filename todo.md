@@ -56,4 +56,4 @@
 - [x] Add several classroom starter themes with safe local scene loading.
 - [x] Add a teacher-controlled anonymized local project-summary download.
 - [x] Validate printing, starter selection, export output, desktop/touch layouts, TypeScript, and production build.
-- [ ] Save and publish the educator-tools release.
+- [x] Save and publish the educator-tools release.
