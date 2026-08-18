@@ -1,4 +1,10 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useStudioStore } from "@/store/useStudioStore";
 import Home from "./Home";
@@ -134,5 +140,28 @@ describe("Home studio workflow", () => {
     expect(useStudioStore.getState().objects.length).toBeGreaterThan(0);
     expect(undo).toBeEnabled();
     expect(redo).toBeDisabled();
+  });
+
+  it("deletes a selected shape from the keyboard without hijacking text fields", () => {
+    render(<Home />);
+    act(() => {
+      useStudioStore.getState().addObject("cube");
+      const objectId = useStudioStore.getState().objects[0]?.id;
+      useStudioStore.getState().selectObject(objectId ?? null);
+    });
+
+    fireEvent.keyDown(window, { key: "Delete" });
+    expect(useStudioStore.getState().objects).toHaveLength(0);
+    expect(mocks.toast).toHaveBeenCalledWith("Shape removed from your stage.");
+
+    act(() => {
+      useStudioStore.getState().addObject("sphere");
+      useStudioStore
+        .getState()
+        .selectObject(useStudioStore.getState().objects[0]?.id ?? null);
+    });
+    const titleField = screen.getByLabelText("Give your world a name");
+    fireEvent.keyDown(titleField, { key: "Delete" });
+    expect(useStudioStore.getState().objects).toHaveLength(1);
   });
 });

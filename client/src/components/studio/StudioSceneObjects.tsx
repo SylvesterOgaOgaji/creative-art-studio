@@ -237,12 +237,12 @@ export function SingleTransformObject({
       }}
       onObjectChange={() => {
         const mesh = meshRef.current;
-        if (mesh)
-          updateObjectDuringTransform(object.id, {
-            position: toTuple(mesh.position),
-            rotation: toTuple(mesh.rotation),
-            scale: toTuple(mesh.scale),
-          });
+        if (!mesh?.position || !mesh.rotation || !mesh.scale) return;
+        updateObjectDuringTransform(object.id, {
+          position: toTuple(mesh.position),
+          rotation: toTuple(mesh.rotation),
+          scale: toTuple(mesh.scale),
+        });
       }}
     >
       <SceneMesh
@@ -297,7 +297,13 @@ export function GroupTransformObject({
     updateObjectsDuringTransform(
       objects.flatMap(object => {
         const mesh = meshRefs.current.get(object.id);
-        if (!mesh) return [];
+        if (
+          !mesh ||
+          typeof mesh.getWorldPosition !== "function" ||
+          typeof mesh.getWorldQuaternion !== "function" ||
+          typeof mesh.getWorldScale !== "function"
+        )
+          return [];
         mesh.getWorldPosition(worldPosition);
         mesh.getWorldQuaternion(worldQuaternion);
         mesh.getWorldScale(worldScale);
