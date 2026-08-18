@@ -37,4 +37,26 @@ describe("server error handling", () => {
       "unhandled request error"
     );
   });
+
+  it("normalizes non-Error throws and replaces unsafe request IDs", async () => {
+    const log = createTestLogger();
+    const app = createApp(undefined, log, configuredApp => {
+      configuredApp.get("/boom", () => {
+        throw "string failure";
+      });
+    });
+
+    const response = await request(app)
+      .get("/boom")
+      .set("x-request-id", "x".repeat(129));
+
+    expect(response.status).toBe(500);
+    expect(response.headers["x-request-id"]).toMatch(/^[0-9a-f-]{36}$/);
+    expect(log.error).toHaveBeenCalledWith(
+      expect.objectContaining({
+        err: expect.objectContaining({ message: "string failure" }),
+      }),
+      "unhandled request error"
+    );
+  });
 });

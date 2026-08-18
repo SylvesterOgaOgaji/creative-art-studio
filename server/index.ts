@@ -18,6 +18,25 @@ function getStaticPath() {
     : path.resolve(__dirname, "..", "dist", "public");
 }
 
+function requestIdFrom(req: Request) {
+  const candidate = req.header("x-request-id")?.trim();
+  return candidate && /^[\x21-\x7e]{1,128}$/.test(candidate)
+    ? candidate
+    : randomUUID();
+}
+
+function describeError(error: unknown) {
+  if (error instanceof Error) {
+    return { message: error.message, stack: error.stack };
+  }
+  if (typeof error === "string") return { message: error };
+  if (error && typeof error === "object" && "message" in error) {
+    const message = (error as { message?: unknown }).message;
+    return { message: typeof message === "string" ? message : String(message) };
+  }
+  return { message: "Unknown server error" };
+}
+
 export type RequestMetrics = {
   record(statusCode: number, durationMs: number): void;
   snapshot(): {
@@ -59,7 +78,7 @@ export function createMetrics(): RequestMetrics {
 function requestLoggingMiddleware(log: AppLogger, metrics: RequestMetrics) {
   return (req: Request, res: Response, next: NextFunction) => {
     const startedAt = performance.now();
-    const requestId = req.header("x-request-id")?.trim() || randomUUID();
+    const requestId = requestIdFrom(req);
     res.locals.requestId = requestId;
     res.setHeader("x-request-id", requestId);
     res.once("finish", () => {
@@ -82,17 +101,18 @@ function requestLoggingMiddleware(log: AppLogger, metrics: RequestMetrics) {
 }
 
 function errorHandlingMiddleware(log: AppLogger, errorSink: ErrorSink) {
-  return (error: Error, req: Request, res: Response, _next: NextFunction) => {
+  return (error: unknown, req: Request, res: Response, _next: NextFunction) => {
+    const details = describeError(error);
     const event = {
       requestId: res.locals.requestId,
       method: req.method,
       path: req.path,
-      message: error.message,
-      stack: error.stack,
+      message: details.message,
+      stack: details.stack,
     };
     log.error(
       {
-        err: { message: error.message, stack: error.stack },
+        err: { message: details.message, stack: details.stack },
         requestId: event.requestId,
         method: event.method,
         path: event.path,
