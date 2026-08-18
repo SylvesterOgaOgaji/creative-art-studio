@@ -57,3 +57,13 @@
 - [x] Add a teacher-controlled anonymized local project-summary download.
 - [x] Validate printing, starter selection, export output, desktop/touch layouts, TypeScript, and production build.
 - [x] Save and publish the educator-tools release.
+
+## Family and session wrap-up expansion
+
+- [x] Inspect current educator printing, session guidance, and browser-local state boundaries.
+- [x] Define the family-sheet print format, duration preset content, and reflection prompt data shape.
+- [x] Add a one-page printable family activity sheet and print action.
+- [x] Add educator-selectable session duration presets with clear lesson pacing.
+- [x] Add a browser-local end-of-session student reflection prompt.
+- [x] Validate print, duration selection, reflection persistence, desktop/touch layouts, TypeScript, and production build.
+- [ ] Save and publish the family and session wrap-up release.

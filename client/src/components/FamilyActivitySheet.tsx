@@ -1,0 +1,13 @@
+/** Playful Atelier design reminder: the family sheet should feel like a take-home studio note—encouraging, clear, and light on ink. */
+import { Camera, HeartHandshake, Home, Lightbulb, Printer, ShieldCheck, Sparkles } from "lucide-react";
+
+function printFamilySheet() {
+  document.body.dataset.printTarget = "family";
+  const cleanup = () => { delete document.body.dataset.printTarget; };
+  window.addEventListener("afterprint", cleanup, { once: true });
+  window.print();
+}
+
+export default function FamilyActivitySheet() {
+  return <section className="family-activity-section" aria-labelledby="family-sheet-title"><div className="family-sheet-heading"><div><span className="eyebrow">Take-home studio note</span><h2 id="family-sheet-title">A tiny world, made together.</h2><p>Print this one-page family activity for a calm at-home making moment. A grown-up can read the prompts aloud; a young maker can choose the shapes and lead the story.</p></div><button className="family-print-button" onClick={printFamilySheet}><Printer aria-hidden="true" />Print family sheet</button></div><article className="family-sheet-paper"><header><div className="family-sheet-mark"><Sparkles aria-hidden="true" /></div><div><span>Creative Art Studio at home</span><h3>Build a place that feels good to visit.</h3></div><p>20–30 minutes</p></header><div className="family-sheet-steps"><section><span>01</span><div><h4>Choose a seed</h4><p>Open the studio and pick a classroom starter, or begin with one bright shape.</p></div></section><section><span>02</span><div><h4>Make it yours</h4><p>Add three things your place needs: a helper, a home, a surprise, or a way to play.</p></div></section><section><span>03</span><div><h4>Tell the story</h4><p>Give the world a name. Ask the maker to point to one choice they are proud of.</p></div></section></div><div className="family-sheet-talk"><Lightbulb aria-hidden="true" /><div><b>Talk together</b><p>“What happens here?” · “Which shape changed the most?” · “What would you make next time?”</p></div></div><footer><span><Home aria-hidden="true" />Everything stays in this browser unless your family chooses to download a picture.</span><span><Camera aria-hidden="true" />Optional: save a PNG of the finished world.</span><span><ShieldCheck aria-hidden="true" />No account or personal details are needed.</span></footer></article><div className="family-sheet-note"><HeartHandshake aria-hidden="true" /><p><b>Grown-up note:</b> There is no right answer. Let the young maker choose, test, and change their mind; questions are more useful than corrections.</p></div></section>;
+}

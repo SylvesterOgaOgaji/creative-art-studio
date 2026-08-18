@@ -4,7 +4,7 @@
  */
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { ClassroomStarterTheme, GalleryFolder, MakerSpotlight, SavedArtwork, StudioAgeMode, StudioEnvironment, StudioLighting, StudioMaterial, StudioObject, StudioObjectType, StudioSticker, StudioTexture, TransformMode, TutorialStep, Vector3Tuple } from "@/types/studio";
+import type { ClassroomStarterTheme, GalleryFolder, MakerSpotlight, SavedArtwork, SessionDuration, SessionReflection, StudioAgeMode, StudioEnvironment, StudioLighting, StudioMaterial, StudioObject, StudioObjectType, StudioSticker, StudioTexture, TransformMode, TutorialStep, Vector3Tuple } from "@/types/studio";
 
 const HISTORY_LIMIT = 40;
 const makeId = () => globalThis.crypto?.randomUUID?.() ?? `studio-${Date.now()}-${Math.random().toString(36).slice(2)}`;
@@ -33,6 +33,8 @@ interface StudioState {
   soundVolume: number;
   challengeIndex: number;
   completedChallengeIds: number[];
+  sessionDuration: SessionDuration;
+  lastSessionReflection: SessionReflection | null;
   setArtworkTitle: (title: string) => void;
   setGalleryOpen: (isOpen: boolean) => void;
   setLighting: (lighting: StudioLighting) => void;
@@ -78,6 +80,9 @@ interface StudioState {
   replayTutorial: () => void;
   nextChallenge: () => void;
   completeChallenge: (challengeId: number) => void;
+  setSessionDuration: (duration: SessionDuration) => void;
+  saveSessionReflection: (answer: string, promptId: string) => boolean;
+  clearSessionReflection: () => void;
 }
 
 type SceneSnapshot = Pick<StudioState, "artworkTitle" | "objects" | "lighting" | "environment" | "selectedObjectId" | "selectedObjectIds">;
@@ -130,7 +135,7 @@ export const useStudioStore = create<StudioState>()(
 
       return {
         artworkTitle: "My tiny world", objects: [], lighting: "daylight", environment: "atelier", ageMode: "creator", selectedObjectId: null, selectedObjectIds: [], multiSelectMode: false,
-        transformMode: "translate", transformInProgress: false, past: [], future: [], savedArtworks: [], galleryFolders: [], makerSpotlights: [], galleryOpen: false, tutorialStep: "welcome", soundEnabled: false, soundVolume: .62, challengeIndex: 0, completedChallengeIds: [],
+        transformMode: "translate", transformInProgress: false, past: [], future: [], savedArtworks: [], galleryFolders: [], makerSpotlights: [], galleryOpen: false, tutorialStep: "welcome", soundEnabled: false, soundVolume: .62, challengeIndex: 0, completedChallengeIds: [], sessionDuration: "extended", lastSessionReflection: null,
         setArtworkTitle: (artworkTitle) => set({ artworkTitle }),
         setGalleryOpen: (galleryOpen) => set({ galleryOpen }),
         setLighting: (lighting) => commit({ lighting }),
@@ -200,8 +205,11 @@ export const useStudioStore = create<StudioState>()(
         replayTutorial: () => set({ tutorialStep: "add" }),
         nextChallenge: () => set((state) => ({ challengeIndex: state.challengeIndex + 1 })),
         completeChallenge: (challengeId) => set((state) => state.completedChallengeIds.includes(challengeId) ? state : { completedChallengeIds: [...state.completedChallengeIds, challengeId] }),
+        setSessionDuration: (sessionDuration) => set({ sessionDuration }),
+        saveSessionReflection: (answer, promptId) => { const cleaned = answer.trim().replace(/\s+/g, " ").slice(0, 240); if (!cleaned) return false; set({ lastSessionReflection: { id: makeId(), createdAt: new Date().toISOString(), promptId, answer: cleaned, objectCount: get().objects.length } }); return true; },
+        clearSessionReflection: () => set({ lastSessionReflection: null }),
       };
     },
-    { name: "creative-art-studio-v2", partialize: (state) => ({ artworkTitle: state.artworkTitle, objects: state.objects, lighting: state.lighting, environment: state.environment, ageMode: state.ageMode, savedArtworks: state.savedArtworks, galleryFolders: state.galleryFolders, makerSpotlights: state.makerSpotlights, tutorialStep: state.tutorialStep, soundEnabled: state.soundEnabled, soundVolume: state.soundVolume, challengeIndex: state.challengeIndex, completedChallengeIds: state.completedChallengeIds }) },
+    { name: "creative-art-studio-v2", partialize: (state) => ({ artworkTitle: state.artworkTitle, objects: state.objects, lighting: state.lighting, environment: state.environment, ageMode: state.ageMode, savedArtworks: state.savedArtworks, galleryFolders: state.galleryFolders, makerSpotlights: state.makerSpotlights, tutorialStep: state.tutorialStep, soundEnabled: state.soundEnabled, soundVolume: state.soundVolume, challengeIndex: state.challengeIndex, completedChallengeIds: state.completedChallengeIds, sessionDuration: state.sessionDuration, lastSessionReflection: state.lastSessionReflection }) },
   ),
 );
