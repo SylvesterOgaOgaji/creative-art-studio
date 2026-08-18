@@ -84,10 +84,10 @@ jobs:
         uses: ./.github/actions/setup-pnpm
 
       - name: Install Chromium for browser tests
-        run: pnpm exec playwright install --with-deps chromium
+        run: timeout 180s pnpm exec playwright install chromium
 
       - name: Run Playwright end-to-end tests
-        run: pnpm test:e2e
+        run: timeout 180s pnpm test:e2e
 
       - name: Upload Playwright artifacts
         if: always()
