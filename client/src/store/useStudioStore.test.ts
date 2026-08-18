@@ -99,4 +99,29 @@ describe("browser-local studio state", () => {
     expect(state.objects).toHaveLength(4);
     expect(state.tutorialStep).toBe("done");
   });
+
+  it("ignores malformed LocalStorage state rather than loading an unsafe scene", async () => {
+    localStorage.setItem(
+      "creative-art-studio-v2",
+      JSON.stringify({
+        state: {
+          artworkTitle: "Broken saved world",
+          objects: [
+            {
+              id: "bad-object",
+              name: "Broken cube",
+              type: "cube",
+              position: ["not-a-number", 0, 0],
+            },
+          ],
+        },
+        version: 0,
+      })
+    );
+
+    await useStudioStore.persist.rehydrate();
+
+    expect(useStudioStore.getState().objects).toEqual([]);
+    expect(useStudioStore.getState().artworkTitle).toBe("My tiny world");
+  });
 });

@@ -15,5 +15,23 @@ export default defineConfig({
     setupFiles: ["./client/src/test/setup.ts"],
     include: ["client/src/**/*.test.{ts,tsx}", "server/**/*.test.ts"],
     clearMocks: true,
+    coverage: {
+      provider: "v8",
+      reporter: ["text", "json-summary"],
+      reportsDirectory: "coverage",
+      include: [
+        "client/src/store/useStudioStore.ts",
+        "client/src/components/studio/ToolPanel.tsx",
+        "client/src/components/studio/PropertiesPanel.tsx",
+        "client/src/components/studio/StudioCanvas.tsx",
+        "server/index.ts",
+      ],
+      thresholds: {
+        lines: 30,
+        functions: 25,
+        statements: 30,
+        branches: 20,
+      },
+    },
   },
 });

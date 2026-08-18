@@ -39,11 +39,17 @@ jobs:
       - name: Check formatting
         run: pnpm format:check
 
+      - name: Run lint
+        run: pnpm lint
+
       - name: Check TypeScript
         run: pnpm check
 
       - name: Run automated tests
         run: pnpm test
+
+      - name: Enforce core coverage baseline
+        run: pnpm test:coverage
 
       - name: Install Chromium for browser tests
         run: pnpm exec playwright install --with-deps chromium

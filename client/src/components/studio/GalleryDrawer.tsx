@@ -17,8 +17,13 @@ import {
   Trash2,
   X,
 } from "lucide-react";
-import { FormEvent, useMemo, useState } from "react";
+import { useMemo, useState, type FormEvent } from "react";
 import { toast } from "sonner";
+import {
+  collectGalleryTags,
+  createFolderLookup,
+  filterGalleryArtworks,
+} from "@/lib/galleryOrganization";
 import { exportSavedArtworkImage } from "@/lib/studioImage";
 import { useStudioStore } from "@/store/useStudioStore";
 
@@ -70,45 +75,26 @@ export default function GalleryDrawer() {
     Record<string, string>
   >({});
   const folderById = useMemo(
-    () => new Map(galleryFolders.map(folder => [folder.id, folder])),
+    () => createFolderLookup(galleryFolders),
     [galleryFolders]
   );
   const allTags = useMemo(
-    () =>
-      Array.from(
-        new Set(savedArtworks.flatMap(artwork => artwork.tags ?? []))
-      ).sort((a, b) => a.localeCompare(b)),
+    () => collectGalleryTags(savedArtworks),
     [savedArtworks]
   );
   const matchingArtworks = useMemo(() => {
-    const query = search.trim().toLocaleLowerCase();
-    return savedArtworks.filter(artwork => {
-      const folderName = artwork.folderId
-        ? (folderById.get(artwork.folderId)?.name ?? "")
-        : "";
-      const textMatches =
-        !query ||
-        [artwork.title, folderName, ...(artwork.tags ?? [])].some(value =>
-          value.toLocaleLowerCase().includes(query)
-        );
-      const folderMatches =
-        folderFilter === "all" ||
-        (folderFilter === "loose"
-          ? !artwork.folderId
-          : artwork.folderId === folderFilter);
-      const tagMatches =
-        tagFilter === "all" || artwork.tags?.includes(tagFilter);
-      return (
-        textMatches &&
-        folderMatches &&
-        tagMatches &&
-        (!favoritesOnly || artwork.isFavorite)
-      );
+    return filterGalleryArtworks({
+      artworks: savedArtworks,
+      folders: galleryFolders,
+      search,
+      folderFilter,
+      tagFilter,
+      favoritesOnly,
     });
   }, [
     savedArtworks,
+    galleryFolders,
     search,
-    folderById,
     folderFilter,
     tagFilter,
     favoritesOnly,
@@ -190,14 +176,15 @@ export default function GalleryDrawer() {
     <div
       className="gallery-overlay"
       role="presentation"
-      onMouseDown={() => setGalleryOpen(false)}
+      onMouseDown={event => {
+        if (event.target === event.currentTarget) setGalleryOpen(false);
+      }}
     >
       <aside
         className="gallery-drawer"
         role="dialog"
         aria-modal="true"
         aria-labelledby="gallery-title"
-        onMouseDown={event => event.stopPropagation()}
       >
         <header className="gallery-header">
           <div>
@@ -443,7 +430,6 @@ export default function GalleryDrawer() {
                             <div className="gallery-rename-row">
                               <input
                                 aria-label="Artwork name"
-                                autoFocus
                                 value={draftTitle}
                                 maxLength={48}
                                 onChange={event =>

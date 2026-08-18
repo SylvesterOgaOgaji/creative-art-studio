@@ -6,7 +6,7 @@ import {
   LockKeyhole,
   Save,
 } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { useStudioStore } from "@/store/useStudioStore";
 import "@/styles/sessionReflection.css";
@@ -48,10 +48,6 @@ export default function SessionReflectionPrompt() {
     [ageMode.length, objects.length]
   );
   const [answer, setAnswer] = useState(lastSessionReflection?.answer ?? "");
-  useEffect(
-    () => setAnswer(lastSessionReflection?.answer ?? ""),
-    [lastSessionReflection?.answer]
-  );
   const save = () => {
     if (saveSessionReflection(answer, prompt.id))
       toast.success("Your reflection is saved in this browser.");

@@ -25,13 +25,23 @@ pnpm install
 pnpm dev
 ```
 
-The app works without accounts, databases, or external services, so a normal local clone requires no environment file. The optional development storage proxy recognizes `BUILT_IN_FORGE_API_URL` and `BUILT_IN_FORGE_API_KEY`; leave it unused unless you intentionally configure that isolated development feature.
+The app works without accounts, databases, or external services, so a normal local clone requires no environment file. Copy `.env.example` to `.env` only if you need to change the optional server port or intentionally configure the isolated development storage proxy.
+
+To build and start the same production host used for deployment with one command, run:
+
+```bash
+docker compose up --build
+```
+
+Then confirm the container is ready at `http://localhost:3000/healthz`.
 
 Run the full local quality gate with:
 
 ```bash
 pnpm check
+pnpm lint
 pnpm test
+pnpm test:coverage
 pnpm test:e2e
 pnpm build
 pnpm format:check
@@ -51,9 +61,10 @@ The artwork model is structured data rather than a screenshot alone, so a saved 
 
 ## Tests and automation
 
-The project uses Vitest with Testing Library for focused unit and integration coverage, plus Playwright for a browser-level creative flow. The browser test opens a fresh studio, creates and colours a shape, saves it locally, verifies the gallery card, and restores the saved world. GitHub Actions installs from the lockfile and runs formatting, type checking, unit tests, the Chromium creative-flow test, and the production build on every push and pull request.
+The project uses Vitest with Testing Library for focused store, persistence, maker-shelf, inspector, and canvas interaction coverage, plus Playwright for a browser-level creative flow. Browser-local state is parsed with Zod before rehydration, so malformed saved data is ignored rather than merged into the creative engine. The browser test opens a fresh studio, creates and colours a shape, saves it locally, verifies the gallery card, and restores the saved world. GitHub Actions installs from the lockfile and runs formatting, linting, type checking, unit tests, coverage thresholds, the Chromium creative-flow test, and the production build on every push and pull request.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the focused-change workflow and [CHANGELOG.md](CHANGELOG.md) for project release notes.
+See [docs/architecture.md](docs/architecture.md) for the module boundaries, browser-local persistence contract, and intentional generated-debug policy.
 
 ## Browser-local data
 

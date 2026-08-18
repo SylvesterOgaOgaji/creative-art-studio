@@ -14,7 +14,6 @@ import {
   Rocket,
   Ruler,
   Smile,
-  Sparkles,
   Star,
   Sun,
   Triangle,
@@ -23,6 +22,7 @@ import {
   Waves,
   Zap,
 } from "lucide-react";
+import type { Sparkles } from "lucide-react";
 import {
   ageModeDetails,
   environmentDetails,

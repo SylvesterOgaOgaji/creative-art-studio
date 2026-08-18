@@ -4,6 +4,7 @@
  */
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { parsePersistedStudioState } from "@/lib/studioPersistence";
 import type {
   ClassroomStarterTheme,
   GalleryFolder,
@@ -860,6 +861,10 @@ export const useStudioStore = create<StudioState>()(
         completedChallengeIds: state.completedChallengeIds,
         sessionDuration: state.sessionDuration,
         lastSessionReflection: state.lastSessionReflection,
+      }),
+      merge: (persistedState, currentState) => ({
+        ...currentState,
+        ...parsePersistedStudioState(persistedState),
       }),
     }
   )

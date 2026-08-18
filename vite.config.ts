@@ -17,6 +17,9 @@ const MAX_LOG_SIZE_BYTES = 1 * 1024 * 1024; // 1MB per log file
 const TRIM_TARGET_BYTES = Math.floor(MAX_LOG_SIZE_BYTES * 0.6); // Trim to 60% to avoid constant re-trimming
 
 type LogSource = "browserConsole" | "networkRequests" | "sessionReplay";
+type DebugPayload = Partial<
+  Record<"consoleLogs" | "networkRequests" | "sessionEvents", unknown[]>
+>;
 
 function ensureLogDir() {
   if (!fs.existsSync(LOG_DIR)) {
@@ -104,16 +107,21 @@ function vitePluginManusDebugCollector(): Plugin {
           return next();
         }
 
-        const handlePayload = (payload: any) => {
+        const handlePayload = (payload: unknown) => {
+          if (!payload || typeof payload !== "object") {
+            throw new Error("Debug payload must be an object.");
+          }
+          const { consoleLogs, networkRequests, sessionEvents } =
+            payload as DebugPayload;
           // Write logs directly to files
-          if (payload.consoleLogs?.length > 0) {
-            writeToLogFile("browserConsole", payload.consoleLogs);
+          if (consoleLogs?.length) {
+            writeToLogFile("browserConsole", consoleLogs);
           }
-          if (payload.networkRequests?.length > 0) {
-            writeToLogFile("networkRequests", payload.networkRequests);
+          if (networkRequests?.length) {
+            writeToLogFile("networkRequests", networkRequests);
           }
-          if (payload.sessionEvents?.length > 0) {
-            writeToLogFile("sessionReplay", payload.sessionEvents);
+          if (sessionEvents?.length) {
+            writeToLogFile("sessionReplay", sessionEvents);
           }
 
           res.writeHead(200, { "Content-Type": "application/json" });

@@ -81,3 +81,12 @@
 - [x] Lazy-load the studio route and confirm a clear accessible loading state.
 - [x] Add a browser-level end-to-end test covering shape creation, customization, save, and gallery restore.
 - [x] Validate the optimized bundle, browser flow, TypeScript, and production build, then publish the update.
+
+## Repository quality hardening
+
+- [x] Verify assessment claims against current source, scripts, CI, and deployment requirements.
+- [x] Add enforced ESLint, meaningful component-level tests, coverage reporting, and CI quality gates.
+- [x] Validate browser-local persistence safely with schemas and malformed-data tests.
+- [x] Add one-command container startup and clarify optional environment configuration.
+- [x] Extract focused gallery organization components and document intentional generated debug instrumentation.
+- [x] Validate quality gates and browser experience, then publish without fabricating commit history or authorship.

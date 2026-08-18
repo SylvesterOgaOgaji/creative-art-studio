@@ -5,7 +5,7 @@ COPY package.json pnpm-lock.yaml ./
 RUN corepack enable && pnpm install --frozen-lockfile
 
 COPY . .
-RUN pnpm check && pnpm test && pnpm build
+RUN pnpm lint && pnpm check && pnpm test:coverage && pnpm build
 
 FROM node:22-alpine AS runtime
 WORKDIR /app

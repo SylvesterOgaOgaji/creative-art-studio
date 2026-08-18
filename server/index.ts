@@ -27,8 +27,8 @@ export function createApp(staticPath = getStaticPath()): Express {
   // Serve static files from dist/public in production.
   app.use(express.static(staticPath));
 
-  // Handle client-side routing - serve index.html for all routes.
-  app.get("*", (_req, res) => {
+  // Express 5 requires a named wildcard; serve the app shell for every client route.
+  app.get("/{*path}", (_req, res) => {
     res.sendFile(path.join(staticPath, "index.html"));
   });
 
