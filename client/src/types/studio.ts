@@ -47,6 +47,13 @@ export interface GalleryFolder {
   createdAt: string;
 }
 
+/** A locally chosen, consent-based showcase label for a saved artwork. */
+export interface MakerSpotlight {
+  artworkId: string;
+  makerName: string;
+  note?: string;
+}
+
 export const ageModeDetails: Record<StudioAgeMode, { label: string; ageRange: string; description: string }> = {
   explorer: { label: "Explorer", ageRange: "Ages 3–6", description: "Big, simple choices for curious first makers." },
   creator: { label: "Creator", ageRange: "Ages 7–11", description: "More shapes, materials, light, and playful scene choices." },

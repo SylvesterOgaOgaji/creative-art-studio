@@ -85,3 +85,9 @@ The wordmark pairs the high-contrast Fraunces title with a compact, tilted **Spa
 11. The 3D canvas remains the **highest-weight maker object**: surrounding shelves, challenge prompts, and guidance notes use quieter paper-tool surfaces rather than competing dashboard cards.
 12. The header now treats the Spark mark, Fraunces studio title, and **Persimmon Spark** as one compact, layered-paper lockup; persimmon remains reserved for active making, selected states, and celebration.
 13. Major workbench surfaces use offset shadows, irregular paper contours, and pigment-adjacent colour accents to reinforce the tactile atelier rather than generic rounded-panel styling.
+14. Makers, educator, and classroom-starter content behaves like a **studio field journal**: a broad paper page, a compact Spark lockup, off-centre pinned notes, and a return path to the workbench rather than a generic marketing subsite.
+15. Student names appear only as the approved developer roster. Artwork is opt-in and browser-local: a teacher or maker chooses a saved world to feature and assigns a display name; no artwork is published or shared by default.
+16. Educator guidance uses practical short-format lesson cards, age-mode comparisons, and privacy-first setup notes. The classroom starter is a set of three ready-to-make scene recipes rather than an instructional dashboard.
+17. The four-lobed pigment **Spark** and Fraunces wordmark are the single visual identity on studio and field-journal routes; “Field journal” remains a secondary descriptor.
+18. **Persimmon Spark `#FF6B4A`** signals making, starting, saving, selection, and celebration. Cobalt is a secondary pigment accent rather than a primary action colour.
+19. Every field-journal section carries a small tactile studio signal: a pinned edge, paper tape, pigment strip, paper-cut shape, or folded surface.

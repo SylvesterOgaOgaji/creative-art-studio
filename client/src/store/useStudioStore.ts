@@ -4,7 +4,7 @@
  */
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { GalleryFolder, SavedArtwork, StudioAgeMode, StudioEnvironment, StudioLighting, StudioMaterial, StudioObject, StudioObjectType, StudioSticker, StudioTexture, TransformMode, TutorialStep, Vector3Tuple } from "@/types/studio";
+import type { GalleryFolder, MakerSpotlight, SavedArtwork, StudioAgeMode, StudioEnvironment, StudioLighting, StudioMaterial, StudioObject, StudioObjectType, StudioSticker, StudioTexture, TransformMode, TutorialStep, Vector3Tuple } from "@/types/studio";
 
 const HISTORY_LIMIT = 40;
 const makeId = () => globalThis.crypto?.randomUUID?.() ?? `studio-${Date.now()}-${Math.random().toString(36).slice(2)}`;
@@ -26,6 +26,7 @@ interface StudioState {
   future: SceneSnapshot[];
   savedArtworks: SavedArtwork[];
   galleryFolders: GalleryFolder[];
+  makerSpotlights: MakerSpotlight[];
   galleryOpen: boolean;
   tutorialStep: TutorialStep;
   soundEnabled: boolean;
@@ -69,6 +70,9 @@ interface StudioState {
   deleteGalleryFolder: (id: string) => void;
   assignArtworkFolder: (artworkId: string, folderId: string | null) => void;
   setArtworkTags: (artworkId: string, tags: string[]) => void;
+  setMakerSpotlight: (artworkId: string, makerName: string, note?: string) => void;
+  removeMakerSpotlight: (artworkId: string) => void;
+  loadClassroomStarter: () => void;
   startTutorial: () => void;
   skipTutorial: () => void;
   replayTutorial: () => void;
@@ -102,7 +106,7 @@ export const useStudioStore = create<StudioState>()(
 
       return {
         artworkTitle: "My tiny world", objects: [], lighting: "daylight", environment: "atelier", ageMode: "creator", selectedObjectId: null, selectedObjectIds: [], multiSelectMode: false,
-        transformMode: "translate", transformInProgress: false, past: [], future: [], savedArtworks: [], galleryFolders: [], galleryOpen: false, tutorialStep: "welcome", soundEnabled: false, soundVolume: .62, challengeIndex: 0, completedChallengeIds: [],
+        transformMode: "translate", transformInProgress: false, past: [], future: [], savedArtworks: [], galleryFolders: [], makerSpotlights: [], galleryOpen: false, tutorialStep: "welcome", soundEnabled: false, soundVolume: .62, challengeIndex: 0, completedChallengeIds: [],
         setArtworkTitle: (artworkTitle) => set({ artworkTitle }),
         setGalleryOpen: (galleryOpen) => set({ galleryOpen }),
         setLighting: (lighting) => commit({ lighting }),
@@ -152,7 +156,7 @@ export const useStudioStore = create<StudioState>()(
         redo: () => { const current = get(); const next = current.future[0]; if (next) set({ ...cloneSnapshot(next), past: [...current.past, cloneSnapshot(current)].slice(-HISTORY_LIMIT), future: current.future.slice(1), transformInProgress: false }); },
         saveArtwork: (thumbnailDataUrl) => { const { objects, artworkTitle, lighting, environment } = get(); if (!objects.length) return null; const artwork: SavedArtwork = { id: makeId(), title: artworkTitle.trim() || "Untitled artwork", createdAt: new Date().toISOString(), objects: objects.map(cloneObject), lighting, environment, thumbnailDataUrl, isFavorite: false, tags: [] }; set((state) => ({ savedArtworks: [artwork, ...state.savedArtworks].slice(0, 24) })); return artwork; },
         loadArtwork: (id) => { const artwork = get().savedArtworks.find((entry) => entry.id === id); if (!artwork) return; const objects = artwork.objects.map(cloneObject); set({ objects, artworkTitle: artwork.title, lighting: artwork.lighting ?? "daylight", environment: artwork.environment ?? "atelier", selectedObjectId: objects[0]?.id ?? null, selectedObjectIds: objects[0] ? [objects[0].id] : [], galleryOpen: false, transformInProgress: false }); },
-        deleteArtwork: (id) => set((state) => ({ savedArtworks: state.savedArtworks.filter((entry) => entry.id !== id) })),
+        deleteArtwork: (id) => set((state) => ({ savedArtworks: state.savedArtworks.filter((entry) => entry.id !== id), makerSpotlights: state.makerSpotlights.filter((spotlight) => spotlight.artworkId !== id) })),
         renameArtwork: (id, title) => { const nextTitle = title.trim(); if (nextTitle) set((state) => ({ savedArtworks: state.savedArtworks.map((artwork) => artwork.id === id ? { ...artwork, title: nextTitle.slice(0, 48) } : artwork) })); },
         toggleArtworkFavorite: (id) => set((state) => ({ savedArtworks: state.savedArtworks.map((artwork) => artwork.id === id ? { ...artwork, isFavorite: !artwork.isFavorite } : artwork) })),
         createGalleryFolder: (name) => { const cleaned = name.trim().replace(/\s+/g, " ").slice(0, 24); if (!cleaned) return null; const existing = get().galleryFolders.find((folder) => folder.name.toLocaleLowerCase() === cleaned.toLocaleLowerCase()); if (existing) return existing.id; const folder = { id: makeId(), name: cleaned, createdAt: new Date().toISOString() }; set((state) => ({ galleryFolders: [...state.galleryFolders, folder] })); return folder.id; },
@@ -160,6 +164,18 @@ export const useStudioStore = create<StudioState>()(
         deleteGalleryFolder: (id) => set((state) => ({ galleryFolders: state.galleryFolders.filter((folder) => folder.id !== id), savedArtworks: state.savedArtworks.map((artwork) => artwork.folderId === id ? { ...artwork, folderId: undefined } : artwork) })),
         assignArtworkFolder: (artworkId, folderId) => set((state) => ({ savedArtworks: state.savedArtworks.map((artwork) => artwork.id === artworkId ? { ...artwork, folderId: folderId ?? undefined } : artwork) })),
         setArtworkTags: (artworkId, tags) => { const cleaned = Array.from(new Set(tags.map((tag) => tag.trim().replace(/\s+/g, " ").slice(0, 18)).filter(Boolean))).slice(0, 6); set((state) => ({ savedArtworks: state.savedArtworks.map((artwork) => artwork.id === artworkId ? { ...artwork, tags: cleaned } : artwork) })); },
+        setMakerSpotlight: (artworkId, makerName, note) => { const cleanedName = makerName.trim().replace(/\s+/g, " ").slice(0, 32); if (!cleanedName || !get().savedArtworks.some((artwork) => artwork.id === artworkId)) return; const cleanedNote = note?.trim().replace(/\s+/g, " ").slice(0, 90) || undefined; set((state) => ({ makerSpotlights: [...state.makerSpotlights.filter((spotlight) => spotlight.artworkId !== artworkId), { artworkId, makerName: cleanedName, note: cleanedNote }].slice(-12) })); },
+        removeMakerSpotlight: (artworkId) => set((state) => ({ makerSpotlights: state.makerSpotlights.filter((spotlight) => spotlight.artworkId !== artworkId) })),
+        loadClassroomStarter: () => {
+          const objects: StudioObject[] = [
+            { id: makeId(), name: "Garden ground", type: "cube", position: [0, .22, 0], rotation: [0, .08, 0], scale: [1.9, .34, 1.5], color: "#4EB69D", material: "matte", texture: "dots", sticker: "none" },
+            { id: makeId(), name: "Story tower", type: "cylinder", position: [-.76, 1.02, .16], rotation: [0, .18, 0], scale: [.42, .8, .42], color: "#4666E9", material: "glossy", texture: "plain", sticker: "star" },
+            { id: makeId(), name: "Tree crown", type: "sphere", position: [.64, 1.5, -.08], rotation: [0, .25, 0], scale: [.76, .76, .76], color: "#F6C945", material: "matte", texture: "checkerboard", sticker: "smile" },
+            { id: makeId(), name: "Idea flag", type: "cone", position: [.08, 1.08, .7], rotation: [.2, .55, 0], scale: [.5, .68, .5], color: "#FF6B4A", material: "neon", texture: "glitter", sticker: "heart" },
+          ];
+          commit({ artworkTitle: "Our tiny future garden", objects, lighting: "daylight", environment: "atelier", selectedObjectId: objects[0].id, selectedObjectIds: [objects[0].id] });
+          set({ ageMode: "creator", multiSelectMode: false, transformMode: "translate", tutorialStep: "done" });
+        },
         startTutorial: () => set({ tutorialStep: "add" }),
         skipTutorial: () => set({ tutorialStep: "done" }),
         replayTutorial: () => set({ tutorialStep: "add" }),
@@ -167,6 +183,6 @@ export const useStudioStore = create<StudioState>()(
         completeChallenge: (challengeId) => set((state) => state.completedChallengeIds.includes(challengeId) ? state : { completedChallengeIds: [...state.completedChallengeIds, challengeId] }),
       };
     },
-    { name: "creative-art-studio-v2", partialize: (state) => ({ artworkTitle: state.artworkTitle, objects: state.objects, lighting: state.lighting, environment: state.environment, ageMode: state.ageMode, savedArtworks: state.savedArtworks, galleryFolders: state.galleryFolders, tutorialStep: state.tutorialStep, soundEnabled: state.soundEnabled, soundVolume: state.soundVolume, challengeIndex: state.challengeIndex, completedChallengeIds: state.completedChallengeIds }) },
+    { name: "creative-art-studio-v2", partialize: (state) => ({ artworkTitle: state.artworkTitle, objects: state.objects, lighting: state.lighting, environment: state.environment, ageMode: state.ageMode, savedArtworks: state.savedArtworks, galleryFolders: state.galleryFolders, makerSpotlights: state.makerSpotlights, tutorialStep: state.tutorialStep, soundEnabled: state.soundEnabled, soundVolume: state.soundVolume, challengeIndex: state.challengeIndex, completedChallengeIds: state.completedChallengeIds }) },
   ),
 );

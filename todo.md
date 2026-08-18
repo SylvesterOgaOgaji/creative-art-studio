@@ -36,3 +36,14 @@
 - [x] Refine PNG export naming and make image download available from saved gallery worlds.
 - [x] Validate key desktop and touch workflows, TypeScript, and production build.
 - [x] Save and publish the completed update.
+
+## Makers and educator expansion
+
+- [x] Inspect current routes, public attribution, and reusable studio components.
+- [x] Research and verify public biographical information about Sylvester Oga Ogaji.
+- [x] Design a privacy-respecting Meet the Makers profile and artwork showcase.
+- [x] Build a Meet the Makers panel with student developer acknowledgements.
+- [x] Add an educator information page with practical teaching resources and child-safety context.
+- [x] Create a classroom project starter that loads a guided browser-local scene.
+- [x] Validate navigation, the starter workflow, desktop/touch layouts, TypeScript, and production build.
+- [ ] Save and publish the expanded release.
