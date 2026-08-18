@@ -25,7 +25,7 @@ pnpm install
 pnpm dev
 ```
 
-The app works without accounts, databases, or external services, so a normal local clone requires no environment file. Copy `.env.example` to `.env` only if you need to change the optional server port or intentionally configure the isolated development storage proxy.
+The app works without accounts, databases, external APIs, or a local configuration file. For development, the Express host defaults to port `3000`; provide `PORT` only when another local process already uses that port. `NODE_ENV=production` is set by the production container command. Platform-managed credentials are intentionally not required to run this browser-local MVP and are never committed to the repository.
 
 To build and start the same production host used for deployment with one command, run:
 

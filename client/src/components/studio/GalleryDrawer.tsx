@@ -26,6 +26,7 @@ import {
 } from "@/lib/galleryOrganization";
 import { exportSavedArtworkImage } from "@/lib/studioImage";
 import { useStudioStore } from "@/store/useStudioStore";
+import GallerySearchControls from "./GallerySearchControls";
 
 const emptyGalleryArtwork = "/manus-storage/atelier-gallery-card_f01187c1.jpg";
 
@@ -335,30 +336,13 @@ export default function GalleryDrawer() {
                 </div>
               )}
             </section>
-            <div className="gallery-filter-row">
-              <label className="gallery-search">
-                <Search aria-hidden="true" />
-                <span className="sr-only">
-                  Search saved artwork by name, folder, or tag
-                </span>
-                <input
-                  value={search}
-                  onChange={event => setSearch(event.target.value)}
-                  placeholder="Find by name, folder, or tag"
-                />
-              </label>
-              <button
-                className={`favorite-filter ${favoritesOnly ? "is-active" : ""}`}
-                onClick={() => setFavoritesOnly(!favoritesOnly)}
-                aria-pressed={favoritesOnly}
-              >
-                <Star
-                  aria-hidden="true"
-                  fill={favoritesOnly ? "currentColor" : "none"}
-                />
-                Best worlds {favoriteCount > 0 && <span>{favoriteCount}</span>}
-              </button>
-            </div>
+            <GallerySearchControls
+              search={search}
+              onSearchChange={setSearch}
+              favoritesOnly={favoritesOnly}
+              onFavoritesOnlyChange={setFavoritesOnly}
+              favoriteCount={favoriteCount}
+            />
             {matchingArtworks.length === 0 ? (
               <div className="gallery-no-results">
                 <Search aria-hidden="true" />

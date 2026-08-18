@@ -1,4 +1,4 @@
-name: Quality checks
+name: Continuous integration
 
 on:
   push:
@@ -12,29 +12,15 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  validate:
-    name: Install, test, and build
+  formatting-and-lint:
+    name: Formatting and lint
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Set up pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10.4.1
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: pnpm
-
-      - name: Install locked dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Audit production dependencies
-        run: pnpm audit:production
+      - name: Set up project
+        uses: ./.github/actions/setup-pnpm
 
       - name: Check formatting
         run: pnpm format:check
@@ -42,8 +28,28 @@ jobs:
       - name: Run lint
         run: pnpm lint
 
+  typecheck:
+    name: TypeScript typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up project
+        uses: ./.github/actions/setup-pnpm
+
       - name: Check TypeScript
         run: pnpm check
+
+  tests:
+    name: Unit tests and coverage
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up project
+        uses: ./.github/actions/setup-pnpm
 
       - name: Run automated tests
         run: pnpm test
@@ -51,11 +57,34 @@ jobs:
       - name: Enforce core coverage baseline
         run: pnpm test:coverage
 
+  browser-test:
+    name: Browser creative flow
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up project
+        uses: ./.github/actions/setup-pnpm
+
       - name: Install Chromium for browser tests
         run: pnpm exec playwright install --with-deps chromium
 
       - name: Run creative-flow browser test
         run: pnpm test:e2e
+
+  production-build:
+    name: Production audit and build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up project
+        uses: ./.github/actions/setup-pnpm
+
+      - name: Audit production dependencies
+        run: pnpm audit:production
 
       - name: Build production bundle
         run: pnpm build

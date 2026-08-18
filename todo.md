@@ -90,3 +90,11 @@
 - [x] Add one-command container startup and clarify optional environment configuration.
 - [x] Extract focused gallery organization components and document intentional generated debug instrumentation.
 - [x] Validate quality gates and browser experience, then publish without fabricating commit history or authorship.
+
+## Score-oriented repository improvements
+
+- [x] Verify CI step naming, environment-file visibility, and scored repository signals against the latest assessment.
+- [x] Make clean-install, lint, typecheck, test, coverage, audit, and build gates explicit and independently discoverable in CI.
+- [x] Add focused tests for the studio shell, gallery drawer, and challenge interactions, then raise the enforced coverage floor.
+- [x] Extract gallery drawer sections into reviewable, tested subcomponents while preserving current browser-local behaviour.
+- [x] Validate clean installation, all quality gates, and desktop/touch workflows before publishing.
