@@ -1,0 +1,16 @@
+{
+  "name": "Creative Art Studio",
+  "short_name": "Art Studio",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fffaf0",
+  "theme_color": "#fff8ea",
+  "description": "A hands-on 3D art workbench for young makers.",
+  "icons": [
+    {
+      "src": "/manus-storage/creative-art-studio-spark_5082d4a6.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}

@@ -85,3 +85,32 @@ test("a creator can undo, redo, and download a PNG of their current stage", asyn
   );
   await expect(page.getByText("Your artwork is ready as a PNG.")).toBeVisible();
 });
+
+test("a previously visited dashboard reopens offline", async ({
+  page,
+  context,
+}) => {
+  await page.goto("/");
+  const title = page.getByLabel("Give your world a name");
+  await expect(title).toBeVisible();
+
+  await page.waitForFunction(
+    () => Boolean(navigator.serviceWorker?.controller),
+    undefined,
+    { timeout: 15_000 }
+  );
+  await page.reload();
+  await expect(title).toBeVisible();
+
+  await context.setOffline(true);
+  await page.reload();
+  await page.evaluate(() => window.dispatchEvent(new Event("offline")));
+
+  await expect(title).toBeVisible();
+  await expect(
+    page.getByText(
+      "Offline mode: your dashboard and saved worlds remain available on this device.",
+      { exact: true }
+    )
+  ).toBeVisible();
+});

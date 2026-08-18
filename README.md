@@ -28,6 +28,8 @@ pnpm dev
 
 The app works without accounts, databases, external APIs, or a local configuration file. For development, the Express host defaults to port `3000`; provide `PORT` only when another local process already uses that port. `NODE_ENV=production` is set by the production container command. Platform-managed credentials are intentionally not required to run this browser-local MVP and are never committed to the repository. See [docs/environment.md](docs/environment.md) for the complete optional configuration contract and safe local examples.
 
+After the dashboard has been opened once, the production web shell is cached by a service worker. If connectivity drops, the dashboard can reload from the cached shell and browser-local worlds remain available through LocalStorage. The top status banner reports offline mode and disappears when the browser reconnects. The offline cache is intentionally device-local; it is not a cloud backup or cross-device sync service. The Playwright suite runs against the production preview and includes a cached offline reload regression.
+
 To build and smoke-test the same production container used in CI, run:
 
 ```bash
