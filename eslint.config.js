@@ -13,7 +13,7 @@ export default tseslint.config(
       "node_modules/**",
       "playwright-report/**",
       "test-results/**",
-      "client/public/__manus__/**",
+      "tools/dev-only/**",
       "client/src/components/ui/**",
     ],
   },

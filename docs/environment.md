@@ -14,3 +14,17 @@ Creative Art Studio is intentionally usable from a fresh clone with no environme
 > Do not add child, student, or educator information to environment files. No secret is needed for the core creative workflow, and `.env` remains ignored by Git.
 
 For a custom local port, run `PORT=4173 pnpm dev`. For a production-shaped local host without manually setting values, run `docker compose up --build`. The service binds the container’s port `3000` to `${PORT:-3000}` on the host and exposes `GET /healthz`. When `ERROR_TRACKING_FILE` is configured, unhandled server errors are appended as structured JSONL records; no external account is required by default.
+
+## Clean-machine verification
+
+From a fresh clone with no existing project dependencies, run the following sequence:
+
+```bash
+corepack enable
+pnpm install --frozen-lockfile
+pnpm build
+pnpm verify:production-assets
+pnpm test:coverage
+```
+
+The equivalent repository check is `bash scripts/verify-fresh-clone.sh`, which runs the same frozen install, coverage suite, production build, and production-asset assertion. The `verify:production-assets` step confirms that development-only Manus debug instrumentation is absent from `dist/public`.
