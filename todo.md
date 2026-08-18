@@ -66,4 +66,4 @@
 - [x] Add educator-selectable session duration presets with clear lesson pacing.
 - [x] Add a browser-local end-of-session student reflection prompt.
 - [x] Validate print, duration selection, reflection persistence, desktop/touch layouts, TypeScript, and production build.
-- [ ] Save and publish the family and session wrap-up release.
+- [x] Save and publish the family and session wrap-up release.
