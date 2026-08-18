@@ -7,9 +7,10 @@ export const objectTypes = ["cube", "sphere", "cone", "cylinder", "torus"] as co
 export type StudioObjectType = (typeof objectTypes)[number];
 export type StudioMaterial = "matte" | "glossy" | "metallic" | "neon";
 export type StudioLighting = "daylight" | "neon";
+export type StudioEnvironment = "atelier" | "space" | "underwater";
 export type TransformMode = "translate" | "rotate" | "scale";
 export type TutorialStep = "welcome" | "add" | "move" | "colour" | "done";
-export type StudioTexture = "plain" | "dots" | "stripes";
+export type StudioTexture = "plain" | "dots" | "stripes" | "checkerboard" | "glitter";
 export type StudioSticker = "none" | "star" | "heart" | "smile";
 export type Vector3Tuple = [number, number, number];
 
@@ -32,6 +33,7 @@ export interface SavedArtwork {
   createdAt: string;
   objects: StudioObject[];
   lighting?: StudioLighting;
+  environment?: StudioEnvironment;
   thumbnailDataUrl?: string;
   isFavorite?: boolean;
 }
@@ -61,6 +63,14 @@ export const textureDetails: Record<StudioTexture, { label: string; description:
   plain: { label: "Plain", description: "Smooth colour" },
   dots: { label: "Dots", description: "Bouncy spots" },
   stripes: { label: "Stripes", description: "Bold bands" },
+  checkerboard: { label: "Checks", description: "Playful tiles" },
+  glitter: { label: "Glitter", description: "Tiny sparkles" },
+};
+
+export const environmentDetails: Record<StudioEnvironment, { label: string; description: string }> = {
+  atelier: { label: "Atelier", description: "Warm maker table" },
+  space: { label: "Space", description: "Stars & planets" },
+  underwater: { label: "Underwater", description: "Bubbly blue world" },
 };
 
 export const stickerDetails: Record<StudioSticker, { label: string; mark: string }> = {

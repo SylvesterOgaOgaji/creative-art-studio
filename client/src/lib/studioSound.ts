@@ -23,17 +23,18 @@ function note(context: AudioContext, frequency: number, start: number, duration:
   oscillator.stop(start + duration + 0.025);
 }
 
-export function playStudioSound(effect: StudioSoundEffect, enabled: boolean) {
+export function playStudioSound(effect: StudioSoundEffect, enabled: boolean, volume = .62) {
   if (!enabled) return;
   const context = getContext();
   if (!context) return;
   const start = context.currentTime + 0.01;
+  const level = Math.max(.08, Math.min(1, volume));
   if (effect === "celebrate") {
-    [523.25, 659.25, 783.99, 1046.5].forEach((frequency, index) => note(context, frequency, start + index * 0.09, 0.24, 0.055, "triangle"));
+    [523.25, 659.25, 783.99, 1046.5].forEach((frequency, index) => note(context, frequency, start + index * 0.09, 0.24, 0.055 * level, "triangle"));
     return;
   }
-  if (effect === "colour") { note(context, 523.25, start, 0.11, 0.038, "sine"); note(context, 783.99, start + 0.055, 0.13, 0.032, "sine"); return; }
-  if (effect === "texture") { note(context, 392, start, 0.09, 0.032, "triangle"); note(context, 587.33, start + 0.045, 0.11, 0.028, "triangle"); return; }
-  if (effect === "toggle") { note(context, 659.25, start, 0.12, 0.036, "sine"); return; }
-  note(context, 440, start, 0.12, 0.034, "triangle");
+  if (effect === "colour") { note(context, 523.25, start, 0.11, 0.038 * level, "sine"); note(context, 783.99, start + 0.055, 0.13, 0.032 * level, "sine"); return; }
+  if (effect === "texture") { note(context, 392, start, 0.09, 0.032 * level, "triangle"); note(context, 587.33, start + 0.045, 0.11, 0.028 * level, "triangle"); return; }
+  if (effect === "toggle") { note(context, 659.25, start, 0.12, 0.036 * level, "sine"); return; }
+  note(context, 440, start, 0.12, 0.034 * level, "triangle");
 }
