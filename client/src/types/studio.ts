@@ -13,6 +13,7 @@ export type TutorialStep = "welcome" | "add" | "move" | "colour" | "done";
 export type StudioTexture = "plain" | "dots" | "stripes" | "checkerboard" | "glitter";
 export type StudioSticker = "none" | "star" | "heart" | "smile";
 export type StudioAgeMode = "explorer" | "creator" | "designer";
+export type ClassroomStarterTheme = "garden" | "space" | "underwater";
 export type Vector3Tuple = [number, number, number];
 
 export interface StudioObject {
@@ -58,6 +59,12 @@ export const ageModeDetails: Record<StudioAgeMode, { label: string; ageRange: st
   explorer: { label: "Explorer", ageRange: "Ages 3–6", description: "Big, simple choices for curious first makers." },
   creator: { label: "Creator", ageRange: "Ages 7–11", description: "More shapes, materials, light, and playful scene choices." },
   designer: { label: "Designer", ageRange: "Ages 12–16", description: "Fine controls, patterns, groups, and detailed compositions." },
+};
+
+export const classroomStarterDetails: Record<ClassroomStarterTheme, { label: string; title: string; brief: string; seedNote: string; shapeCount: number }> = {
+  garden: { label: "Future garden", title: "Build a tiny future garden.", brief: "Design one corner of a garden where something good can grow.", seedNote: "A ground, a story tower, a tree crown, and an idea flag are ready to remix.", shapeCount: 4 },
+  space: { label: "Friendly space station", title: "Build a friendly space station.", brief: "Design a small station that helps explorers feel safe, curious, and welcome.", seedNote: "A launch pad, orbit friend, signal hoop, and idea comet are ready to remix.", shapeCount: 4 },
+  underwater: { label: "Underwater discovery lab", title: "Build an underwater discovery lab.", brief: "Design a bright underwater place where a new discovery can be shared.", seedNote: "A sea floor, bubble home, coral tower, and treasure ring are ready to remix.", shapeCount: 4 },
 };
 
 export const studioColors = [

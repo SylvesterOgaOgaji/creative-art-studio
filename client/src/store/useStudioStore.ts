@@ -4,7 +4,7 @@
  */
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { GalleryFolder, MakerSpotlight, SavedArtwork, StudioAgeMode, StudioEnvironment, StudioLighting, StudioMaterial, StudioObject, StudioObjectType, StudioSticker, StudioTexture, TransformMode, TutorialStep, Vector3Tuple } from "@/types/studio";
+import type { ClassroomStarterTheme, GalleryFolder, MakerSpotlight, SavedArtwork, StudioAgeMode, StudioEnvironment, StudioLighting, StudioMaterial, StudioObject, StudioObjectType, StudioSticker, StudioTexture, TransformMode, TutorialStep, Vector3Tuple } from "@/types/studio";
 
 const HISTORY_LIMIT = 40;
 const makeId = () => globalThis.crypto?.randomUUID?.() ?? `studio-${Date.now()}-${Math.random().toString(36).slice(2)}`;
@@ -72,7 +72,7 @@ interface StudioState {
   setArtworkTags: (artworkId: string, tags: string[]) => void;
   setMakerSpotlight: (artworkId: string, makerName: string, note?: string) => void;
   removeMakerSpotlight: (artworkId: string) => void;
-  loadClassroomStarter: () => void;
+  loadClassroomStarter: (theme?: ClassroomStarterTheme) => void;
   startTutorial: () => void;
   skipTutorial: () => void;
   replayTutorial: () => void;
@@ -88,6 +88,30 @@ const createObject = (type: StudioObjectType, count: number): StudioObject => {
   const column = (count % 3) - 1;
   const row = Math.floor(count / 3);
   return { id: makeId(), name: `${titleCase(type)} ${count + 1}`, type, position: [column * 1.35, 0.85, -row * 1.1], rotation: [0, count * 0.35, 0], scale: [1, 1, 1], color: "#FF6B4A", material: "matte", texture: "plain", sticker: "none" };
+};
+
+const classroomStarterScene = (theme: ClassroomStarterTheme) => {
+  const starters: Record<ClassroomStarterTheme, { title: string; lighting: StudioLighting; environment: StudioEnvironment; objects: StudioObject[] }> = {
+    garden: { title: "Our tiny future garden", lighting: "daylight", environment: "atelier", objects: [
+      { id: makeId(), name: "Garden ground", type: "cube", position: [0, .22, 0], rotation: [0, .08, 0], scale: [1.9, .34, 1.5], color: "#4EB69D", material: "matte", texture: "dots", sticker: "none" },
+      { id: makeId(), name: "Story tower", type: "cylinder", position: [-.76, 1.02, .16], rotation: [0, .18, 0], scale: [.42, .8, .42], color: "#4666E9", material: "glossy", texture: "plain", sticker: "star" },
+      { id: makeId(), name: "Tree crown", type: "sphere", position: [.64, 1.5, -.08], rotation: [0, .25, 0], scale: [.76, .76, .76], color: "#F6C945", material: "matte", texture: "checkerboard", sticker: "smile" },
+      { id: makeId(), name: "Idea flag", type: "cone", position: [.08, 1.08, .7], rotation: [.2, .55, 0], scale: [.5, .68, .5], color: "#FF6B4A", material: "neon", texture: "glitter", sticker: "heart" },
+    ] },
+    space: { title: "Our friendly space station", lighting: "neon", environment: "space", objects: [
+      { id: makeId(), name: "Launch pad", type: "cylinder", position: [0, .24, 0], rotation: [0, .1, 0], scale: [1.55, .34, 1.55], color: "#4666E9", material: "metallic", texture: "checkerboard", sticker: "none" },
+      { id: makeId(), name: "Orbit friend", type: "sphere", position: [-.82, 1.16, .08], rotation: [0, .2, 0], scale: [.65, .65, .65], color: "#F6C945", material: "glossy", texture: "plain", sticker: "smile" },
+      { id: makeId(), name: "Signal hoop", type: "torus", position: [.68, 1.3, -.2], rotation: [.45, .2, .24], scale: [.75, .75, .75], color: "#C85A91", material: "neon", texture: "glitter", sticker: "star" },
+      { id: makeId(), name: "Idea comet", type: "cone", position: [.04, 1.68, .58], rotation: [.55, .15, .38], scale: [.48, .78, .48], color: "#72BFE8", material: "metallic", texture: "stripes", sticker: "heart" },
+    ] },
+    underwater: { title: "Our underwater discovery lab", lighting: "daylight", environment: "underwater", objects: [
+      { id: makeId(), name: "Sea floor", type: "cube", position: [0, .2, 0], rotation: [0, -.1, 0], scale: [1.95, .3, 1.55], color: "#4EB69D", material: "matte", texture: "dots", sticker: "none" },
+      { id: makeId(), name: "Bubble home", type: "sphere", position: [-.67, 1.12, .15], rotation: [0, .25, 0], scale: [.7, .7, .7], color: "#72BFE8", material: "glossy", texture: "glitter", sticker: "smile" },
+      { id: makeId(), name: "Coral tower", type: "cone", position: [.66, 1.06, -.14], rotation: [0, -.24, 0], scale: [.62, .85, .62], color: "#FF6B4A", material: "matte", texture: "stripes", sticker: "heart" },
+      { id: makeId(), name: "Treasure ring", type: "torus", position: [.1, 1.62, .58], rotation: [.44, .1, -.12], scale: [.63, .63, .63], color: "#F6C945", material: "metallic", texture: "checkerboard", sticker: "star" },
+    ] },
+  };
+  return starters[theme];
 };
 
 export const useStudioStore = create<StudioState>()(
@@ -166,14 +190,9 @@ export const useStudioStore = create<StudioState>()(
         setArtworkTags: (artworkId, tags) => { const cleaned = Array.from(new Set(tags.map((tag) => tag.trim().replace(/\s+/g, " ").slice(0, 18)).filter(Boolean))).slice(0, 6); set((state) => ({ savedArtworks: state.savedArtworks.map((artwork) => artwork.id === artworkId ? { ...artwork, tags: cleaned } : artwork) })); },
         setMakerSpotlight: (artworkId, makerName, note) => { const cleanedName = makerName.trim().replace(/\s+/g, " ").slice(0, 32); if (!cleanedName || !get().savedArtworks.some((artwork) => artwork.id === artworkId)) return; const cleanedNote = note?.trim().replace(/\s+/g, " ").slice(0, 90) || undefined; set((state) => ({ makerSpotlights: [...state.makerSpotlights.filter((spotlight) => spotlight.artworkId !== artworkId), { artworkId, makerName: cleanedName, note: cleanedNote }].slice(-12) })); },
         removeMakerSpotlight: (artworkId) => set((state) => ({ makerSpotlights: state.makerSpotlights.filter((spotlight) => spotlight.artworkId !== artworkId) })),
-        loadClassroomStarter: () => {
-          const objects: StudioObject[] = [
-            { id: makeId(), name: "Garden ground", type: "cube", position: [0, .22, 0], rotation: [0, .08, 0], scale: [1.9, .34, 1.5], color: "#4EB69D", material: "matte", texture: "dots", sticker: "none" },
-            { id: makeId(), name: "Story tower", type: "cylinder", position: [-.76, 1.02, .16], rotation: [0, .18, 0], scale: [.42, .8, .42], color: "#4666E9", material: "glossy", texture: "plain", sticker: "star" },
-            { id: makeId(), name: "Tree crown", type: "sphere", position: [.64, 1.5, -.08], rotation: [0, .25, 0], scale: [.76, .76, .76], color: "#F6C945", material: "matte", texture: "checkerboard", sticker: "smile" },
-            { id: makeId(), name: "Idea flag", type: "cone", position: [.08, 1.08, .7], rotation: [.2, .55, 0], scale: [.5, .68, .5], color: "#FF6B4A", material: "neon", texture: "glitter", sticker: "heart" },
-          ];
-          commit({ artworkTitle: "Our tiny future garden", objects, lighting: "daylight", environment: "atelier", selectedObjectId: objects[0].id, selectedObjectIds: [objects[0].id] });
+        loadClassroomStarter: (theme = "garden") => {
+          const starter = classroomStarterScene(theme);
+          commit({ artworkTitle: starter.title, objects: starter.objects, lighting: starter.lighting, environment: starter.environment, selectedObjectId: starter.objects[0].id, selectedObjectIds: [starter.objects[0].id] });
           set({ ageMode: "creator", multiSelectMode: false, transformMode: "translate", tutorialStep: "done" });
         },
         startTutorial: () => set({ tutorialStep: "add" }),

@@ -46,4 +46,14 @@
 - [x] Add an educator information page with practical teaching resources and child-safety context.
 - [x] Create a classroom project starter that loads a guided browser-local scene.
 - [x] Validate navigation, the starter workflow, desktop/touch layouts, TypeScript, and production build.
-- [ ] Save and publish the expanded release.
+- [x] Save and publish the expanded release.
+
+## Educator tools expansion
+
+- [x] Inspect the current educator page, starter scene loader, gallery data, and export helpers.
+- [x] Define print-ready lesson-card content, starter-theme metadata, and an anonymized summary format.
+- [x] Add teacher-printable lesson cards and a print action.
+- [x] Add several classroom starter themes with safe local scene loading.
+- [x] Add a teacher-controlled anonymized local project-summary download.
+- [x] Validate printing, starter selection, export output, desktop/touch layouts, TypeScript, and production build.
+- [ ] Save and publish the educator-tools release.
