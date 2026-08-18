@@ -159,8 +159,8 @@ importers:
         specifier: ^1.1.2
         version: 1.1.2(@types/react-dom@19.2.1(@types/react@19.2.1))(@types/react@19.2.1)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       wouter:
-        specifier: ^3.3.5
-        version: 3.7.1(react@19.2.1)
+        specifier: ^3.10.0
+        version: 3.10.0(react@19.2.1)
       zod:
         specifier: ^4.1.12
         version: 4.1.12
@@ -4432,8 +4432,8 @@ packages:
     resolution: {integrity: sha512-BN22B5eaMMI9UMtjrGd5g5eCYPpCPDUy0FJXbYsaT5zYxjFOckS53SQDE3pWkVoWpHXVb3BrYcEN4Twa55B5cA==}
     engines: {node: '>=0.10.0'}
 
-  wouter@3.7.1:
-    resolution: {integrity: sha512-od5LGmndSUzntZkE2R5CHhoiJ7YMuTIbiXsa0Anytc2RATekgv4sfWRAxLEULBrp7ADzinWQw8g470lkT8+fOw==}
+  wouter@3.10.0:
+    resolution: {integrity: sha512-zTfddD80zc2/J5l8JKcdvzOK6AwP0kpyHEI3DxRN2bn8U1oJPnrSVm8v+X3WwDamvLAOxTO7ZvkxkpRWlyeJ1Q==}
     peerDependencies:
       react: '>=16.8.0'
 
@@ -8853,7 +8853,7 @@ snapshots:
 
   word-wrap@1.2.5: {}
 
-  wouter@3.7.1(react@19.2.1):
+  wouter@3.10.0(react@19.2.1):
     dependencies:
       mitt: 3.0.1
       react: 19.2.1
