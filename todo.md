@@ -21,9 +21,18 @@
 - [x] Add browser-local stickers and polka-dot/stripe texture treatments for selected 3D shapes.
 - [x] Add a playful challenge-card prompt experience with accessible refresh and dismiss actions.
 - [x] Validate opt-in sound behaviour, decoration persistence, challenge interactions, touch layout, TypeScript, and production build.
-- [ ] Inspect the current browser-local sound, scene, challenge, branding, documentation, and GitHub repository state.
-- [ ] Add a visual volume slider, checkerboard/glitter textures, and child-friendly background environments.
-- [ ] Add persistent completed-challenge badges and a celebratory badge shelf.
-- [ ] Add collaborative credits for Mr. Sylvester Ogah Ogaji and student makers in the app and project documentation.
-- [ ] Validate the final browser-local studio, responsive experience, TypeScript, and production build.
-- [ ] Create a public GitHub repository and push the final code with clear cloning and attribution guidance.
+- [x] Inspect the current browser-local sound, scene, challenge, branding, documentation, and GitHub repository state.
+- [x] Add a visual volume slider, checkerboard/glitter textures, and child-friendly background environments.
+- [x] Add persistent completed-challenge badges and a celebratory badge shelf.
+- [x] Add collaborative credits for Mr. Sylvester Ogah Ogaji and student makers in the app and project documentation.
+- [x] Validate the final browser-local studio, responsive experience, TypeScript, and production build.
+- [x] Create a public GitHub repository and push the final code with clear cloning and attribution guidance.
+- [x] Inspect the current persisted studio and gallery data shapes.
+- [x] Define Explorer, Creator, and Designer control boundaries.
+- [x] Add a persisted age-mode selector with accessible guidance.
+- [x] Adapt studio shelves and inspector controls to each selected mode.
+- [x] Add browser-local folder and tag metadata to saved artworks.
+- [x] Add gallery controls for creating folders, assigning folders, editing tags, and filtering.
+- [x] Refine PNG export naming and make image download available from saved gallery worlds.
+- [x] Validate key desktop and touch workflows, TypeScript, and production build.
+- [ ] Save and publish the completed update.

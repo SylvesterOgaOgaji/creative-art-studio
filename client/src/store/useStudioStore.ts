@@ -4,7 +4,7 @@
  */
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { SavedArtwork, StudioEnvironment, StudioLighting, StudioMaterial, StudioObject, StudioObjectType, StudioSticker, StudioTexture, TransformMode, TutorialStep, Vector3Tuple } from "@/types/studio";
+import type { GalleryFolder, SavedArtwork, StudioAgeMode, StudioEnvironment, StudioLighting, StudioMaterial, StudioObject, StudioObjectType, StudioSticker, StudioTexture, TransformMode, TutorialStep, Vector3Tuple } from "@/types/studio";
 
 const HISTORY_LIMIT = 40;
 const makeId = () => globalThis.crypto?.randomUUID?.() ?? `studio-${Date.now()}-${Math.random().toString(36).slice(2)}`;
@@ -16,6 +16,7 @@ interface StudioState {
   objects: StudioObject[];
   lighting: StudioLighting;
   environment: StudioEnvironment;
+  ageMode: StudioAgeMode;
   selectedObjectId: string | null;
   selectedObjectIds: string[];
   multiSelectMode: boolean;
@@ -24,6 +25,7 @@ interface StudioState {
   past: SceneSnapshot[];
   future: SceneSnapshot[];
   savedArtworks: SavedArtwork[];
+  galleryFolders: GalleryFolder[];
   galleryOpen: boolean;
   tutorialStep: TutorialStep;
   soundEnabled: boolean;
@@ -34,6 +36,7 @@ interface StudioState {
   setGalleryOpen: (isOpen: boolean) => void;
   setLighting: (lighting: StudioLighting) => void;
   setEnvironment: (environment: StudioEnvironment) => void;
+  setAgeMode: (ageMode: StudioAgeMode) => void;
   setSoundEnabled: (isEnabled: boolean) => void;
   setSoundVolume: (volume: number) => void;
   selectObject: (id: string | null, additive?: boolean) => void;
@@ -61,6 +64,11 @@ interface StudioState {
   deleteArtwork: (id: string) => void;
   renameArtwork: (id: string, title: string) => void;
   toggleArtworkFavorite: (id: string) => void;
+  createGalleryFolder: (name: string) => string | null;
+  renameGalleryFolder: (id: string, name: string) => void;
+  deleteGalleryFolder: (id: string) => void;
+  assignArtworkFolder: (artworkId: string, folderId: string | null) => void;
+  setArtworkTags: (artworkId: string, tags: string[]) => void;
   startTutorial: () => void;
   skipTutorial: () => void;
   replayTutorial: () => void;
@@ -93,12 +101,13 @@ export const useStudioStore = create<StudioState>()(
       };
 
       return {
-        artworkTitle: "My tiny world", objects: [], lighting: "daylight", environment: "atelier", selectedObjectId: null, selectedObjectIds: [], multiSelectMode: false,
-        transformMode: "translate", transformInProgress: false, past: [], future: [], savedArtworks: [], galleryOpen: false, tutorialStep: "welcome", soundEnabled: false, soundVolume: .62, challengeIndex: 0, completedChallengeIds: [],
+        artworkTitle: "My tiny world", objects: [], lighting: "daylight", environment: "atelier", ageMode: "creator", selectedObjectId: null, selectedObjectIds: [], multiSelectMode: false,
+        transformMode: "translate", transformInProgress: false, past: [], future: [], savedArtworks: [], galleryFolders: [], galleryOpen: false, tutorialStep: "welcome", soundEnabled: false, soundVolume: .62, challengeIndex: 0, completedChallengeIds: [],
         setArtworkTitle: (artworkTitle) => set({ artworkTitle }),
         setGalleryOpen: (galleryOpen) => set({ galleryOpen }),
         setLighting: (lighting) => commit({ lighting }),
         setEnvironment: (environment) => commit({ environment }),
+        setAgeMode: (ageMode) => set((state) => ageMode === "explorer" ? { ageMode, transformMode: "translate", multiSelectMode: false, selectedObjectIds: state.selectedObjectId ? [state.selectedObjectId] : [] } : { ageMode }),
         setSoundEnabled: (soundEnabled) => set({ soundEnabled }),
         setSoundVolume: (soundVolume) => set({ soundVolume: Math.max(0, Math.min(1, soundVolume)) }),
         selectObject: (id, additive = false) => set((state) => {
@@ -141,11 +150,16 @@ export const useStudioStore = create<StudioState>()(
         },
         undo: () => { const current = get(); const previous = current.past.at(-1); if (previous) set({ ...cloneSnapshot(previous), past: current.past.slice(0, -1), future: [cloneSnapshot(current), ...current.future].slice(0, HISTORY_LIMIT), transformInProgress: false }); },
         redo: () => { const current = get(); const next = current.future[0]; if (next) set({ ...cloneSnapshot(next), past: [...current.past, cloneSnapshot(current)].slice(-HISTORY_LIMIT), future: current.future.slice(1), transformInProgress: false }); },
-        saveArtwork: (thumbnailDataUrl) => { const { objects, artworkTitle, lighting, environment } = get(); if (!objects.length) return null; const artwork: SavedArtwork = { id: makeId(), title: artworkTitle.trim() || "Untitled artwork", createdAt: new Date().toISOString(), objects: objects.map(cloneObject), lighting, environment, thumbnailDataUrl, isFavorite: false }; set((state) => ({ savedArtworks: [artwork, ...state.savedArtworks].slice(0, 24) })); return artwork; },
+        saveArtwork: (thumbnailDataUrl) => { const { objects, artworkTitle, lighting, environment } = get(); if (!objects.length) return null; const artwork: SavedArtwork = { id: makeId(), title: artworkTitle.trim() || "Untitled artwork", createdAt: new Date().toISOString(), objects: objects.map(cloneObject), lighting, environment, thumbnailDataUrl, isFavorite: false, tags: [] }; set((state) => ({ savedArtworks: [artwork, ...state.savedArtworks].slice(0, 24) })); return artwork; },
         loadArtwork: (id) => { const artwork = get().savedArtworks.find((entry) => entry.id === id); if (!artwork) return; const objects = artwork.objects.map(cloneObject); set({ objects, artworkTitle: artwork.title, lighting: artwork.lighting ?? "daylight", environment: artwork.environment ?? "atelier", selectedObjectId: objects[0]?.id ?? null, selectedObjectIds: objects[0] ? [objects[0].id] : [], galleryOpen: false, transformInProgress: false }); },
         deleteArtwork: (id) => set((state) => ({ savedArtworks: state.savedArtworks.filter((entry) => entry.id !== id) })),
         renameArtwork: (id, title) => { const nextTitle = title.trim(); if (nextTitle) set((state) => ({ savedArtworks: state.savedArtworks.map((artwork) => artwork.id === id ? { ...artwork, title: nextTitle.slice(0, 48) } : artwork) })); },
         toggleArtworkFavorite: (id) => set((state) => ({ savedArtworks: state.savedArtworks.map((artwork) => artwork.id === id ? { ...artwork, isFavorite: !artwork.isFavorite } : artwork) })),
+        createGalleryFolder: (name) => { const cleaned = name.trim().replace(/\s+/g, " ").slice(0, 24); if (!cleaned) return null; const existing = get().galleryFolders.find((folder) => folder.name.toLocaleLowerCase() === cleaned.toLocaleLowerCase()); if (existing) return existing.id; const folder = { id: makeId(), name: cleaned, createdAt: new Date().toISOString() }; set((state) => ({ galleryFolders: [...state.galleryFolders, folder] })); return folder.id; },
+        renameGalleryFolder: (id, name) => { const cleaned = name.trim().replace(/\s+/g, " ").slice(0, 24); if (cleaned) set((state) => ({ galleryFolders: state.galleryFolders.map((folder) => folder.id === id ? { ...folder, name: cleaned } : folder) })); },
+        deleteGalleryFolder: (id) => set((state) => ({ galleryFolders: state.galleryFolders.filter((folder) => folder.id !== id), savedArtworks: state.savedArtworks.map((artwork) => artwork.folderId === id ? { ...artwork, folderId: undefined } : artwork) })),
+        assignArtworkFolder: (artworkId, folderId) => set((state) => ({ savedArtworks: state.savedArtworks.map((artwork) => artwork.id === artworkId ? { ...artwork, folderId: folderId ?? undefined } : artwork) })),
+        setArtworkTags: (artworkId, tags) => { const cleaned = Array.from(new Set(tags.map((tag) => tag.trim().replace(/\s+/g, " ").slice(0, 18)).filter(Boolean))).slice(0, 6); set((state) => ({ savedArtworks: state.savedArtworks.map((artwork) => artwork.id === artworkId ? { ...artwork, tags: cleaned } : artwork) })); },
         startTutorial: () => set({ tutorialStep: "add" }),
         skipTutorial: () => set({ tutorialStep: "done" }),
         replayTutorial: () => set({ tutorialStep: "add" }),
@@ -153,6 +167,6 @@ export const useStudioStore = create<StudioState>()(
         completeChallenge: (challengeId) => set((state) => state.completedChallengeIds.includes(challengeId) ? state : { completedChallengeIds: [...state.completedChallengeIds, challengeId] }),
       };
     },
-    { name: "creative-art-studio-v2", partialize: (state) => ({ artworkTitle: state.artworkTitle, objects: state.objects, lighting: state.lighting, environment: state.environment, savedArtworks: state.savedArtworks, tutorialStep: state.tutorialStep, soundEnabled: state.soundEnabled, soundVolume: state.soundVolume, challengeIndex: state.challengeIndex, completedChallengeIds: state.completedChallengeIds }) },
+    { name: "creative-art-studio-v2", partialize: (state) => ({ artworkTitle: state.artworkTitle, objects: state.objects, lighting: state.lighting, environment: state.environment, ageMode: state.ageMode, savedArtworks: state.savedArtworks, galleryFolders: state.galleryFolders, tutorialStep: state.tutorialStep, soundEnabled: state.soundEnabled, soundVolume: state.soundVolume, challengeIndex: state.challengeIndex, completedChallengeIds: state.completedChallengeIds }) },
   ),
 );

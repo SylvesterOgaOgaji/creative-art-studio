@@ -82,3 +82,6 @@ The wordmark pairs the high-contrast Fraunces title with a compact, tilted **Spa
 8. Empty stages use an encouraging maker prompt with a small physical studio cue; the Spark mark and Fraunces wordmark form one compact, persimmon-anchored studio lockup.
 9. First-run guidance appears as a **pinned paper studio note**, with a dashed edge and folded corner; it guides attention without blurring or visually eclipsing the canvas.
 10. The empty 3D stage carries a small **maker-table cue**—a hand-cut frame and simple form marks—so the invitation feels ready for play rather than vacant.
+11. The 3D canvas remains the **highest-weight maker object**: surrounding shelves, challenge prompts, and guidance notes use quieter paper-tool surfaces rather than competing dashboard cards.
+12. The header now treats the Spark mark, Fraunces studio title, and **Persimmon Spark** as one compact, layered-paper lockup; persimmon remains reserved for active making, selected states, and celebration.
+13. Major workbench surfaces use offset shadows, irregular paper contours, and pigment-adjacent colour accents to reinforce the tactile atelier rather than generic rounded-panel styling.

@@ -68,14 +68,30 @@ export function captureStudioImage(objects: StudioObject[], width = 640, height 
   }
 }
 
-export function exportStudioImage(title: string, objects: StudioObject[]) {
-  const dataUrl = captureStudioImage(objects, 1600, 1060);
-  if (!dataUrl) return false;
+function imageFilename(title: string) {
+  const stem = (title.trim() || "creative-artwork").replace(/[^a-z0-9]+/gi, "-").replace(/(^-|-$)/g, "").toLowerCase() || "creative-artwork";
+  return `${stem}-creative-art-studio.png`;
+}
+
+function downloadPng(dataUrl: string, title: string) {
   const link = document.createElement("a");
   link.href = dataUrl;
-  link.download = `${(title.trim() || "creative-artwork").replace(/[^a-z0-9]+/gi, "-").replace(/(^-|-$)/g, "").toLowerCase() || "creative-artwork"}.png`;
+  link.download = imageFilename(title);
   document.body.appendChild(link);
   link.click();
   link.remove();
   return true;
+}
+
+export function exportStudioImage(title: string, objects: StudioObject[]) {
+  const dataUrl = captureStudioImage(objects, 1600, 1060);
+  if (!dataUrl) return false;
+  return downloadPng(dataUrl, title);
+}
+
+/** Export a saved scene from its structured browser-local object data, not the current live canvas. */
+export function exportSavedArtworkImage(title: string, objects: StudioObject[]) {
+  const dataUrl = drawScenePoster(objects, 1600, 1060);
+  if (!dataUrl) return false;
+  return downloadPng(dataUrl, title);
 }

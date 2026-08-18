@@ -12,6 +12,7 @@ export type TransformMode = "translate" | "rotate" | "scale";
 export type TutorialStep = "welcome" | "add" | "move" | "colour" | "done";
 export type StudioTexture = "plain" | "dots" | "stripes" | "checkerboard" | "glitter";
 export type StudioSticker = "none" | "star" | "heart" | "smile";
+export type StudioAgeMode = "explorer" | "creator" | "designer";
 export type Vector3Tuple = [number, number, number];
 
 export interface StudioObject {
@@ -36,7 +37,21 @@ export interface SavedArtwork {
   environment?: StudioEnvironment;
   thumbnailDataUrl?: string;
   isFavorite?: boolean;
+  folderId?: string;
+  tags?: string[];
 }
+
+export interface GalleryFolder {
+  id: string;
+  name: string;
+  createdAt: string;
+}
+
+export const ageModeDetails: Record<StudioAgeMode, { label: string; ageRange: string; description: string }> = {
+  explorer: { label: "Explorer", ageRange: "Ages 3–6", description: "Big, simple choices for curious first makers." },
+  creator: { label: "Creator", ageRange: "Ages 7–11", description: "More shapes, materials, light, and playful scene choices." },
+  designer: { label: "Designer", ageRange: "Ages 12–16", description: "Fine controls, patterns, groups, and detailed compositions." },
+};
 
 export const studioColors = [
   { name: "Persimmon", value: "#FF6B4A" },
