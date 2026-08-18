@@ -12,11 +12,11 @@ import { vitePluginManusRuntime } from "vite-plugin-manus-runtime";
 // =============================================================================
 
 const PROJECT_ROOT = import.meta.dirname;
-const DEBUG_COLLECTOR_PATH = path.join(
+const DEBUG_COLLECTOR_DIR = path.join(
   PROJECT_ROOT,
   "tools",
   "dev-only",
-  "debug-collector.js"
+  "debug-collector"
 );
 const LOG_DIR = path.join(PROJECT_ROOT, ".manus-logs");
 const MAX_LOG_SIZE_BYTES = 1 * 1024 * 1024; // 1MB per log file
@@ -97,8 +97,8 @@ function vitePluginManusDebugCollector(): Plugin {
           {
             tag: "script",
             attrs: {
-              src: "/__manus__/debug-collector.js",
-              defer: true,
+              src: "/__manus__/debug-collector/index.js",
+              type: "module",
             },
             injectTo: "head",
           },
@@ -109,18 +109,26 @@ function vitePluginManusDebugCollector(): Plugin {
     configureServer(server: ViteDevServer) {
       // The collector is development-only and is served from tools/ so it is
       // never copied into dist/public by Vite.
-      server.middlewares.use(
-        "/__manus__/debug-collector.js",
-        (req, res, next) => {
-          if (req.method !== "GET") return next();
-          res.statusCode = 200;
-          res.setHeader(
-            "Content-Type",
-            "application/javascript; charset=utf-8"
-          );
-          res.end(fs.readFileSync(DEBUG_COLLECTOR_PATH, "utf8"));
+      server.middlewares.use("/__manus__/debug-collector", (req, res, next) => {
+        if (req.method !== "GET") return next();
+        const requestedPath = decodeURIComponent(
+          (req.url ?? "/").split("?", 1)[0]
+        ).replace(/^\/+/, "");
+        const filePath = path.resolve(DEBUG_COLLECTOR_DIR, requestedPath);
+        const relativePath = path.relative(DEBUG_COLLECTOR_DIR, filePath);
+        if (
+          !requestedPath ||
+          relativePath.startsWith("..") ||
+          path.isAbsolute(relativePath) ||
+          !fs.existsSync(filePath)
+        ) {
+          return next();
         }
-      );
+        res.statusCode = 200;
+        res.setHeader("Content-Type", "application/javascript; charset=utf-8");
+        res.setHeader("Cache-Control", "no-store");
+        res.end(fs.readFileSync(filePath, "utf8"));
+      });
 
       // POST /__manus__/logs: Browser sends logs (written directly to files)
       server.middlewares.use("/__manus__/logs", (req, res, next) => {
