@@ -4,8 +4,10 @@ import { randomUUID } from "node:crypto";
 import { createServer } from "http";
 import path from "path";
 import { fileURLToPath } from "url";
+import { createErrorSink, type ErrorSink } from "./errorSink";
 import { healthHandler } from "./health";
 import { logger, type AppLogger } from "./logger";
+import { metricsQuerySchema, validateQuery } from "./schemas";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -79,17 +81,25 @@ function requestLoggingMiddleware(log: AppLogger, metrics: RequestMetrics) {
   };
 }
 
-function errorHandlingMiddleware(log: AppLogger) {
+function errorHandlingMiddleware(log: AppLogger, errorSink: ErrorSink) {
   return (error: Error, req: Request, res: Response, _next: NextFunction) => {
+    const event = {
+      requestId: res.locals.requestId,
+      method: req.method,
+      path: req.path,
+      message: error.message,
+      stack: error.stack,
+    };
     log.error(
       {
         err: { message: error.message, stack: error.stack },
-        requestId: res.locals.requestId,
-        method: req.method,
-        path: req.path,
+        requestId: event.requestId,
+        method: event.method,
+        path: event.path,
       },
       "unhandled request error"
     );
+    errorSink.capture(event);
     if (!res.headersSent) res.status(500).json({ error: "internal_error" });
   };
 }
@@ -102,7 +112,8 @@ export function createApp(
   staticPath = getStaticPath(),
   log: AppLogger = logger,
   registerRoutes?: (app: Express) => void,
-  metrics: RequestMetrics = createMetrics()
+  metrics: RequestMetrics = createMetrics(),
+  errorSink: ErrorSink = createErrorSink(log)
 ): Express {
   const app = express();
   app.use(requestLoggingMiddleware(log, metrics));
@@ -110,7 +121,7 @@ export function createApp(
 
   app.get("/healthz", healthHandler);
 
-  app.get("/metrics", (_req, res) => {
+  app.get("/metrics", validateQuery(metricsQuerySchema), (_req, res) => {
     res.status(200).json({
       service: "creative-art-studio",
       ...metrics.snapshot(),
@@ -125,7 +136,7 @@ export function createApp(
     res.sendFile(path.join(staticPath, "index.html"));
   });
 
-  app.use(errorHandlingMiddleware(log));
+  app.use(errorHandlingMiddleware(log, errorSink));
 
   return app;
 }

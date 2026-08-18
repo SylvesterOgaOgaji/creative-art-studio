@@ -10,7 +10,9 @@ All notable project changes are documented here.
 - Added a committed `.env.example` and aligned configuration documentation for fresh-clone setup.
 - Added an explicit reusable `server/health.ts` handler and strengthened its direct contract tests so the operational endpoint is statically discoverable.
 - Added a no-cache `scripts/verify-fresh-clone.sh` check, dependency-freshness artifact, and required clean-checkout quality gate in GitHub Actions.
-- Extracted Three.js scene objects and Zustand scene builders into focused modules, added paired tests, and raised the enforced coverage baseline to 70% lines/statements/branches and 55% functions.
+- Extracted Three.js scene objects, Zustand scene builders, and the sidebar provider/menu primitives into focused modules, added paired tests, and raised the enforced coverage baseline to 70% lines/statements/branches and 55% functions.
+- Made the optional map integration offline-first when `VITE_FRONTEND_FORGE_API_KEY` is absent, added explicit Zod-backed metrics query validation, and added an opt-in local JSONL error-tracking sink controlled by `ERROR_TRACKING_FILE`.
+- Marked the generated browser-debug collector as generated metadata and aligned the environment and architecture documentation with the fresh-clone contract.
 
 ## 1.0.1 - 2026-08-18
 
