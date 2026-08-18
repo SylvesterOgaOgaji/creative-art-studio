@@ -43,6 +43,7 @@ Run the consolidated local quality gate with:
 ```bash
 pnpm quality:ci
 pnpm test:e2e
+bash scripts/verify-fresh-clone.sh
 ```
 
 The coverage gate enforces 70% for lines, statements, and branches, and 55% for functions.
@@ -56,11 +57,11 @@ The coverage gate enforces 70% for lines, statements, and branches, and 55% for 
 | Browser-local state | Zustand scene history, gallery metadata, preferences, badges, session reflections, and aggregate activity history persisted to LocalStorage.            |
 | Production delivery | A small Express server serves the built static application and exposes privacy-safe `GET /healthz` and `GET /metrics` endpoints for operational checks. |
 
-The artwork model is structured data rather than a screenshot alone, so a saved composition can be reconstructed in the studio. The Educators route also includes a privacy-preserving activity report: its chart is derived only from actual save and reflection events, and it excludes titles, names, reflection text, images, tags, and scene coordinates. UI interactions and persistent artwork state are deliberately separated so a future optional storage provider can replace LocalStorage without rewriting the scene engine.
+The artwork model is structured data rather than a screenshot alone, so a saved composition can be reconstructed in the studio. The Educators route also includes a privacy-preserving activity report: its chart is derived only from actual save and reflection events, and it excludes titles, names, reflection text, images, tags, and scene coordinates. UI interactions and persistent artwork state are deliberately separated so a future optional storage provider can replace LocalStorage without rewriting the scene engine. The Three.js scene-object controls and Zustand scene builders live in focused modules so rendering and state construction can be tested independently.
 
 ## Tests and automation
 
-The project uses Vitest with Testing Library for focused store, persistence, maker-shelf, inspector, canvas interaction, server error, health, and metrics coverage, plus Playwright for browser-level creative flows. Browser-local state is parsed with Zod before rehydration, so malformed saved data is ignored rather than merged into the creative engine. GitHub Actions installs from the lockfile and runs formatting, linting, type checking, unit tests with coverage thresholds, Chromium creative-flow tests, dependency review on pull requests, a production build, and a production-container smoke test on every push and pull request.
+The project uses Vitest with Testing Library for focused store, persistence, maker-shelf, inspector, canvas interaction, server error, health, and metrics coverage, plus Playwright for browser-level creative flows. Browser-local state is parsed with Zod before rehydration, so malformed saved data is ignored rather than merged into the creative engine. GitHub Actions installs from the lockfile and runs formatting, linting, type checking, unit tests with coverage thresholds, a no-cache fresh-clone install/build check, Chromium creative-flow tests, dependency freshness reporting, dependency review on pull requests, a production build, and a production-container smoke test on every push and pull request.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the focused-change workflow and [CHANGELOG.md](CHANGELOG.md) for project release notes.
 See [docs/architecture.md](docs/architecture.md) for the module boundaries, browser-local persistence contract, and intentional generated-debug policy.

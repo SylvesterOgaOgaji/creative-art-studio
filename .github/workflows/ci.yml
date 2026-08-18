@@ -73,6 +73,33 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
+  fresh-clone:
+    name: Fresh clone check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository without a package cache
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Set up Node.js without a package cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify clean checkout
+        run: bash scripts/verify-fresh-clone.sh
+
+      - name: Upload fresh-clone coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fresh-clone-coverage
+          path: coverage
+          if-no-files-found: ignore
+          retention-days: 14
+
   browser-test:
     name: Playwright creative flow
     runs-on: ubuntu-latest
@@ -142,6 +169,28 @@ jobs:
         if: always()
         run: docker rm --force creative-art-studio-ci
 
+  dependency-freshness:
+    name: Dependency freshness report
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up project
+        uses: ./.github/actions/setup-pnpm
+
+      - name: Capture dependency freshness
+        run: pnpm outdated --format json > dependency-freshness.json || true
+
+      - name: Upload dependency freshness report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-freshness
+          path: dependency-freshness.json
+          if-no-files-found: warn
+          retention-days: 14
+
   dependency-review:
     name: Dependency review
     if: github.event_name == 'pull_request'
@@ -164,6 +213,7 @@ jobs:
       - lint
       - typecheck
       - unit-tests
+      - fresh-clone
       - browser-test
       - production-build
       - container-smoke
@@ -175,11 +225,12 @@ jobs:
           LINT_RESULT: ${{ needs.lint.result }}
           TYPECHECK_RESULT: ${{ needs.typecheck.result }}
           UNIT_TEST_RESULT: ${{ needs.unit-tests.result }}
+          FRESH_CLONE_RESULT: ${{ needs.fresh-clone.result }}
           BROWSER_RESULT: ${{ needs.browser-test.result }}
           BUILD_RESULT: ${{ needs.production-build.result }}
           CONTAINER_RESULT: ${{ needs.container-smoke.result }}
         run: |
-          for result in "$FORMAT_RESULT" "$LINT_RESULT" "$TYPECHECK_RESULT" "$UNIT_TEST_RESULT" "$BROWSER_RESULT" "$BUILD_RESULT" "$CONTAINER_RESULT"; do
+          for result in "$FORMAT_RESULT" "$LINT_RESULT" "$TYPECHECK_RESULT" "$UNIT_TEST_RESULT" "$FRESH_CLONE_RESULT" "$BROWSER_RESULT" "$BUILD_RESULT" "$CONTAINER_RESULT"; do
             if [ "$result" != "success" ]; then
               echo "A required quality check returned: $result"
               exit 1

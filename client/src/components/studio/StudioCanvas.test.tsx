@@ -2,6 +2,7 @@ import { fireEvent, render } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useStudioStore } from "@/store/useStudioStore";
 import StudioCanvas from "./StudioCanvas";
+import { SceneMesh } from "./StudioSceneObjects";
 
 vi.mock("@react-three/fiber", () => ({
   Canvas: ({ children }: { children: React.ReactNode }) => (
@@ -80,6 +81,18 @@ describe("StudioCanvas", () => {
       firstId,
       secondId,
     ]);
+  });
+
+  it("renders a selected scene object and keeps its click selection contract", () => {
+    useStudioStore.getState().addObject("cube");
+    const object = useStudioStore.getState().objects[0];
+    const { container, getByText } = render(
+      <SceneMesh object={object} selected showTag />
+    );
+
+    expect(getByText("Chosen")).toBeTruthy();
+    fireEvent.click(container.querySelector("mesh")!);
+    expect(useStudioStore.getState().selectedObjectId).toBe(object.id);
   });
 
   it("shows the paper-cut invitation on an empty stage", () => {

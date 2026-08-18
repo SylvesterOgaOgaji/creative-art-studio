@@ -118,6 +118,18 @@ describe("browser-local studio state", () => {
     );
   });
 
+  it("rejects empty reflections and clamps browser-local sound settings", () => {
+    const store = useStudioStore.getState();
+
+    expect(store.saveSessionReflection("   ", "notice")).toBe(false);
+    store.setSoundEnabled(true);
+    store.setSoundVolume(2);
+
+    expect(useStudioStore.getState().soundEnabled).toBe(true);
+    expect(useStudioStore.getState().soundVolume).toBe(1);
+    expect(useStudioStore.getState().activityHistory).toEqual([]);
+  });
+
   it("loads a complete classroom starter through the same creative engine", () => {
     useStudioStore.getState().loadClassroomStarter("underwater");
 

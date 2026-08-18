@@ -4,6 +4,7 @@ import { randomUUID } from "node:crypto";
 import { createServer } from "http";
 import path from "path";
 import { fileURLToPath } from "url";
+import { healthHandler } from "./health";
 import { logger, type AppLogger } from "./logger";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -107,9 +108,7 @@ export function createApp(
   app.use(requestLoggingMiddleware(log, metrics));
   registerRoutes?.(app);
 
-  app.get("/healthz", (_req, res) => {
-    res.status(200).json({ status: "ok", service: "creative-art-studio" });
-  });
+  app.get("/healthz", healthHandler);
 
   app.get("/metrics", (_req, res) => {
     res.status(200).json({
