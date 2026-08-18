@@ -15,20 +15,61 @@ function getStaticPath() {
     : path.resolve(__dirname, "..", "dist", "public");
 }
 
-function requestLoggingMiddleware(log: AppLogger) {
+export type RequestMetrics = {
+  record(statusCode: number, durationMs: number): void;
+  snapshot(): {
+    requestCount: number;
+    errorCount: number;
+    averageDurationMs: number;
+    statusCounts: Record<string, number>;
+  };
+};
+
+export function createMetrics(): RequestMetrics {
+  let requestCount = 0;
+  let errorCount = 0;
+  let totalDurationMs = 0;
+  const statusCounts: Record<string, number> = {};
+
+  return {
+    record(statusCode, durationMs) {
+      requestCount += 1;
+      totalDurationMs += durationMs;
+      statusCounts[String(statusCode)] =
+        (statusCounts[String(statusCode)] ?? 0) + 1;
+      if (statusCode >= 500) errorCount += 1;
+    },
+    snapshot() {
+      return {
+        requestCount,
+        errorCount,
+        averageDurationMs:
+          requestCount === 0
+            ? 0
+            : Math.round((totalDurationMs / requestCount) * 100) / 100,
+        statusCounts: { ...statusCounts },
+      };
+    },
+  };
+}
+
+function requestLoggingMiddleware(log: AppLogger, metrics: RequestMetrics) {
   return (req: Request, res: Response, next: NextFunction) => {
     const startedAt = performance.now();
     const requestId = req.header("x-request-id")?.trim() || randomUUID();
     res.locals.requestId = requestId;
     res.setHeader("x-request-id", requestId);
     res.once("finish", () => {
+      const durationMs =
+        Math.round((performance.now() - startedAt) * 100) / 100;
+      metrics.record(res.statusCode, durationMs);
       log.info(
         {
           requestId: res.locals.requestId,
           method: req.method,
           path: req.path,
           statusCode: res.statusCode,
-          durationMs: Math.round((performance.now() - startedAt) * 100) / 100,
+          durationMs,
         },
         "request completed"
       );
@@ -59,14 +100,22 @@ function errorHandlingMiddleware(log: AppLogger) {
 export function createApp(
   staticPath = getStaticPath(),
   log: AppLogger = logger,
-  registerRoutes?: (app: Express) => void
+  registerRoutes?: (app: Express) => void,
+  metrics: RequestMetrics = createMetrics()
 ): Express {
   const app = express();
-  app.use(requestLoggingMiddleware(log));
+  app.use(requestLoggingMiddleware(log, metrics));
   registerRoutes?.(app);
 
   app.get("/healthz", (_req, res) => {
     res.status(200).json({ status: "ok", service: "creative-art-studio" });
+  });
+
+  app.get("/metrics", (_req, res) => {
+    res.status(200).json({
+      service: "creative-art-studio",
+      ...metrics.snapshot(),
+    });
   });
 
   // Serve static files from dist/public in production.

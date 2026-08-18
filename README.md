@@ -28,41 +28,39 @@ pnpm dev
 
 The app works without accounts, databases, external APIs, or a local configuration file. For development, the Express host defaults to port `3000`; provide `PORT` only when another local process already uses that port. `NODE_ENV=production` is set by the production container command. Platform-managed credentials are intentionally not required to run this browser-local MVP and are never committed to the repository. See [docs/environment.md](docs/environment.md) for the complete optional configuration contract and safe local examples.
 
-To build and start the same production host used for deployment with one command, run:
+To build and smoke-test the same production container used in CI, run:
 
 ```bash
-docker compose up --build
+docker build --tag creative-art-studio:local .
+docker run --detach --name creative-art-studio-local --publish 3000:3000 creative-art-studio:local
+curl --fail http://localhost:3000/healthz
+curl --fail http://localhost:3000/metrics
+docker rm --force creative-art-studio-local
 ```
 
-Then confirm the container is ready at `http://localhost:3000/healthz`.
-
-Run the full local quality gate with:
+Run the consolidated local quality gate with:
 
 ```bash
-pnpm check
-pnpm lint
-pnpm test
-pnpm test:coverage
+pnpm quality:ci
 pnpm test:e2e
-pnpm build
-pnpm format:check
-pnpm audit:production
 ```
+
+The coverage gate enforces 70% for lines, statements, and branches, and 55% for functions.
 
 ## Architecture
 
-| Layer               | Responsibility                                                                                                                               |
-| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| React interface     | Age-adaptive studio, gallery, classroom, family, educator, and maker routes.                                                                 |
-| Creative engine     | React Three Fiber scene, object manipulation, materials, lighting, environments, textures, and procedural compositions.                      |
-| Browser-local state | Zustand scene history, gallery metadata, preferences, badges, session reflections, and aggregate activity history persisted to LocalStorage. |
-| Production delivery | A small Express server serves the built static application and exposes `GET /healthz` for operational checks.                                |
+| Layer               | Responsibility                                                                                                                                          |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| React interface     | Age-adaptive studio, gallery, classroom, family, educator, and maker routes.                                                                            |
+| Creative engine     | React Three Fiber scene, object manipulation, materials, lighting, environments, textures, and procedural compositions.                                 |
+| Browser-local state | Zustand scene history, gallery metadata, preferences, badges, session reflections, and aggregate activity history persisted to LocalStorage.            |
+| Production delivery | A small Express server serves the built static application and exposes privacy-safe `GET /healthz` and `GET /metrics` endpoints for operational checks. |
 
 The artwork model is structured data rather than a screenshot alone, so a saved composition can be reconstructed in the studio. The Educators route also includes a privacy-preserving activity report: its chart is derived only from actual save and reflection events, and it excludes titles, names, reflection text, images, tags, and scene coordinates. UI interactions and persistent artwork state are deliberately separated so a future optional storage provider can replace LocalStorage without rewriting the scene engine.
 
 ## Tests and automation
 
-The project uses Vitest with Testing Library for focused store, persistence, maker-shelf, inspector, and canvas interaction coverage, plus Playwright for a browser-level creative flow. Browser-local state is parsed with Zod before rehydration, so malformed saved data is ignored rather than merged into the creative engine. The browser test opens a fresh studio, creates and colours a shape, saves it locally, verifies the gallery card, and restores the saved world. GitHub Actions installs from the lockfile and runs formatting, linting, type checking, unit tests, coverage thresholds, the Chromium creative-flow test, and the production build on every push and pull request.
+The project uses Vitest with Testing Library for focused store, persistence, maker-shelf, inspector, canvas interaction, server error, health, and metrics coverage, plus Playwright for browser-level creative flows. Browser-local state is parsed with Zod before rehydration, so malformed saved data is ignored rather than merged into the creative engine. GitHub Actions installs from the lockfile and runs formatting, linting, type checking, unit tests with coverage thresholds, Chromium creative-flow tests, dependency review on pull requests, a production build, and a production-container smoke test on every push and pull request.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the focused-change workflow and [CHANGELOG.md](CHANGELOG.md) for project release notes.
 See [docs/architecture.md](docs/architecture.md) for the module boundaries, browser-local persistence contract, and intentional generated-debug policy.

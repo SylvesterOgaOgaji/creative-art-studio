@@ -17,7 +17,7 @@ export default defineConfig({
     clearMocks: true,
     coverage: {
       provider: "v8",
-      reporter: ["text", "json-summary"],
+      reporter: ["text", "json-summary", "json", "lcov"],
       reportsDirectory: "coverage",
       include: [
         "client/src/store/useStudioStore.ts",
@@ -31,10 +31,10 @@ export default defineConfig({
         "server/index.ts",
       ],
       thresholds: {
-        lines: 50,
-        functions: 45,
-        statements: 50,
-        branches: 35,
+        lines: 70,
+        functions: 55,
+        statements: 70,
+        branches: 70,
       },
     },
   },
