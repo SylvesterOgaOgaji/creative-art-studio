@@ -5,6 +5,11 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { parsePersistedStudioState } from "@/lib/studioPersistence";
+import {
+  ACTIVITY_HISTORY_LIMIT,
+  createStudioActivityEntry,
+  type StudioActivityEntry,
+} from "@/lib/studioActivity";
 import { getClassroomStarter } from "./classroomStarters";
 import { createGalleryActions } from "./gallerySlice";
 import { createHistoryActions } from "./historySlice";
@@ -64,6 +69,7 @@ export interface StudioState {
   completedChallengeIds: number[];
   sessionDuration: SessionDuration;
   lastSessionReflection: SessionReflection | null;
+  activityHistory: StudioActivityEntry[];
   setArtworkTitle: (title: string) => void;
   setGalleryOpen: (isOpen: boolean) => void;
   setLighting: (lighting: StudioLighting) => void;
@@ -199,6 +205,7 @@ export const useStudioStore = create<StudioState>()(
         completedChallengeIds: [],
         sessionDuration: "extended",
         lastSessionReflection: null,
+        activityHistory: [],
         setArtworkTitle: artworkTitle => set({ artworkTitle }),
         setGalleryOpen: galleryOpen => set({ galleryOpen }),
         setLighting: lighting => commit({ lighting }),
@@ -445,18 +452,66 @@ export const useStudioStore = create<StudioState>()(
                 }
           ),
         setSessionDuration: sessionDuration => set({ sessionDuration }),
+        saveArtwork: thumbnailDataUrl => {
+          const artwork = galleryActions.saveArtwork(thumbnailDataUrl);
+          if (!artwork) return null;
+          const current = get();
+          const activity = createStudioActivityEntry(
+            {
+              type: "save",
+              objectCount: artwork.objects.length,
+              sourceId: artwork.id,
+            },
+            {
+              ageMode: current.ageMode,
+              environment: artwork.environment ?? current.environment,
+              lighting: artwork.lighting ?? current.lighting,
+              sessionDuration: current.sessionDuration,
+            },
+            artwork.createdAt,
+            makeId()
+          );
+          set(state => ({
+            activityHistory: [activity, ...state.activityHistory].slice(
+              0,
+              ACTIVITY_HISTORY_LIMIT
+            ),
+          }));
+          return artwork;
+        },
         saveSessionReflection: (answer, promptId) => {
           const cleaned = answer.trim().replace(/\s+/g, " ").slice(0, 240);
           if (!cleaned) return false;
-          set({
-            lastSessionReflection: {
-              id: makeId(),
-              createdAt: new Date().toISOString(),
-              promptId,
-              answer: cleaned,
-              objectCount: get().objects.length,
+          const current = get();
+          const createdAt = new Date().toISOString();
+          const reflection = {
+            id: makeId(),
+            createdAt,
+            promptId,
+            answer: cleaned,
+            objectCount: current.objects.length,
+          } satisfies SessionReflection;
+          const activity = createStudioActivityEntry(
+            {
+              type: "reflection",
+              objectCount: current.objects.length,
             },
-          });
+            {
+              ageMode: current.ageMode,
+              environment: current.environment,
+              lighting: current.lighting,
+              sessionDuration: current.sessionDuration,
+            },
+            createdAt,
+            makeId()
+          );
+          set(state => ({
+            lastSessionReflection: reflection,
+            activityHistory: [activity, ...state.activityHistory].slice(
+              0,
+              ACTIVITY_HISTORY_LIMIT
+            ),
+          }));
           return true;
         },
         clearSessionReflection: () => set({ lastSessionReflection: null }),
@@ -480,6 +535,7 @@ export const useStudioStore = create<StudioState>()(
         completedChallengeIds: state.completedChallengeIds,
         sessionDuration: state.sessionDuration,
         lastSessionReflection: state.lastSessionReflection,
+        activityHistory: state.activityHistory,
       }),
       merge: (persistedState, currentState) => ({
         ...currentState,

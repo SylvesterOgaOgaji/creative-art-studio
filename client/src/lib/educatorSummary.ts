@@ -2,6 +2,13 @@
  * Privacy-first educator export: this helper serializes aggregate studio usage only.
  * It intentionally excludes project titles, gallery labels, display names, images, object positions, and raw scenes.
  */
+import {
+  ACTIVITY_WINDOW_DAYS,
+  createActivityChartData,
+  getReportActivityEntries,
+  summarizeActivity,
+  type StudioActivityEntry,
+} from "@/lib/studioActivity";
 import type {
   MakerSpotlight,
   SavedArtwork,
@@ -21,6 +28,7 @@ type EducatorSummaryInput = {
   lighting: StudioLighting;
   environment: StudioEnvironment;
   ageMode: StudioAgeMode;
+  activityHistory: StudioActivityEntry[];
 };
 
 function countBy<T extends string>(values: T[]) {
@@ -33,6 +41,16 @@ function countBy<T extends string>(values: T[]) {
 export function createAnonymizedProjectSummary(input: EducatorSummaryInput) {
   const allSavedObjects = input.savedArtworks.flatMap(
     artwork => artwork.objects
+  );
+  const reportActivity = getReportActivityEntries(
+    input.activityHistory,
+    input.savedArtworks,
+    {
+      ageMode: input.ageMode,
+      environment: input.environment,
+      lighting: input.lighting,
+      sessionDuration: "standard",
+    }
   );
   const tagAssignmentCount = input.savedArtworks.reduce(
     (total, artwork) => total + (artwork.tags?.length ?? 0),
@@ -82,6 +100,11 @@ export function createAnonymizedProjectSummary(input: EducatorSummaryInput) {
       lighting: input.lighting,
       environment: input.environment,
       ageMode: input.ageMode,
+    },
+    activityHistory: {
+      windowDays: ACTIVITY_WINDOW_DAYS,
+      daily: createActivityChartData(reportActivity),
+      totals: summarizeActivity(reportActivity),
     },
   };
 }

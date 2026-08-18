@@ -1,0 +1,199 @@
+.educator-activity-report {
+  width: min(1140px, calc(100% - 40px));
+  margin: 0 auto 75px;
+  border-top: 1px dashed rgba(121, 90, 59, 0.25);
+  padding: 58px 20px 0;
+}
+.activity-report-heading {
+  max-width: 680px;
+}
+.activity-report-heading .eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.activity-report-heading .eyebrow svg {
+  width: 15px;
+  color: #ff6b4a;
+}
+.activity-report-heading h2 {
+  margin: 7px 0 10px;
+  font-family: Fraunces, Georgia, serif;
+  font-size: clamp(30px, 4vw, 47px);
+  line-height: 1.02;
+  letter-spacing: -0.056em;
+}
+.activity-report-heading p {
+  margin: 0;
+  color: #715e4c;
+  font-size: 14px;
+  line-height: 1.62;
+}
+.activity-report-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(250px, 0.7fr);
+  gap: 24px;
+  margin-top: 26px;
+}
+.activity-chart-card {
+  min-width: 0;
+  border: 1px solid rgba(78, 182, 157, 0.26);
+  border-radius: 21px 15px 23px 16px;
+  background: #f0faf5;
+  padding: 20px 22px 16px;
+  box-shadow: 8px 9px 0 rgba(78, 182, 157, 0.12);
+}
+.activity-chart-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+.activity-chart-card-header div {
+  display: grid;
+  gap: 4px;
+}
+.activity-chart-card-header strong {
+  color: #245f55;
+  font-size: 16px;
+}
+.activity-chart-card-header span {
+  color: #638078;
+  font-size: 11px;
+}
+.activity-chart-card-header > svg {
+  width: 22px;
+  color: #4eb69d;
+}
+.activity-report-chart {
+  min-height: 250px;
+  margin-top: 10px;
+  aspect-ratio: auto;
+}
+.activity-report-chart .recharts-cartesian-axis-tick_text {
+  font-size: 10px;
+}
+.activity-report-empty {
+  display: grid;
+  min-height: 250px;
+  align-content: center;
+  justify-items: center;
+  gap: 8px;
+  color: #638078;
+  text-align: center;
+}
+.activity-report-empty svg {
+  width: 30px;
+  margin-bottom: 4px;
+  color: #4eb69d;
+}
+.activity-report-empty strong {
+  color: #245f55;
+  font-size: 14px;
+}
+.activity-report-empty span {
+  max-width: 260px;
+  font-size: 11px;
+  line-height: 1.45;
+}
+.activity-report-summary {
+  display: grid;
+  gap: 10px;
+}
+.activity-report-stat {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 12px;
+  border: 1px solid rgba(200, 90, 145, 0.17);
+  border-radius: 13px 9px 15px 10px;
+  background: #fff7f2;
+  padding: 12px 14px;
+}
+.activity-report-stat span {
+  align-self: end;
+  color: #896778;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.activity-report-stat strong {
+  grid-row: span 2;
+  align-self: center;
+  color: #9c496d;
+  font-family: Fraunces, Georgia, serif;
+  font-size: 30px;
+  line-height: 1;
+}
+.activity-report-stat small {
+  color: #816f66;
+  font-size: 10px;
+  line-height: 1.35;
+}
+.activity-report-latest {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  border-left: 3px solid #ff6b4a;
+  background: #fff5df;
+  padding: 10px 12px;
+  color: #836347;
+  font-size: 11px;
+  line-height: 1.45;
+}
+.activity-report-latest svg {
+  flex: 0 0 auto;
+  width: 16px;
+  margin-top: 1px;
+  color: #e16a45;
+}
+.activity-report-latest span {
+  display: grid;
+  gap: 2px;
+}
+.activity-report-latest b {
+  color: #9a6848;
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.activity-report-note {
+  display: flex;
+  gap: 5px;
+  max-width: 820px;
+  margin: 18px 0 0;
+  color: #78695c;
+  font-size: 11px;
+  line-height: 1.55;
+}
+.activity-report-note b {
+  color: #4f746a;
+}
+@media (max-width: 800px) {
+  .educator-activity-report {
+    width: min(100% - 28px, 1140px);
+    padding-inline: 0;
+  }
+  .activity-report-layout {
+    grid-template-columns: 1fr;
+  }
+  .activity-report-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .activity-report-latest {
+    grid-column: 1 / -1;
+  }
+}
+@media (max-width: 520px) {
+  .activity-report-summary {
+    grid-template-columns: 1fr;
+  }
+  .activity-report-latest {
+    grid-column: auto;
+  }
+}
+@media print {
+  .educator-activity-report {
+    display: none !important;
+  }
+}

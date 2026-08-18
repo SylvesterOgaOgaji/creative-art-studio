@@ -4,6 +4,11 @@ All notable project changes are documented here.
 
 ## Unreleased
 
+- Added a real browser-local Educators activity report with a 14-day chart of saved worlds and session reflections; legacy saved worlds are backfilled from their existing timestamps without fabricated activity.
+- Added bounded, Zod-validated aggregate activity history to LocalStorage and included the same metrics in anonymized educator JSON exports without titles, reflection text, images, tags, or scene coordinates.
+- Added request IDs, stack-aware structured server errors, a safe client-facing `internal_error` response, and focused coverage for the error-handling contract.
+- Added a committed `.env.example` and aligned configuration documentation for fresh-clone setup.
+
 ## 1.0.1 - 2026-08-18
 
 - Added explicit environment documentation and independently discoverable clean-install, format, lint, typecheck, coverage, browser-flow, security-audit, and build checks in CI.

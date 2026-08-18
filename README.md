@@ -16,6 +16,7 @@ Creative Art Studio is a React and Three.js learning project created during a co
 | Play    | Change colour, material, stickers, dots, stripes, checkerboard, glitter, lighting, and environments.            |
 | Explore | Use optional sound, Surprise Me scenes, first-run guidance, and short creative challenges.                      |
 | Keep    | Save browser-local worlds with thumbnails, favourites, badges, PNG export, search, rename, and delete controls. |
+| Reflect | Review a real 14-day activity history of saved worlds and session reflections from the Educators route.         |
 
 ## Run locally from a fresh clone
 
@@ -50,14 +51,14 @@ pnpm audit:production
 
 ## Architecture
 
-| Layer               | Responsibility                                                                                                          |
-| ------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| React interface     | Age-adaptive studio, gallery, classroom, family, educator, and maker routes.                                            |
-| Creative engine     | React Three Fiber scene, object manipulation, materials, lighting, environments, textures, and procedural compositions. |
-| Browser-local state | Zustand scene history, gallery metadata, preferences, badges, and session reflections persisted to LocalStorage.        |
-| Production delivery | A small Express server serves the built static application and exposes `GET /healthz` for operational checks.           |
+| Layer               | Responsibility                                                                                                                               |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| React interface     | Age-adaptive studio, gallery, classroom, family, educator, and maker routes.                                                                 |
+| Creative engine     | React Three Fiber scene, object manipulation, materials, lighting, environments, textures, and procedural compositions.                      |
+| Browser-local state | Zustand scene history, gallery metadata, preferences, badges, session reflections, and aggregate activity history persisted to LocalStorage. |
+| Production delivery | A small Express server serves the built static application and exposes `GET /healthz` for operational checks.                                |
 
-The artwork model is structured data rather than a screenshot alone, so a saved composition can be reconstructed in the studio. UI interactions and persistent artwork state are deliberately separated so a future optional storage provider can replace LocalStorage without rewriting the scene engine.
+The artwork model is structured data rather than a screenshot alone, so a saved composition can be reconstructed in the studio. The Educators route also includes a privacy-preserving activity report: its chart is derived only from actual save and reflection events, and it excludes titles, names, reflection text, images, tags, and scene coordinates. UI interactions and persistent artwork state are deliberately separated so a future optional storage provider can replace LocalStorage without rewriting the scene engine.
 
 ## Tests and automation
 

@@ -1,5 +1,6 @@
 import express from "express";
 import type { Express, NextFunction, Request, Response } from "express";
+import { randomUUID } from "node:crypto";
 import { createServer } from "http";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -17,9 +18,13 @@ function getStaticPath() {
 function requestLoggingMiddleware(log: AppLogger) {
   return (req: Request, res: Response, next: NextFunction) => {
     const startedAt = performance.now();
+    const requestId = req.header("x-request-id")?.trim() || randomUUID();
+    res.locals.requestId = requestId;
+    res.setHeader("x-request-id", requestId);
     res.once("finish", () => {
       log.info(
         {
+          requestId: res.locals.requestId,
           method: req.method,
           path: req.path,
           statusCode: res.statusCode,
@@ -36,7 +41,8 @@ function errorHandlingMiddleware(log: AppLogger) {
   return (error: Error, req: Request, res: Response, _next: NextFunction) => {
     log.error(
       {
-        err: { message: error.message },
+        err: { message: error.message, stack: error.stack },
+        requestId: res.locals.requestId,
         method: req.method,
         path: req.path,
       },
@@ -52,10 +58,12 @@ function errorHandlingMiddleware(log: AppLogger) {
  */
 export function createApp(
   staticPath = getStaticPath(),
-  log: AppLogger = logger
+  log: AppLogger = logger,
+  registerRoutes?: (app: Express) => void
 ): Express {
   const app = express();
   app.use(requestLoggingMiddleware(log));
+  registerRoutes?.(app);
 
   app.get("/healthz", (_req, res) => {
     res.status(200).json({ status: "ok", service: "creative-art-studio" });
