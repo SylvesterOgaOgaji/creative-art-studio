@@ -17,6 +17,7 @@
     "audit:production": "pnpm audit --prod --audit-level=high",
     "quality:ci": "pnpm format:check && pnpm lint && pnpm check && pnpm test:coverage && pnpm audit:production && pnpm build && pnpm verify:production-assets",
     "verify:production-assets": "bash scripts/verify-production-assets.sh",
+    "verify:fresh-clone": "bash scripts/verify-fresh-clone.sh",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },

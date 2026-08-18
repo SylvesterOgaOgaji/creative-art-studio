@@ -22,9 +22,11 @@ From a fresh clone with no existing project dependencies, run the following sequ
 ```bash
 corepack enable
 pnpm install --frozen-lockfile
+pnpm exec playwright install --with-deps chromium
+pnpm test:coverage
 pnpm build
 pnpm verify:production-assets
-pnpm test:coverage
+pnpm test:e2e
 ```
 
-The equivalent repository check is `bash scripts/verify-fresh-clone.sh`, which runs the same frozen install, coverage suite, production build, and production-asset assertion. The `verify:production-assets` step confirms that development-only Manus debug instrumentation is absent from `dist/public`.
+The equivalent repository check is `bash scripts/verify-fresh-clone.sh`. It runs the frozen install, installs the pinned browser dependency, executes coverage before the build, verifies the production asset boundary, and completes the Playwright creative flow against a production-shaped preview server. The `verify:production-assets` step confirms that development-only Manus debug instrumentation is absent from `dist/public`. A known-good verification record is maintained in [`docs/fresh-clone-verification.md`](fresh-clone-verification.md); refresh it when the toolchain or command sequence changes.
