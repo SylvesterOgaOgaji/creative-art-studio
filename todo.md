@@ -119,5 +119,5 @@
 
 - [x] Inspect the failing GitHub Actions run and isolate the lockfile compatibility issue.
 - [x] Publish a clean CI lockfile repair to the main branch and verify the workflow succeeds.
-- [ ] Review the four open Dependabot pull requests for compatibility with the repaired main branch.
-- [ ] Merge compatible updates and confirm the final repository health.
+- [x] Review the four open Dependabot pull requests for compatibility with the repaired main branch.
+- [x] Merge compatible updates and confirm the final repository health.
