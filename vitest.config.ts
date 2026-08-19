@@ -24,6 +24,8 @@ export default defineConfig({
         "client/src/store/historySlice.ts",
         "client/src/store/gallerySlice.ts",
         "client/src/store/studioHelpers.ts",
+        "client/src/components/studio/StudioSceneObjects.tsx",
+        "client/src/pages/Home.tsx",
         "client/src/components/studio/ToolPanel.tsx",
         "client/src/components/studio/PropertiesPanel.tsx",
         "client/src/components/studio/StudioCanvas.tsx",

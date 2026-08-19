@@ -24,24 +24,35 @@ describe("error tracking sink", () => {
 
   it("writes structured events when explicitly configured", async () => {
     const directory = await mkdtemp(join(tmpdir(), "creative-art-studio-"));
-    const filePath = join(directory, "errors.jsonl");
+    const filePath = join(directory, "nested", "errors.jsonl");
     const sink = createErrorSink(testLogger(), filePath);
 
     sink.capture({
       requestId: "request-test-42",
       method: "GET",
-      path: "/boom",
+      path: "/boom?token=private&view=gallery",
       message: "test failure",
       stack: "Error: test failure",
+    });
+    sink.capture({
+      method: "POST",
+      path: "/save",
+      message: "second failure",
     });
 
     await vi.waitFor(async () => {
       const records = (await readFile(filePath, "utf8")).trim().split("\n");
+      expect(records).toHaveLength(2);
       expect(JSON.parse(records[0])).toMatchObject({
         service: "creative-art-studio",
         requestId: "request-test-42",
-        path: "/boom",
+        path: "/boom?token=%5BREDACTED%5D&view=gallery",
         message: "test failure",
+      });
+      expect(JSON.parse(records[1])).toMatchObject({
+        method: "POST",
+        path: "/save",
+        message: "second failure",
       });
     });
   });
