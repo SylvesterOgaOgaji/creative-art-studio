@@ -2,9 +2,10 @@
  * Playful Atelier design reminder: transforms should feel like intuitive studio tools,
  * with a warm stage that keeps controls secondary to the object being shaped.
  */
+import { ContactShadows } from "@react-three/drei/core/ContactShadows";
+import { OrbitControls } from "@react-three/drei/core/OrbitControls";
 import { Canvas } from "@react-three/fiber";
-import { ContactShadows, OrbitControls, Stars } from "@react-three/drei";
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { useStudioStore } from "@/store/useStudioStore";
 import {
   GroupTransformObject,
@@ -14,6 +15,14 @@ import {
 
 const workspaceArtwork =
   "/manus-storage/playful-atelier-workspace_6be4be8c.jpg";
+
+// The starfield is a special-occasion environment, not part of the default
+// atelier. Loading it on demand keeps the first interactive stage lighter.
+const Stars = lazy(() =>
+  import("@react-three/drei/core/Stars").then(({ Stars: Starfield }) => ({
+    default: Starfield,
+  }))
+);
 
 function StudioScene() {
   const [isDragging, setIsDragging] = useState(false);
@@ -43,15 +52,17 @@ function StudioScene() {
   return (
     <>
       {environment === "space" && (
-        <Stars
-          radius={70}
-          depth={42}
-          count={1500}
-          factor={3}
-          saturation={0.25}
-          fade
-          speed={0.22}
-        />
+        <Suspense fallback={null}>
+          <Stars
+            radius={70}
+            depth={42}
+            count={1500}
+            factor={3}
+            saturation={0.25}
+            fade
+            speed={0.22}
+          />
+        </Suspense>
       )}
       {environment === "underwater" && (
         <fog attach="fog" args={["#81d5e5", 7, 19]} />

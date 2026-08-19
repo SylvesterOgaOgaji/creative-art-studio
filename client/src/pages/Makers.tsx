@@ -94,6 +94,16 @@ export default function Makers() {
           </a>
           <sup>[2]</sup>
         </aside>
+        <div
+          className="journal-maker-artifact artifact-makers"
+          aria-hidden="true"
+        >
+          <i className="artifact-paper artifact-paper-back" />
+          <i className="artifact-paper artifact-paper-front" />
+          <span className="artifact-pigment pigment-cobalt" />
+          <span className="artifact-pigment pigment-seaglass" />
+          <span className="artifact-pigment pigment-yellow" />
+        </div>
       </section>
       <section
         className="makers-roster-section"

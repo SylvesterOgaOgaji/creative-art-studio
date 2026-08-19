@@ -86,6 +86,39 @@ test("a creator can undo, redo, and download a PNG of their current stage", asyn
   await expect(page.getByText("Your artwork is ready as a PNG.")).toBeVisible();
 });
 
+test("a touch creator can choose move, turn, and stretch tools for a selected shape", async ({
+  browser,
+}) => {
+  const context = await browser.newContext({
+    hasTouch: true,
+    isMobile: true,
+    viewport: { width: 390, height: 844 },
+  });
+  const page = await context.newPage();
+
+  await page.addInitScript(() => {
+    window.localStorage.clear();
+  });
+  await page.goto("/");
+
+  await page.getByRole("button", { name: "Add a Cube" }).tap();
+  await expect(page.getByLabel("Properties panel")).toBeVisible();
+
+  const move = page.getByRole("button", { name: "Move", exact: true });
+  const turn = page.getByRole("button", { name: "Turn", exact: true });
+  const stretch = page.getByRole("button", { name: "Stretch", exact: true });
+
+  await expect(move).toHaveAttribute("aria-pressed", "true");
+  await turn.tap();
+  await expect(turn).toHaveAttribute("aria-pressed", "true");
+  await stretch.tap();
+  await expect(stretch).toHaveAttribute("aria-pressed", "true");
+  await move.tap();
+  await expect(move).toHaveAttribute("aria-pressed", "true");
+
+  await context.close();
+});
+
 test("a previously visited dashboard reopens offline", async ({
   page,
   context,

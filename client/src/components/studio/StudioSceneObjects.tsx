@@ -1,5 +1,11 @@
 /* eslint-disable react/no-unknown-property */
-import { Edges, Html, TransformControls } from "@react-three/drei";
+/**
+ * Playful Atelier design reminder: scene controls stay direct and tactile so
+ * children can shape an artwork without navigating technical abstractions.
+ */
+import { Edges } from "@react-three/drei/core/Edges";
+import { Html } from "@react-three/drei/web/Html";
+import { TransformControls } from "@react-three/drei/core/TransformControls";
 import type { ThreeEvent } from "@react-three/fiber";
 import type { ReactNode } from "react";
 import { useEffect, useMemo, useRef } from "react";

@@ -128,3 +128,10 @@
 - [x] Resolve any remaining failed pull-request merge, lockfile, or CI compatibility issues without overwriting application code.
 - [x] Address the highest-impact remaining verifiable score gaps with focused code, test, documentation, or configuration improvements.
 - [x] Run clean-install, quality, browser, security, and responsive validation; publish the evidence-based update.
+
+## Final Three.js delivery and touch coverage pass
+
+- [x] Profile the deferred studio bundle and identify safe dependency boundaries that reduce initial interactive-stage cost.
+- [x] Implement targeted deferred Three.js improvements without changing the creative engine’s public behavior.
+- [x] Add touch-specific transform-gizmo tests for core move, rotate, and scale workflows.
+- [x] Validate bundle composition, mobile browser flows, quality gates, and publish the final refinement.

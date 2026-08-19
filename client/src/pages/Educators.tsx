@@ -110,6 +110,16 @@ export default function Educators() {
             </li>
           </ul>
         </aside>
+        <div
+          className="journal-maker-artifact artifact-educators"
+          aria-hidden="true"
+        >
+          <i className="artifact-paper artifact-paper-back" />
+          <i className="artifact-paper artifact-paper-front" />
+          <span className="artifact-pigment pigment-cobalt" />
+          <span className="artifact-pigment pigment-seaglass" />
+          <span className="artifact-pigment pigment-yellow" />
+        </div>
       </section>
       <SessionDurationPlanner />
       <section className="age-path-section" aria-labelledby="age-path-title">

@@ -620,6 +620,191 @@
   padding: 15px;
 }
 
+/* Final Playful Atelier reminder: the stage is the physical maker object;
+   side trays and journal notes are deliberately softer supporting materials. */
+.atelier-layout {
+  align-items: start;
+}
+
+.workspace-panel {
+  position: relative;
+  isolation: isolate;
+  padding-inline: clamp(8px, 1vw, 16px);
+}
+
+.workspace-panel::after {
+  position: absolute;
+  z-index: -1;
+  right: 9%;
+  bottom: 26%;
+  width: 82px;
+  height: 13px;
+  border-radius: 70% 45% 60% 55%;
+  background: rgba(78, 182, 157, 0.12);
+  box-shadow:
+    -410px 50px 0 -3px rgba(70, 102, 233, 0.1),
+    36px 82px 0 -4px rgba(246, 201, 69, 0.16);
+  content: "";
+  filter: blur(0.2px);
+  transform: rotate(-4deg);
+}
+
+.workspace-header {
+  margin-inline: clamp(8px, 2vw, 24px);
+  padding-top: 6px;
+}
+
+.canvas-shell {
+  min-height: clamp(455px, 59vw, 675px);
+  border-width: 2px;
+  border-color: rgba(83, 70, 55, 0.28);
+  box-shadow:
+    0 20px 0 -13px rgba(192, 153, 99, 0.2),
+    0 32px 44px -32px rgba(61, 48, 37, 0.58);
+}
+
+.canvas-shell::before {
+  opacity: 0.82;
+  transform: rotate(-1.3deg) scale(1.015);
+}
+
+.workspace-actionbar {
+  margin: 14px clamp(8px, 2vw, 24px) 0;
+  border-color: rgba(127, 100, 72, 0.1);
+  background: rgba(255, 252, 243, 0.44);
+  box-shadow: none;
+}
+
+.workspace-panel > .challenge-card,
+.workspace-panel > .badge-shelf,
+.workspace-panel > .studio-quick-guide,
+.workspace-panel > .maker-table-cue {
+  max-width: 92%;
+  margin-inline: auto;
+}
+
+.workspace-panel > .challenge-card {
+  margin-top: 26px;
+  color: #71685c;
+  opacity: 0.84;
+}
+
+.workspace-panel > .badge-shelf {
+  opacity: 0.76;
+}
+
+.workspace-panel > .studio-quick-guide,
+.workspace-panel > .maker-table-cue {
+  opacity: 0.72;
+}
+
+.workspace-panel > .maker-table-cue .paper-chips {
+  opacity: 0.42;
+}
+
+.tool-panel,
+.properties-panel {
+  border-color: rgba(127, 100, 72, 0.13);
+  box-shadow: 2px 5px 0 rgba(192, 153, 99, 0.08);
+}
+
+/* Hand-cut physical artifacts provide one memorable studio cue per journal hero. */
+.makers-hero,
+.educator-hero {
+  position: relative;
+  isolation: isolate;
+}
+
+.journal-maker-artifact {
+  position: absolute;
+  z-index: 2;
+  width: 118px;
+  height: 95px;
+  pointer-events: none;
+  transform: rotate(-7deg);
+}
+
+.artifact-makers {
+  top: 42%;
+  left: 51.5%;
+}
+
+.artifact-educators {
+  top: 46%;
+  left: 51%;
+  transform: rotate(6deg) scale(0.94);
+}
+
+.artifact-paper,
+.artifact-pigment {
+  position: absolute;
+  display: block;
+}
+
+.artifact-paper-back {
+  top: 11px;
+  left: 8px;
+  width: 85px;
+  height: 65px;
+  border: 1px solid rgba(83, 70, 55, 0.15);
+  border-radius: 9px 17px 11px 15px;
+  background: #e2eefc;
+  box-shadow: 4px 5px 0 rgba(70, 102, 233, 0.13);
+  transform: rotate(11deg);
+}
+
+.artifact-paper-front {
+  top: 16px;
+  left: 17px;
+  width: 84px;
+  height: 62px;
+  border: 1px solid rgba(83, 70, 55, 0.13);
+  border-radius: 18px 9px 15px 8px;
+  background: linear-gradient(130deg, #fffdf7 0 77%, #f7e8bb 77% 100%);
+  box-shadow: 5px 6px 0 rgba(144, 109, 65, 0.11);
+}
+
+.artifact-paper-front::after {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  width: 31px;
+  height: 5px;
+  border-radius: 60% 35% 55% 45%;
+  background: rgba(78, 182, 157, 0.56);
+  content: "";
+  transform: rotate(-6deg);
+}
+
+.artifact-pigment {
+  border-radius: 48% 52% 45% 55%;
+  box-shadow: 1px 2px 0 rgba(83, 70, 55, 0.12);
+}
+
+.pigment-cobalt {
+  top: 2px;
+  right: 9px;
+  width: 20px;
+  height: 20px;
+  background: #4666e9;
+}
+
+.pigment-seaglass {
+  right: 2px;
+  bottom: 2px;
+  width: 15px;
+  height: 15px;
+  background: #4eb69d;
+}
+
+.pigment-yellow {
+  bottom: 8px;
+  left: 2px;
+  width: 12px;
+  height: 12px;
+  background: #f6c945;
+}
+
 .reflection-stamp {
   width: 44px;
   height: 44px;
@@ -655,6 +840,25 @@
 }
 
 @media (max-width: 700px) {
+  .workspace-panel {
+    padding-inline: 0;
+  }
+
+  .canvas-shell {
+    min-height: min(61vh, 505px);
+  }
+
+  .workspace-panel > .challenge-card,
+  .workspace-panel > .badge-shelf,
+  .workspace-panel > .studio-quick-guide,
+  .workspace-panel > .maker-table-cue {
+    max-width: 100%;
+  }
+
+  .journal-maker-artifact {
+    display: none;
+  }
+
   .workspace-panel > .challenge-card {
     margin-top: 14px;
   }

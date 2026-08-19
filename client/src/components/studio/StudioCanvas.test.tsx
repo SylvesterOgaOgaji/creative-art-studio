@@ -10,12 +10,27 @@ vi.mock("@react-three/fiber", () => ({
   ),
 }));
 
-vi.mock("@react-three/drei", () => ({
+vi.mock("@react-three/drei/core/ContactShadows", () => ({
   ContactShadows: () => null,
+}));
+
+vi.mock("@react-three/drei/core/Edges", () => ({
   Edges: () => null,
+}));
+
+vi.mock("@react-three/drei/web/Html", () => ({
   Html: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+}));
+
+vi.mock("@react-three/drei/core/OrbitControls", () => ({
   OrbitControls: () => null,
+}));
+
+vi.mock("@react-three/drei/core/Stars", () => ({
   Stars: () => null,
+}));
+
+vi.mock("@react-three/drei/core/TransformControls", () => ({
   TransformControls: ({ children }: { children: React.ReactNode }) => (
     <>{children}</>
   ),

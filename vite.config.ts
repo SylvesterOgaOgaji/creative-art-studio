@@ -277,14 +277,17 @@ export default defineConfig(() => ({
       output: {
         manualChunks(id) {
           if (!id.includes("node_modules")) return;
-          if (
-            id.includes("/three/") ||
-            id.includes("/@react-three/") ||
-            id.includes("/three-stdlib/") ||
-            id.includes("/maath/")
-          ) {
-            return "three-runtime";
+          // Keep the renderer and its optional stage effects independently
+          // cacheable. The default atelier does not need the space starfield.
+          if (id.includes("/@react-three/drei/core/Stars")) {
+            return "three-stars";
           }
+          if (id.includes("/@react-three/drei/")) return "three-drei";
+          if (id.includes("/@react-three/fiber/")) return "three-fiber";
+          if (id.includes("/three-stdlib/") || id.includes("/maath/")) {
+            return "three-helpers";
+          }
+          if (id.includes("/three/")) return "three-core";
           if (id.includes("/framer-motion/")) return "motion";
           if (id.includes("/@radix-ui/")) return "radix-ui";
           if (id.includes("/lucide-react/")) return "studio-icons";

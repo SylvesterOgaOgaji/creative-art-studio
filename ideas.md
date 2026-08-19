@@ -113,3 +113,5 @@ The wordmark pairs the high-contrast Fraunces title with a compact, tilted **Spa
 24. **Persimmon Spark `#FF6B4A`** is reserved for primary maker actions, selected or active states, saving/exporting, and celebration; secondary notes use parchment, charcoal, sea-glass, cobalt, and softer pigment accents.
 25. The Spark + Fraunces “Make a tiny world” lockup is the compact identity anchor; it reads as one ownable maker mark rather than a decorated application header.
 26. Reflection is a calm **field-journal pause** with parchment surfaces and muted studio pigments; its only persimmon action is the functional save control.
+27. The art stage is treated as a **physical tabletop centerpiece**: it earns the deepest frame, greatest breathing room, and the only strong downstream shadow. Side trays and post-stage notes visibly recede as workshop tools.
+28. Field-journal heroes include one small, hand-cut **maker artifact** made from layered paper and cobalt, sea-glass, and sunny pigment chips. These are decorative studio materials, never action controls, and they prevent the public pages from reading like generic editorial cards.
