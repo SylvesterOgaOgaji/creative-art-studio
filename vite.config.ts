@@ -247,7 +247,7 @@ const plugins = [
   vitePluginStorageProxy(),
 ];
 
-export default defineConfig(({ command }) => ({
+export default defineConfig(() => ({
   plugins,
   resolve: {
     alias: {
@@ -258,12 +258,10 @@ export default defineConfig(({ command }) => ({
   },
   envDir: path.resolve(import.meta.dirname),
   root: path.resolve(import.meta.dirname, "client"),
-  // Browser diagnostics are served only during local development and never copied
-  // into the production artifact or exposed to children using the published studio.
-  publicDir:
-    command === "serve"
-      ? path.resolve(import.meta.dirname, "client", "public")
-      : false,
+  // Public PWA files (service worker and manifest) must ship with the browser app.
+  // Development diagnostics live in tools/dev-only and are served only by the
+  // local plugin, so they cannot enter the production artifact.
+  publicDir: path.resolve(import.meta.dirname, "client", "public"),
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
