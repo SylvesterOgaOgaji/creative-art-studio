@@ -17,7 +17,7 @@ export default defineConfig({
     clearMocks: true,
     coverage: {
       provider: "v8",
-      reporter: ["text", "json-summary"],
+      reporter: ["text", "json-summary", "json", "lcov"],
       reportsDirectory: "coverage",
       include: [
         "client/src/store/useStudioStore.ts",

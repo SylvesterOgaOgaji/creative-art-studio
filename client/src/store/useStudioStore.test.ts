@@ -14,6 +14,7 @@ function resetStudio() {
       savedArtworks: [],
       galleryFolders: [],
       makerSpotlights: [],
+      activityHistory: [],
       selectedObjectId: null,
       selectedObjectIds: [],
     },
@@ -88,6 +89,45 @@ describe("browser-local studio state", () => {
       tags: ["space", "bright ideas"],
       isFavorite: true,
     });
+  });
+
+  it("records real save and reflection events for the educator report", () => {
+    const store = useStudioStore.getState();
+    store.addObject("sphere");
+    const artwork = store.saveArtwork();
+    expect(artwork).not.toBeNull();
+
+    store.saveSessionReflection("I changed the light.", "notice");
+
+    expect(useStudioStore.getState().activityHistory).toHaveLength(2);
+    expect(useStudioStore.getState().activityHistory).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          type: "save",
+          objectCount: 1,
+          sourceId: artwork!.id,
+        }),
+        expect.objectContaining({
+          type: "reflection",
+          objectCount: 1,
+        }),
+      ])
+    );
+    expect(useStudioStore.getState().activityHistory[0]).not.toHaveProperty(
+      "answer"
+    );
+  });
+
+  it("rejects empty reflections and clamps browser-local sound settings", () => {
+    const store = useStudioStore.getState();
+
+    expect(store.saveSessionReflection("   ", "notice")).toBe(false);
+    store.setSoundEnabled(true);
+    store.setSoundVolume(2);
+
+    expect(useStudioStore.getState().soundEnabled).toBe(true);
+    expect(useStudioStore.getState().soundVolume).toBe(1);
+    expect(useStudioStore.getState().activityHistory).toEqual([]);
   });
 
   it("loads a complete classroom starter through the same creative engine", () => {

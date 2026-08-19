@@ -1,10 +1,8 @@
-/**
- * Playful Atelier scene helpers: reusable mesh, transform, and environment pieces
- * keep the canvas component focused on the child-friendly maker stage.
- */
-import { type ThreeEvent } from "@react-three/fiber";
+/* eslint-disable react/no-unknown-property */
 import { Edges, Html, TransformControls } from "@react-three/drei";
-import { useEffect, useMemo, useRef, type ReactNode } from "react";
+import type { ThreeEvent } from "@react-three/fiber";
+import type { ReactNode } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import {
   CanvasTexture,
   Euler,
@@ -15,7 +13,6 @@ import {
 } from "three";
 import { useStudioStore } from "@/store/useStudioStore";
 import type {
-  StudioEnvironment,
   StudioMaterial,
   StudioObject,
   StudioSticker,
@@ -23,45 +20,37 @@ import type {
   Vector3Tuple,
 } from "@/types/studio";
 
-const workspaceArtwork =
-  "/manus-storage/playful-atelier-workspace_6be4be8c.jpg";
+const toTuple = (values: { x: number; y: number; z: number }): Vector3Tuple => [
+  values.x,
+  values.y,
+  values.z,
+];
 
-export type DraggingChangeHandler = (dragging: boolean) => void;
-
-export const toVectorTuple = (values: {
-  x: number;
-  y: number;
-  z: number;
-}): Vector3Tuple => [values.x, values.y, values.z];
-
-export function geometryFor(type: StudioObject["type"]): ReactNode {
+function geometryFor(type: StudioObject["type"]): ReactNode {
   if (type === "sphere") return <sphereGeometry args={[0.78, 48, 32]} />;
   if (type === "cone") return <coneGeometry args={[0.76, 1.55, 48]} />;
-  if (type === "cylinder") {
+  if (type === "cylinder")
     return <cylinderGeometry args={[0.7, 0.7, 1.45, 48]} />;
-  }
   if (type === "torus") return <torusGeometry args={[0.72, 0.25, 20, 64]} />;
   return <boxGeometry args={[1.25, 1.25, 1.25]} />;
 }
 
-export function makeSurfaceTexture(texture: StudioTexture, color: string) {
+function makeSurfaceTexture(texture: StudioTexture, color: string) {
   if (texture === "plain") return null;
   const canvas = document.createElement("canvas");
   canvas.width = canvas.height = 128;
   const context = canvas.getContext("2d");
   if (!context) return null;
-
   context.fillStyle = color;
   context.fillRect(0, 0, 128, 128);
   context.fillStyle = "rgba(255,255,246,.68)";
   if (texture === "dots") {
-    for (let x = 18; x < 128; x += 38) {
+    for (let x = 18; x < 128; x += 38)
       for (let y = 18; y < 128; y += 38) {
         context.beginPath();
         context.arc(x, y, 8, 0, Math.PI * 2);
         context.fill();
       }
-    }
   } else if (texture === "stripes") {
     context.lineWidth = 14;
     for (let x = -90; x < 170; x += 35) {
@@ -72,11 +61,9 @@ export function makeSurfaceTexture(texture: StudioTexture, color: string) {
     }
   } else if (texture === "checkerboard") {
     context.fillStyle = "rgba(255,255,246,.66)";
-    for (let x = 0; x < 128; x += 24) {
-      for (let y = 0; y < 128; y += 24) {
+    for (let x = 0; x < 128; x += 24)
+      for (let y = 0; y < 128; y += 24)
         if ((x / 24 + y / 24) % 2 === 0) context.fillRect(x, y, 24, 24);
-      }
-    }
   } else {
     context.fillStyle = "rgba(255,255,246,.8)";
     for (let index = 0; index < 44; index += 1) {
@@ -87,7 +74,6 @@ export function makeSurfaceTexture(texture: StudioTexture, color: string) {
       context.fill();
     }
   }
-
   const map = new CanvasTexture(canvas);
   map.colorSpace = SRGBColorSpace;
   return map;
@@ -172,14 +158,13 @@ export function SceneMesh({
 }) {
   const selectObject = useStudioStore(state => state.selectObject);
   const multiSelectMode = useStudioStore(state => state.multiSelectMode);
-  const texture = object.texture ?? "plain";
-  const sticker = object.sticker ?? "none";
-  const map = useSurfaceTexture(texture, object.color);
   const handleSelect = (event: ThreeEvent<MouseEvent>) => {
     event.stopPropagation();
     selectObject(object.id, event.shiftKey || multiSelectMode);
   };
-
+  const texture = object.texture ?? "plain";
+  const sticker = object.sticker ?? "none";
+  const map = useSurfaceTexture(texture, object.color);
   return (
     <mesh
       ref={meshRef}
@@ -225,7 +210,7 @@ export function SingleTransformObject({
   onDraggingChange,
 }: {
   object: StudioObject;
-  onDraggingChange: DraggingChangeHandler;
+  onDraggingChange: (dragging: boolean) => void;
 }) {
   const meshRef = useRef<Mesh | null>(null);
   const transformMode = useStudioStore(state => state.transformMode);
@@ -238,7 +223,6 @@ export function SingleTransformObject({
   const updateObjectDuringTransform = useStudioStore(
     state => state.updateObjectDuringTransform
   );
-
   return (
     <TransformControls
       mode={transformMode}
@@ -253,12 +237,12 @@ export function SingleTransformObject({
       }}
       onObjectChange={() => {
         const mesh = meshRef.current;
-        if (!mesh) return;
-        updateObjectDuringTransform(object.id, {
-          position: toVectorTuple(mesh.position),
-          rotation: toVectorTuple(mesh.rotation),
-          scale: toVectorTuple(mesh.scale),
-        });
+        if (mesh)
+          updateObjectDuringTransform(object.id, {
+            position: toTuple(mesh.position),
+            rotation: toTuple(mesh.rotation),
+            scale: toTuple(mesh.scale),
+          });
       }}
     >
       <SceneMesh
@@ -280,7 +264,7 @@ export function GroupTransformObject({
 }: {
   objects: StudioObject[];
   selectedObjectId: string | null;
-  onDraggingChange: DraggingChangeHandler;
+  onDraggingChange: (dragging: boolean) => void;
 }) {
   const meshRefs = useRef(new Map<string, Mesh>());
   const transformMode = useStudioStore(state => state.transformMode);
@@ -322,9 +306,9 @@ export function GroupTransformObject({
           {
             id: object.id,
             updates: {
-              position: toVectorTuple(worldPosition),
-              rotation: toVectorTuple(rotation),
-              scale: toVectorTuple(worldScale),
+              position: toTuple(worldPosition),
+              rotation: toTuple(rotation),
+              scale: toTuple(worldScale),
             },
           },
         ];
@@ -333,7 +317,6 @@ export function GroupTransformObject({
     finishDirectTransform();
     onDraggingChange(false);
   };
-
   return (
     <TransformControls
       mode={transformMode}
@@ -365,23 +348,4 @@ export function GroupTransformObject({
       </group>
     </TransformControls>
   );
-}
-
-export function getStageFloorColor(
-  environment: StudioEnvironment,
-  lighting: "daylight" | "neon"
-) {
-  if (environment === "space") return "#101a47";
-  if (environment === "underwater") return "#c9f3ee";
-  return lighting === "neon" ? "#111B3B" : "#FFF7E9";
-}
-
-export function getStageBackground(environment: StudioEnvironment) {
-  if (environment === "space") {
-    return "radial-gradient(circle at 20% 18%, #4f54aa 0 2%, transparent 2.5%), radial-gradient(circle at 78% 24%, #ffffff 0 1%, transparent 1.5%), linear-gradient(145deg, #17174d, #2d2368 54%, #101a47)";
-  }
-  if (environment === "underwater") {
-    return "radial-gradient(circle at 23% 12%, rgba(255,255,255,.55) 0 4%, transparent 4.5%), radial-gradient(circle at 68% 24%, rgba(255,255,255,.4) 0 3%, transparent 3.5%), linear-gradient(160deg, #80d9e9, #c4f4e7 72%)";
-  }
-  return `linear-gradient(180deg, ${"rgba(255,255,255,.16)"}, rgba(255,249,238,.48)), url(${workspaceArtwork})`;
 }

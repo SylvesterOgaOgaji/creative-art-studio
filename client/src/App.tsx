@@ -4,6 +4,7 @@ import { lazy, Suspense } from "react";
 import NotFound from "@/pages/NotFound";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
+import OfflineStatus from "./components/OfflineStatus";
 import { ThemeProvider } from "./contexts/ThemeContext";
 
 const StudioRoute = lazy(() => import("./pages/StudioRoute"));
@@ -104,6 +105,7 @@ function App() {
       >
         <TooltipProvider>
           <Toaster />
+          <OfflineStatus />
           <Router />
         </TooltipProvider>
       </ThemeProvider>

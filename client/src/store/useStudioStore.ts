@@ -5,9 +5,19 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { parsePersistedStudioState } from "@/lib/studioPersistence";
+import {
+  ACTIVITY_HISTORY_LIMIT,
+  createStudioActivityEntry,
+  type StudioActivityEntry,
+} from "@/lib/studioActivity";
 import { getClassroomStarter } from "./classroomStarters";
 import { createGalleryActions } from "./gallerySlice";
 import { createHistoryActions } from "./historySlice";
+import {
+  createObject,
+  createSurpriseArrangement,
+  makeId,
+} from "./sceneBuilders";
 import type {
   ClassroomStarterTheme,
   GalleryFolder,
@@ -28,11 +38,6 @@ import type {
   Vector3Tuple,
 } from "@/types/studio";
 
-const makeId = () =>
-  globalThis.crypto?.randomUUID?.() ??
-  `studio-${Date.now()}-${Math.random().toString(36).slice(2)}`;
-const titleCase = (value: string) =>
-  value.charAt(0).toUpperCase() + value.slice(1);
 const cloneObject = (object: StudioObject): StudioObject => ({
   ...object,
   position: [...object.position] as Vector3Tuple,
@@ -64,6 +69,7 @@ export interface StudioState {
   completedChallengeIds: number[];
   sessionDuration: SessionDuration;
   lastSessionReflection: SessionReflection | null;
+  activityHistory: StudioActivityEntry[];
   setArtworkTitle: (title: string) => void;
   setGalleryOpen: (isOpen: boolean) => void;
   setLighting: (lighting: StudioLighting) => void;
@@ -140,22 +146,6 @@ const selectedIdsFor = (
     : state.selectedObjectId
       ? [state.selectedObjectId]
       : [];
-const createObject = (type: StudioObjectType, count: number): StudioObject => {
-  const column = (count % 3) - 1;
-  const row = Math.floor(count / 3);
-  return {
-    id: makeId(),
-    name: `${titleCase(type)} ${count + 1}`,
-    type,
-    position: [column * 1.35, 0.85, -row * 1.1],
-    rotation: [0, count * 0.35, 0],
-    scale: [1, 1, 1],
-    color: "#FF6B4A",
-    material: "matte",
-    texture: "plain",
-    sticker: "none",
-  };
-};
 
 export const useStudioStore = create<StudioState>()(
   persist(
@@ -199,6 +189,7 @@ export const useStudioStore = create<StudioState>()(
         completedChallengeIds: [],
         sessionDuration: "extended",
         lastSessionReflection: null,
+        activityHistory: [],
         setArtworkTitle: artworkTitle => set({ artworkTitle }),
         setGalleryOpen: galleryOpen => set({ galleryOpen }),
         setLighting: lighting => commit({ lighting }),
@@ -336,74 +327,7 @@ export const useStudioStore = create<StudioState>()(
             });
         },
         surpriseMe: () => {
-          const palette = [
-            "#FF6B4A",
-            "#4666E9",
-            "#4EB69D",
-            "#F6C945",
-            "#C85A91",
-            "#72BFE8",
-          ];
-          const types: StudioObjectType[] = [
-            "torus",
-            "sphere",
-            "cone",
-            "cube",
-            "cylinder",
-            "sphere",
-            "torus",
-          ];
-          const anchors: Vector3Tuple[] = [
-            [-1.9, 0.9, 0.3],
-            [-0.75, 1.5, -0.4],
-            [0.55, 0.75, 0.1],
-            [1.85, 1.15, -0.35],
-            [0.05, 2.25, -0.9],
-            [-1.25, 0.6, -1.25],
-            [1.35, 0.55, -1.4],
-          ];
-          const materials: StudioMaterial[] = [
-            "matte",
-            "glossy",
-            "metallic",
-            "neon",
-            "matte",
-            "glossy",
-            "metallic",
-          ];
-          const arrangement: StudioObject[] = types.map((type, index) => {
-            const wobble = () => (Math.random() - 0.5) * 0.32;
-            const size = 0.72 + Math.random() * 0.72;
-            return {
-              id: makeId(),
-              name: `${titleCase(type)} spark ${index + 1}`,
-              type,
-              position: [
-                anchors[index][0] + wobble(),
-                anchors[index][1] + wobble(),
-                anchors[index][2] + wobble(),
-              ] as Vector3Tuple,
-              rotation: [
-                Math.random() * 1.1,
-                Math.random() * Math.PI,
-                Math.random() * 0.8,
-              ] as Vector3Tuple,
-              scale: [
-                size,
-                size * (0.85 + Math.random() * 0.35),
-                size,
-              ] as Vector3Tuple,
-              color: palette[index % palette.length],
-              material: materials[index],
-              texture:
-                index % 3 === 0
-                  ? "dots"
-                  : index % 3 === 1
-                    ? "stripes"
-                    : "plain",
-              sticker: index % 3 === 0 ? "star" : "none",
-            };
-          });
+          const arrangement = createSurpriseArrangement();
           commit({
             objects: arrangement,
             selectedObjectId: arrangement[0].id,
@@ -445,18 +369,66 @@ export const useStudioStore = create<StudioState>()(
                 }
           ),
         setSessionDuration: sessionDuration => set({ sessionDuration }),
+        saveArtwork: thumbnailDataUrl => {
+          const artwork = galleryActions.saveArtwork(thumbnailDataUrl);
+          if (!artwork) return null;
+          const current = get();
+          const activity = createStudioActivityEntry(
+            {
+              type: "save",
+              objectCount: artwork.objects.length,
+              sourceId: artwork.id,
+            },
+            {
+              ageMode: current.ageMode,
+              environment: artwork.environment ?? current.environment,
+              lighting: artwork.lighting ?? current.lighting,
+              sessionDuration: current.sessionDuration,
+            },
+            artwork.createdAt,
+            makeId()
+          );
+          set(state => ({
+            activityHistory: [activity, ...state.activityHistory].slice(
+              0,
+              ACTIVITY_HISTORY_LIMIT
+            ),
+          }));
+          return artwork;
+        },
         saveSessionReflection: (answer, promptId) => {
           const cleaned = answer.trim().replace(/\s+/g, " ").slice(0, 240);
           if (!cleaned) return false;
-          set({
-            lastSessionReflection: {
-              id: makeId(),
-              createdAt: new Date().toISOString(),
-              promptId,
-              answer: cleaned,
-              objectCount: get().objects.length,
+          const current = get();
+          const createdAt = new Date().toISOString();
+          const reflection = {
+            id: makeId(),
+            createdAt,
+            promptId,
+            answer: cleaned,
+            objectCount: current.objects.length,
+          } satisfies SessionReflection;
+          const activity = createStudioActivityEntry(
+            {
+              type: "reflection",
+              objectCount: current.objects.length,
             },
-          });
+            {
+              ageMode: current.ageMode,
+              environment: current.environment,
+              lighting: current.lighting,
+              sessionDuration: current.sessionDuration,
+            },
+            createdAt,
+            makeId()
+          );
+          set(state => ({
+            lastSessionReflection: reflection,
+            activityHistory: [activity, ...state.activityHistory].slice(
+              0,
+              ACTIVITY_HISTORY_LIMIT
+            ),
+          }));
           return true;
         },
         clearSessionReflection: () => set({ lastSessionReflection: null }),
@@ -480,6 +452,7 @@ export const useStudioStore = create<StudioState>()(
         completedChallengeIds: state.completedChallengeIds,
         sessionDuration: state.sessionDuration,
         lastSessionReflection: state.lastSessionReflection,
+        activityHistory: state.activityHistory,
       }),
       merge: (persistedState, currentState) => ({
         ...currentState,

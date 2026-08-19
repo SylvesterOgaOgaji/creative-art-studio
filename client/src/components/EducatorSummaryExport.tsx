@@ -12,6 +12,7 @@ export default function EducatorSummaryExport() {
   const lighting = useStudioStore(state => state.lighting);
   const environment = useStudioStore(state => state.environment);
   const ageMode = useStudioStore(state => state.ageMode);
+  const activityHistory = useStudioStore(state => state.activityHistory);
   const objectCount = savedArtworks.reduce(
     (total, artwork) => total + artwork.objects.length,
     0
@@ -25,6 +26,7 @@ export default function EducatorSummaryExport() {
       lighting,
       environment,
       ageMode,
+      activityHistory,
     });
     toast.success("An anonymized local summary has downloaded.");
   };

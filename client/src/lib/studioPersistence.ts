@@ -79,6 +79,22 @@ export const persistedStudioStateSchema = z.object({
     })
     .nullable()
     .optional(),
+  activityHistory: z
+    .array(
+      z.object({
+        id: identifierSchema,
+        type: z.enum(["save", "reflection"]),
+        createdAt: z.string().datetime(),
+        objectCount: z.number().int().min(0).max(10_000),
+        ageMode: z.enum(["explorer", "creator", "designer"]),
+        environment: z.enum(["atelier", "space", "underwater"]),
+        lighting: z.enum(["daylight", "neon"]),
+        sessionDuration: z.enum(["quick", "standard", "extended"]),
+        sourceId: identifierSchema.optional(),
+      })
+    )
+    .max(180)
+    .optional(),
 });
 
 export type PersistedStudioState = z.output<typeof persistedStudioStateSchema>;

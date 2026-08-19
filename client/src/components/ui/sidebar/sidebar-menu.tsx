@@ -10,12 +10,9 @@ import { cn } from "@/lib/utils";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 import * as React from "react";
-import { useSidebar } from "./sidebarContext";
+import { useSidebar } from "./sidebar-context";
 
-export function SidebarMenu({
-  className,
-  ...props
-}: React.ComponentProps<"ul">) {
+function SidebarMenu({ className, ...props }: React.ComponentProps<"ul">) {
   return (
     <ul
       data-slot="sidebar-menu"
@@ -26,10 +23,7 @@ export function SidebarMenu({
   );
 }
 
-export function SidebarMenuItem({
-  className,
-  ...props
-}: React.ComponentProps<"li">) {
+function SidebarMenuItem({ className, ...props }: React.ComponentProps<"li">) {
   return (
     <li
       data-slot="sidebar-menu-item"
@@ -55,11 +49,14 @@ const sidebarMenuButtonVariants = cva(
         lg: "h-12 text-sm group-data-[collapsible=icon]:p-0!",
       },
     },
-    defaultVariants: { variant: "default", size: "default" },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
   }
 );
 
-export function SidebarMenuButton({
+function SidebarMenuButton({
   asChild = false,
   isActive = false,
   variant = "default",
@@ -74,6 +71,7 @@ export function SidebarMenuButton({
 } & VariantProps<typeof sidebarMenuButtonVariants>) {
   const Comp = asChild ? Slot : "button";
   const { isMobile, state } = useSidebar();
+
   const button = (
     <Comp
       data-slot="sidebar-menu-button"
@@ -84,9 +82,17 @@ export function SidebarMenuButton({
       {...props}
     />
   );
-  if (!tooltip) return button;
-  const tooltipProps =
-    typeof tooltip === "string" ? { children: tooltip } : tooltip;
+
+  if (!tooltip) {
+    return button;
+  }
+
+  if (typeof tooltip === "string") {
+    tooltip = {
+      children: tooltip,
+    };
+  }
+
   return (
     <Tooltip>
       <TooltipTrigger asChild>{button}</TooltipTrigger>
@@ -94,13 +100,13 @@ export function SidebarMenuButton({
         side="right"
         align="center"
         hidden={state !== "collapsed" || isMobile}
-        {...tooltipProps}
+        {...tooltip}
       />
     </Tooltip>
   );
 }
 
-export function SidebarMenuAction({
+function SidebarMenuAction({
   className,
   asChild = false,
   showOnHover = false,
@@ -110,12 +116,14 @@ export function SidebarMenuAction({
   showOnHover?: boolean;
 }) {
   const Comp = asChild ? Slot : "button";
+
   return (
     <Comp
       data-slot="sidebar-menu-action"
       data-sidebar="menu-action"
       className={cn(
         "text-sidebar-foreground ring-sidebar-ring hover:bg-sidebar-accent hover:text-sidebar-accent-foreground peer-hover/menu-button:text-sidebar-accent-foreground absolute top-1.5 right-1 flex aspect-square w-5 items-center justify-center rounded-md p-0 outline-hidden transition-transform focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0",
+        // Increases the hit area of the button on mobile.
         "after:absolute after:-inset-2 md:after:hidden",
         "peer-data-[size=sm]/menu-button:top-1",
         "peer-data-[size=default]/menu-button:top-1.5",
@@ -130,7 +138,7 @@ export function SidebarMenuAction({
   );
 }
 
-export function SidebarMenuBadge({
+function SidebarMenuBadge({
   className,
   ...props
 }: React.ComponentProps<"div">) {
@@ -152,15 +160,18 @@ export function SidebarMenuBadge({
   );
 }
 
-export function SidebarMenuSkeleton({
+function SidebarMenuSkeleton({
   className,
   showIcon = false,
   ...props
-}: React.ComponentProps<"div"> & { showIcon?: boolean }) {
-  const width = React.useMemo(
-    () => `${Math.floor(Math.random() * 40) + 50}%`,
-    []
-  );
+}: React.ComponentProps<"div"> & {
+  showIcon?: boolean;
+}) {
+  // Random width between 50 to 90%.
+  const width = React.useMemo(() => {
+    return `${Math.floor(Math.random() * 40) + 50}%`;
+  }, []);
+
   return (
     <div
       data-slot="sidebar-menu-skeleton"
@@ -177,16 +188,17 @@ export function SidebarMenuSkeleton({
       <Skeleton
         className="h-4 max-w-(--skeleton-width) flex-1"
         data-sidebar="menu-skeleton-text"
-        style={{ "--skeleton-width": width } as React.CSSProperties}
+        style={
+          {
+            "--skeleton-width": width,
+          } as React.CSSProperties
+        }
       />
     </div>
   );
 }
 
-export function SidebarMenuSub({
-  className,
-  ...props
-}: React.ComponentProps<"ul">) {
+function SidebarMenuSub({ className, ...props }: React.ComponentProps<"ul">) {
   return (
     <ul
       data-slot="sidebar-menu-sub"
@@ -201,7 +213,7 @@ export function SidebarMenuSub({
   );
 }
 
-export function SidebarMenuSubItem({
+function SidebarMenuSubItem({
   className,
   ...props
 }: React.ComponentProps<"li">) {
@@ -215,7 +227,7 @@ export function SidebarMenuSubItem({
   );
 }
 
-export function SidebarMenuSubButton({
+function SidebarMenuSubButton({
   asChild = false,
   size = "md",
   isActive = false,
@@ -227,6 +239,7 @@ export function SidebarMenuSubButton({
   isActive?: boolean;
 }) {
   const Comp = asChild ? Slot : "a";
+
   return (
     <Comp
       data-slot="sidebar-menu-sub-button"
@@ -245,3 +258,15 @@ export function SidebarMenuSubButton({
     />
   );
 }
+
+export {
+  SidebarMenu,
+  SidebarMenuAction,
+  SidebarMenuBadge,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuSkeleton,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
+};

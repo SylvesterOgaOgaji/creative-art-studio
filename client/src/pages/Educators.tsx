@@ -17,6 +17,7 @@ import {
   UsersRound,
 } from "lucide-react";
 import { Link } from "wouter";
+import EducatorActivityReport from "@/components/EducatorActivityReport";
 import EducatorSummaryExport from "@/components/EducatorSummaryExport";
 import FamilyActivitySheet from "@/components/FamilyActivitySheet";
 import SessionDurationPlanner from "@/components/SessionDurationPlanner";
@@ -217,6 +218,7 @@ export default function Educators() {
         </div>
       </section>
       <FamilyActivitySheet />
+      <EducatorActivityReport />
       <EducatorSummaryExport />
       <section className="educator-safety-section">
         <div>

@@ -1,18 +1,19 @@
 /**
- * Playful Atelier design reminder: the canvas stays the calm, tactile hero while
- * focused scene helpers contain mesh and transform mechanics.
+ * Playful Atelier design reminder: transforms should feel like intuitive studio tools,
+ * with a warm stage that keeps controls secondary to the object being shaped.
  */
 import { Canvas } from "@react-three/fiber";
 import { ContactShadows, OrbitControls, Stars } from "@react-three/drei";
 import { useState } from "react";
 import { useStudioStore } from "@/store/useStudioStore";
 import {
-  getStageBackground,
-  getStageFloorColor,
   GroupTransformObject,
   SceneMesh,
   SingleTransformObject,
-} from "./sceneHelpers";
+} from "./StudioSceneObjects";
+
+const workspaceArtwork =
+  "/manus-storage/playful-atelier-workspace_6be4be8c.jpg";
 
 function StudioScene() {
   const [isDragging, setIsDragging] = useState(false);
@@ -30,7 +31,14 @@ function StudioScene() {
   const activeSet = new Set(activeIds);
   const groupedObjects = objects.filter(object => activeSet.has(object.id));
   const useGroupGizmo = groupedObjects.length > 1;
-  const floorColor = getStageFloorColor(environment, lighting);
+  const floorColor =
+    environment === "space"
+      ? "#101a47"
+      : environment === "underwater"
+        ? "#c9f3ee"
+        : lighting === "neon"
+          ? "#111B3B"
+          : "#FFF7E9";
 
   return (
     <>
@@ -164,7 +172,12 @@ function StudioScene() {
 export default function StudioCanvas() {
   const environment = useStudioStore(state => state.environment ?? "atelier");
   const objects = useStudioStore(state => state.objects);
-  const backgroundImage = getStageBackground(environment);
+  const backgroundImage =
+    environment === "space"
+      ? "radial-gradient(circle at 20% 18%, #4f54aa 0 2%, transparent 2.5%), radial-gradient(circle at 78% 24%, #ffffff 0 1%, transparent 1.5%), linear-gradient(145deg, #17174d, #2d2368 54%, #101a47)"
+      : environment === "underwater"
+        ? "radial-gradient(circle at 23% 12%, rgba(255,255,255,.55) 0 4%, transparent 4.5%), radial-gradient(circle at 68% 24%, rgba(255,255,255,.4) 0 3%, transparent 3.5%), linear-gradient(160deg, #80d9e9, #c4f4e7 72%)"
+        : `linear-gradient(180deg, ${"rgba(255,255,255,.16)"}, rgba(255,249,238,.48)), url(${workspaceArtwork})`;
 
   return (
     <div

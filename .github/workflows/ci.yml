@@ -12,73 +12,127 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  formatting-and-lint:
-    name: Formatting and lint
+  format:
+    name: Format check
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@v4
 
       - name: Set up project
         uses: ./.github/actions/setup-pnpm
 
-      - name: Check formatting
+      - name: Check Prettier formatting
         run: pnpm format:check
 
-      - name: Run ESLint
-        run: pnpm run lint
+  lint:
+    name: ESLint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up project
+        uses: ./.github/actions/setup-pnpm
+
+      - name: Run ESLint with zero warnings
+        run: pnpm lint
 
   typecheck:
     name: TypeScript typecheck
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@v4
 
       - name: Set up project
         uses: ./.github/actions/setup-pnpm
 
       - name: Run TypeScript typecheck
-        run: pnpm run check
+        run: pnpm check
 
-  tests:
+  unit-tests:
     name: Unit tests and coverage
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@v4
 
       - name: Set up project
         uses: ./.github/actions/setup-pnpm
 
-      - name: Run unit tests with Vitest
-        run: pnpm run test
+      - name: Run Vitest unit tests with coverage thresholds
+        run: pnpm test:coverage
 
-      - name: Enforce unit-test coverage threshold
-        run: pnpm run test:coverage
+      - name: Upload coverage artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vitest-coverage
+          path: coverage
+          if-no-files-found: error
+          retention-days: 14
+
+  fresh-clone:
+    name: Fresh clone check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository without a package cache
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Set up Node.js without a package cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify clean checkout
+        run: bash scripts/verify-fresh-clone.sh
+
+      - name: Upload fresh-clone coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fresh-clone-coverage
+          path: coverage
+          if-no-files-found: ignore
+          retention-days: 14
 
   browser-test:
-    name: Browser creative flow
+    name: Playwright creative flow
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@v4
 
       - name: Set up project
         uses: ./.github/actions/setup-pnpm
 
       - name: Install Chromium for browser tests
-        run: pnpm exec playwright install --with-deps chromium
+        run: timeout 180s pnpm exec playwright install chromium
 
-      - name: Run creative-flow browser test
-        run: pnpm test:e2e
+      - name: Run Playwright end-to-end tests
+        run: timeout 180s pnpm test:e2e
+
+      - name: Upload Playwright artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-results
+          path: |
+            playwright-report
+            test-results
+          if-no-files-found: ignore
+          retention-days: 14
 
   production-build:
     name: Production audit and build
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@v4
 
       - name: Set up project
         uses: ./.github/actions/setup-pnpm
@@ -88,3 +142,98 @@ jobs:
 
       - name: Build production bundle
         run: pnpm build
+
+  container-smoke:
+    name: Production container smoke test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Build production container
+        run: docker build --tag creative-art-studio:ci .
+
+      - name: Start production container
+        run: docker run --detach --name creative-art-studio-ci --publish 3000:3000 creative-art-studio:ci
+
+      - name: Verify health and metrics endpoints
+        run: |
+          curl --fail --retry-all-errors --retry 15 --retry-delay 1 --max-time 10 http://127.0.0.1:3000/healthz
+          curl --fail --retry-all-errors --retry 15 --retry-delay 1 --max-time 10 http://127.0.0.1:3000/metrics
+
+      - name: Print container logs on failure
+        if: failure()
+        run: docker logs creative-art-studio-ci
+
+      - name: Remove production container
+        if: always()
+        run: docker rm --force creative-art-studio-ci
+
+  dependency-freshness:
+    name: Dependency freshness report
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up project
+        uses: ./.github/actions/setup-pnpm
+
+      - name: Capture dependency freshness
+        run: pnpm outdated --format json > dependency-freshness.json || true
+
+      - name: Upload dependency freshness report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-freshness
+          path: dependency-freshness.json
+          if-no-files-found: warn
+          retention-days: 14
+
+  dependency-review:
+    name: Dependency review
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Review dependency changes
+        uses: actions/dependency-review-action@v4
+
+  quality-gate:
+    name: Required quality gate
+    if: always()
+    needs:
+      - format
+      - lint
+      - typecheck
+      - unit-tests
+      - fresh-clone
+      - browser-test
+      - production-build
+      - container-smoke
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fail if a required check did not pass
+        env:
+          FORMAT_RESULT: ${{ needs.format.result }}
+          LINT_RESULT: ${{ needs.lint.result }}
+          TYPECHECK_RESULT: ${{ needs.typecheck.result }}
+          UNIT_TEST_RESULT: ${{ needs.unit-tests.result }}
+          FRESH_CLONE_RESULT: ${{ needs.fresh-clone.result }}
+          BROWSER_RESULT: ${{ needs.browser-test.result }}
+          BUILD_RESULT: ${{ needs.production-build.result }}
+          CONTAINER_RESULT: ${{ needs.container-smoke.result }}
+        run: |
+          for result in "$FORMAT_RESULT" "$LINT_RESULT" "$TYPECHECK_RESULT" "$UNIT_TEST_RESULT" "$FRESH_CLONE_RESULT" "$BROWSER_RESULT" "$BUILD_RESULT" "$CONTAINER_RESULT"; do
+            if [ "$result" != "success" ]; then
+              echo "A required quality check returned: $result"
+              exit 1
+            fi
+          done
+          echo "All required quality checks passed."

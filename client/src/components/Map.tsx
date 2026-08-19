@@ -93,17 +93,21 @@ const FORGE_BASE_URL =
 const MAPS_PROXY_URL = `${FORGE_BASE_URL}/v1/maps/proxy`;
 
 function loadMapScript() {
-  return new Promise(resolve => {
+  if (!API_KEY) return Promise.resolve(false);
+
+  return new Promise<boolean>(resolve => {
     const script = document.createElement("script");
     script.src = `${MAPS_PROXY_URL}/maps/api/js?key=${API_KEY}&v=weekly&libraries=marker,places,geocoding,geometry`;
     script.async = true;
     script.crossOrigin = "anonymous";
     script.onload = () => {
-      resolve(null);
       script.remove(); // Clean up immediately
+      resolve(Boolean(window.google?.maps));
     };
     script.onerror = () => {
       console.error("Failed to load Google Maps script");
+      script.remove();
+      resolve(false);
     };
     document.head.appendChild(script);
   });
@@ -126,7 +130,13 @@ export function MapView({
   const map = useRef<google.maps.Map | null>(null);
 
   const init = usePersistFn(async () => {
-    await loadMapScript();
+    const isAvailable = await loadMapScript();
+    if (!isAvailable) {
+      if (mapContainer.current) {
+        mapContainer.current.dataset.mapState = "unavailable";
+      }
+      return;
+    }
     if (!mapContainer.current) {
       console.error("Map container not found");
       return;
@@ -150,6 +160,11 @@ export function MapView({
   }, [init]);
 
   return (
-    <div ref={mapContainer} className={cn("w-full h-[500px]", className)} />
+    <div
+      ref={mapContainer}
+      data-map-state="loading"
+      aria-label="Optional map integration"
+      className={cn("w-full h-[500px]", className)}
+    />
   );
 }

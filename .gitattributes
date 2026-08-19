@@ -1,0 +1,2 @@
+# Generated runtime instrumentation; exclude from authored-code language and review metrics.
+tools/dev-only/debug-collector.js linguist-generated=true

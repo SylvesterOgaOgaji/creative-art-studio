@@ -62,3 +62,28 @@ describe("SidebarProvider", () => {
     expect(sidebar).toHaveAttribute("data-state", "expanded");
   });
 });
+
+describe("sidebar menu barrel", () => {
+  beforeEach(stubDesktopViewport);
+  afterEach(() => vi.restoreAllMocks());
+
+  it("renders menu primitives through the compatibility export", async () => {
+    const { SidebarMenu, SidebarMenuButton, SidebarMenuItem } = await import(
+      "./sidebar"
+    );
+    render(
+      <SidebarProvider>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton>Open studio</SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarProvider>
+    );
+
+    expect(screen.getByRole("button", { name: "Open studio" })).toHaveAttribute(
+      "data-sidebar",
+      "menu-button"
+    );
+  });
+});

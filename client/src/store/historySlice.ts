@@ -24,7 +24,7 @@ export const cloneSnapshot = (state: SceneSnapshot): SceneSnapshot => ({
   lighting: state.lighting ?? "daylight",
   environment: state.environment ?? "atelier",
   selectedObjectId: state.selectedObjectId,
-  selectedObjectIds: selectedIdsFor(state),
+  selectedObjectIds: [...selectedIdsFor(state)],
 });
 
 export function createHistoryActions(set: StudioSet, get: StudioGet) {
