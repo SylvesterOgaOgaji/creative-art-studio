@@ -16,13 +16,19 @@ const mocks = vi.hoisted(() => ({
   updateObjectsDuringTransform: vi.fn(),
 }));
 
-vi.mock("@react-three/drei", () => ({
+vi.mock("@react-three/drei/core/Edges", () => ({
   Edges: ({ children }: { children?: ReactNode }) => (
     <div data-testid="edges">{children}</div>
   ),
+}));
+
+vi.mock("@react-three/drei/web/Html", () => ({
   Html: ({ children }: { children?: ReactNode }) => (
     <div data-testid="html">{children}</div>
   ),
+}));
+
+vi.mock("@react-three/drei/core/TransformControls", () => ({
   TransformControls: ({
     children,
     onMouseDown,
