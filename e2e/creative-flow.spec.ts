@@ -94,14 +94,14 @@ test("a previously visited dashboard reopens offline", async ({
   const title = page.getByLabel("Give your world a name");
   await expect(title).toBeVisible();
 
+  await page.reload();
+  await expect(title).toBeVisible();
+
   await page.waitForFunction(
     () => Boolean(navigator.serviceWorker?.controller),
     undefined,
     { timeout: 15_000 }
   );
-  await page.reload();
-  await expect(title).toBeVisible();
-
   await context.setOffline(true);
   await page.reload();
   await page.evaluate(() => window.dispatchEvent(new Event("offline")));

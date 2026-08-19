@@ -60,7 +60,10 @@ export default tseslint.config(
     },
   },
   {
-    files: ["client/src/components/studio/StudioCanvas.tsx"],
+    files: [
+      "client/src/components/studio/StudioCanvas.tsx",
+      "client/src/components/studio/sceneHelpers.tsx",
+    ],
     rules: {
       // React Three Fiber maps these JSX props to Three.js properties rather
       // than HTML attributes, so React DOM's attribute list is inapplicable.

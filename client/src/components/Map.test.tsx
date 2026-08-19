@@ -1,9 +1,12 @@
 import { render, waitFor } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { MapView } from "./Map";
 
 describe("MapView", () => {
+  afterEach(() => vi.unstubAllEnvs());
+
   it("does not request Forge or Google Maps when credentials are absent", async () => {
+    vi.stubEnv("VITE_FRONTEND_FORGE_API_KEY", "");
     const appendChild = vi.spyOn(document.head, "appendChild");
     const { container } = render(<MapView />);
 
